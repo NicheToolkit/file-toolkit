@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.github.nichetoolkit.file.mapper.FileIndexMapper">
+    <resultMap type="io.github.nichetoolkit.file.entity.FileIndexEntity" id="fileIndexMap">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="originalFilename" column="original_filename"/>
+        <result property="filename" column="filename"/>
+        <result property="alias" column="alias"/>
+        <result property="suffix" column="suffix"/>
+        <result property="fileMd5" column="file_md5"/>
+        <result property="fileSize" column="file_size"/>
+        <result property="fileType" column="file_type"/>
+        <result property="isFinish" column="is_finish"/>
+        <result property="isCondense" column="is_condense"/>
+        <result property="isSlice" column="is_slice"/>
+        <result property="sliceSize" column="slice_size"/>
+        <result property="isMerge" column="is_merge"/>
+        <result property="endpoint" column="endpoint"/>
+        <result property="etag" column="etag"/>
+        <result property="versionId" column="version_id"/>
+        <result property="headers" column="headers"/>
+        <result property="properties" column="properties"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="operate" column="operate"/>
+    </resultMap>
+
+    <sql id="all_column">
+        id, user_id, original_filename, filename, alias, suffix, file_md5,
+        file_size, file_type, is_finish, is_condense, is_slice, slice_size, is_merge, endpoint, etag, version_id, headers, properties, create_time, update_time, operate
+    </sql>
+
+    <insert id="save">
+        INSERT INTO file_index (
+        <include refid="all_column"/>
+        )
+        VALUES (
+        #{entity.id},
+        #{entity.userId},
+        #{entity.originalFilename},
+        #{entity.filename},
+        #{entity.alias},
+        #{entity.suffix},
+        #{entity.fileMd5},
+        #{entity.fileSize},
+        #{entity.fileType},
+        #{entity.isFinish},
+        #{entity.isCondense},
+        #{entity.isSlice},
+        #{entity.sliceSize},
+        #{entity.isMerge},
+        #{entity.endpoint},
+        #{entity.etag},
+        #{entity.versionId},
+        #{entity.headers},
+        #{entity.properties},
+        now(),
+        now(),
+        CASE WHEN #{entity.operate}::INT4 IS NULL THEN 1 ELSE #{entity.operate} END
+        ) ON CONFLICT (id) DO UPDATE
+        <set>
+            user_id = CASE WHEN EXCLUDED.user_id IS NOT NULL THEN EXCLUDED.user_id ELSE file_index.user_id END,
+            original_filename = CASE WHEN EXCLUDED.original_filename IS NOT NULL THEN EXCLUDED.original_filename ELSE file_index.original_filename END,
+            filename = CASE WHEN EXCLUDED.filename IS NOT NULL THEN EXCLUDED.filename ELSE file_index.filename END,
+            alias = CASE WHEN EXCLUDED.alias IS NOT NULL THEN EXCLUDED.alias ELSE file_index.alias END,
+            suffix = CASE WHEN EXCLUDED.suffix IS NOT NULL THEN EXCLUDED.suffix ELSE file_index.suffix END,
+            file_md5 = CASE WHEN EXCLUDED.file_md5 IS NOT NULL THEN EXCLUDED.file_md5 ELSE file_index.file_md5 END,
+            file_size = CASE WHEN EXCLUDED.file_size IS NOT NULL THEN EXCLUDED.file_size ELSE file_index.file_size END,
+            file_type = CASE WHEN EXCLUDED.file_type IS NOT NULL THEN EXCLUDED.file_type ELSE file_index.file_type END,
+            is_finish = CASE WHEN EXCLUDED.is_finish IS NOT NULL THEN EXCLUDED.is_finish ELSE file_index.is_finish END,
+            is_condense = CASE WHEN EXCLUDED.is_condense IS NOT NULL THEN EXCLUDED.is_condense ELSE file_index.is_condense END,
+            is_slice = CASE WHEN EXCLUDED.is_slice IS NOT NULL THEN EXCLUDED.is_slice ELSE file_index.is_slice END,
+            slice_size = CASE WHEN EXCLUDED.slice_size IS NOT NULL THEN EXCLUDED.slice_size ELSE file_index.slice_size END,
+            is_merge = CASE WHEN EXCLUDED.is_merge IS NOT NULL THEN EXCLUDED.is_merge ELSE file_index.is_merge END,
+            endpoint = CASE WHEN EXCLUDED.endpoint IS NOT NULL THEN EXCLUDED.endpoint ELSE file_index.endpoint END,
+            etag = CASE WHEN EXCLUDED.etag IS NOT NULL THEN EXCLUDED.etag ELSE file_index.etag END,
+            version_id = CASE WHEN EXCLUDED.version_id IS NOT NULL THEN EXCLUDED.version_id ELSE file_index.version_id END,
+            headers = CASE WHEN EXCLUDED.headers IS NOT NULL THEN EXCLUDED.headers ELSE file_index.headers END,
+            properties = CASE WHEN EXCLUDED.properties IS NOT NULL THEN EXCLUDED.properties ELSE file_index.properties END,
+            update_time = now()
+        </set>
+    </insert>
+
+    <update id="saveAll">
+        INSERT INTO file_index (
+        <include refid="all_column"/>
+        )
+        VALUES
+        <foreach item="entity" index="index" collection="entityList" separator=",">
+            (
+            #{entity.id},
+            #{entity.userId},
+            #{entity.originalFilename},
+            #{entity.filename},
+            #{entity.alias},
+            #{entity.suffix},
+            #{entity.fileMd5},
+            #{entity.fileSize},
+            #{entity.fileType},
+            #{entity.isFinish},
+            #{entity.isCondense},
+            #{entity.isSlice},
+            #{entity.sliceSize},
+            #{entity.isMerge},
+            #{entity.endpoint},
+            #{entity.etag},
+            #{entity.versionId},
+            #{entity.headers},
+            #{entity.properties},
+            now(),
+            now(),
+            CASE WHEN #{entity.operate}::INT4 IS NULL THEN 1 ELSE #{entity.operate} END
+            )
+        </foreach>
+        ON CONFLICT (id) DO UPDATE
+        <set>
+            user_id = CASE WHEN EXCLUDED.user_id IS NOT NULL THEN EXCLUDED.user_id ELSE file_index.user_id END,
+            original_filename = CASE WHEN EXCLUDED.original_filename IS NOT NULL THEN EXCLUDED.original_filename ELSE file_index.original_filename END,
+            filename = CASE WHEN EXCLUDED.filename IS NOT NULL THEN EXCLUDED.filename ELSE file_index.filename END,
+            alias = CASE WHEN EXCLUDED.alias IS NOT NULL THEN EXCLUDED.alias ELSE file_index.alias END,
+            suffix = CASE WHEN EXCLUDED.suffix IS NOT NULL THEN EXCLUDED.suffix ELSE file_index.suffix END,
+            file_md5 = CASE WHEN EXCLUDED.file_md5 IS NOT NULL THEN EXCLUDED.file_md5 ELSE file_index.file_md5 END,
+            file_size = CASE WHEN EXCLUDED.file_size IS NOT NULL THEN EXCLUDED.file_size ELSE file_index.file_size END,
+            file_type = CASE WHEN EXCLUDED.file_type IS NOT NULL THEN EXCLUDED.file_type ELSE file_index.file_type END,
+            is_finish = CASE WHEN EXCLUDED.is_finish IS NOT NULL THEN EXCLUDED.is_finish ELSE file_index.is_finish END,
+            is_condense = CASE WHEN EXCLUDED.is_condense IS NOT NULL THEN EXCLUDED.is_condense ELSE file_index.is_condense END,
+            is_slice = CASE WHEN EXCLUDED.is_slice IS NOT NULL THEN EXCLUDED.is_slice ELSE file_index.is_slice END,
+            slice_size = CASE WHEN EXCLUDED.slice_size IS NOT NULL THEN EXCLUDED.slice_size ELSE file_index.slice_size END,
+            is_merge = CASE WHEN EXCLUDED.is_merge IS NOT NULL THEN EXCLUDED.is_merge ELSE file_index.is_merge END,
+            endpoint = CASE WHEN EXCLUDED.endpoint IS NOT NULL THEN EXCLUDED.endpoint ELSE file_index.endpoint END,
+            etag = CASE WHEN EXCLUDED.etag IS NOT NULL THEN EXCLUDED.etag ELSE file_index.etag END,
+            version_id = CASE WHEN EXCLUDED.version_id IS NOT NULL THEN EXCLUDED.version_id ELSE file_index.version_id END,
+            headers = CASE WHEN EXCLUDED.headers IS NOT NULL THEN EXCLUDED.headers ELSE file_index.headers END,
+            properties = CASE WHEN EXCLUDED.properties IS NOT NULL THEN EXCLUDED.properties ELSE file_index.properties END,
+            update_time = now()
+        </set>
+    </update>
+
+    <update id="operateAll">
+        UPDATE file_chunk
+        SET operate = ${operate}
+        WHERE id IN
+        <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="operateById">
+        UPDATE file_chunk
+        SET operate = ${operate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="removeAll">
+        UPDATE file_chunk
+        SET operate = 32
+        WHERE id IN
+        <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="removeById">
+        UPDATE file_chunk
+        SET operate = 32
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteAll">
+        DELETE FROM file_index
+        WHERE id IN
+        <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteById">
+        DELETE
+        FROM file_index
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findById" resultMap="fileIndexMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM file_index
+        WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="fileIndexMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM file_index
+        WHERE id in
+        <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="findAllByWhere" resultMap="fileIndexMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM file_index
+        WHERE 1=1
+        <if test="whereSql!=null">
+            ${whereSql}
+        </if>
+    </select>
+
+    <delete id="deleteAllByWhere">
+        DELETE FROM file_index
+        WHERE 1=1
+        <if test="whereSql!=null">
+            ${whereSql}
+        </if>
+    </delete>
+
+    <select id="findByNameWithUploadInterrupt" resultMap="fileIndexMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM file_index
+        WHERE original_filename = #{name}
+        AND is_slice = true
+        AND is_finish = false
+    </select>
+
+    <update id="finishSliceUpload">
+        UPDATE file_index
+        SET is_finish = true,
+            slice_size = ${sliceSize}
+        WHERE id = ${id}
+        AND is_slice = true
+    </update>
+
+</mapper>

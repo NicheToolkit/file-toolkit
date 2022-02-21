@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.github.nichetoolkit.file.mapper.FileChunkMapper">
+    <resultMap type="io.github.nichetoolkit.file.entity.FileChunkEntity" id="fileChunkMap">
+        <id property="id" column="id" />
+        <result property="fileId" column="file_index_id" />
+        <result property="chunkIndex" column="chunk_index" />
+        <result property="chunkSize" column="chunk_size" />
+        <result property="chunkStart" column="chunk_start" />
+        <result property="chunkEnd" column="chunk_end" />
+        <result property="chunkMd5" column="chunk_md5" />
+        <result property="isLastChunk" column="is_last_chunk" />
+        <result property="chunkTime" column="chunk_time" />
+        <result property="startTime" column="start_time" />
+        <result property="endTime" column="end_time" />
+        <result property="operate" column="operate"/>
+    </resultMap>
+
+    <sql id="all_column">
+        id, file_index_id, chunk_index, chunk_size, chunk_start, chunk_end, chunk_md5, is_last_chunk, chunk_time, start_time, end_time, operate
+    </sql>
+
+    <sql id="filter_all_column">
+        c.id, c.file_index_id, c.chunk_index, c.chunk_size, c.chunk_start, c.chunk_end, c.chunk_md5, c.is_last_chunk, c.chunk_time, c.start_time, c.end_time, c.operate
+    </sql>
+
+    <insert id="save">
+        INSERT INTO file_chunk ( <include refid="all_column"/> )
+        VALUES (
+        #{entity.id},
+        #{entity.fileId},
+        #{entity.chunkIndex},
+        #{entity.chunkSize},
+        #{entity.chunkStart},
+        #{entity.chunkEnd},
+        #{entity.chunkMd5},
+        #{entity.isLastChunk},
+        now(),
+        #{entity.startTime},
+        #{entity.endTime},
+        CASE WHEN #{entity.operate}::INT4 IS NULL THEN 1 ELSE #{entity.operate} END
+        ) ON CONFLICT (id) DO UPDATE
+        <set>
+            file_index_id = CASE WHEN EXCLUDED.file_index_id IS NOT NULL THEN EXCLUDED.file_index_id ELSE file_chunk.file_index_id END,
+            chunk_index = CASE WHEN EXCLUDED.chunk_index IS NOT NULL THEN EXCLUDED.chunk_index ELSE file_chunk.chunk_index END,
+            chunk_size = CASE WHEN EXCLUDED.chunk_size IS NOT NULL THEN EXCLUDED.chunk_size ELSE file_chunk.chunk_size END,
+            chunk_start = CASE WHEN EXCLUDED.chunk_start IS NOT NULL THEN EXCLUDED.chunk_start ELSE file_chunk.chunk_start END,
+            chunk_end = CASE WHEN EXCLUDED.chunk_end IS NOT NULL THEN EXCLUDED.chunk_end ELSE file_chunk.chunk_end END,
+            chunk_md5 = CASE WHEN EXCLUDED.chunk_md5 IS NOT NULL THEN EXCLUDED.chunk_md5 ELSE file_chunk.chunk_md5 END,
+            is_last_chunk = CASE WHEN EXCLUDED.is_last_chunk IS NOT NULL THEN EXCLUDED.is_last_chunk ELSE file_chunk.is_last_chunk END,
+            chunk_time = now(),
+            start_time = CASE WHEN EXCLUDED.start_time IS NOT NULL THEN EXCLUDED.start_time ELSE file_chunk.start_time END,
+            end_time = CASE WHEN EXCLUDED.end_time IS NOT NULL THEN EXCLUDED.end_time ELSE file_chunk.end_time END,
+            "is_del" = CASE WHEN EXCLUDED."is_del" IS NOT NULL THEN EXCLUDED."is_del" ELSE "file_chunk"."is_del" END
+        </set>
+    </insert>
+
+    <update id="saveAll">
+        INSERT INTO file_chunk (
+        <include refid="all_column"/>
+        )
+        VALUES
+        <foreach item="entity" index="index" collection="entityList" separator=",">
+            (
+            #{entity.id},
+            #{entity.fileId},
+            #{entity.chunkIndex},
+            #{entity.chunkSize},
+            #{entity.chunkStart},
+            #{entity.chunkEnd},
+            #{entity.chunkMd5},
+            #{entity.isLastChunk},
+            now(),
+            #{entity.startTime},
+            #{entity.endTime},
+            CASE WHEN #{entity.operate}::INT4 IS NULL THEN 1 ELSE #{entity.operate} END
+            )
+        </foreach>
+        ON CONFLICT (id) DO UPDATE
+        <set>
+            file_index_id = CASE WHEN EXCLUDED.file_index_id IS NOT NULL THEN EXCLUDED.file_index_id ELSE file_chunk.file_index_id END,
+            chunk_index = CASE WHEN EXCLUDED.chunk_index IS NOT NULL THEN EXCLUDED.chunk_index ELSE file_chunk.chunk_index END,
+            chunk_size = CASE WHEN EXCLUDED.chunk_size IS NOT NULL THEN EXCLUDED.chunk_size ELSE file_chunk.chunk_size END,
+            chunk_start = CASE WHEN EXCLUDED.chunk_start IS NOT NULL THEN EXCLUDED.chunk_start ELSE file_chunk.chunk_start END,
+            chunk_end = CASE WHEN EXCLUDED.chunk_end IS NOT NULL THEN EXCLUDED.chunk_end ELSE file_chunk.chunk_end END,
+            chunk_md5 = CASE WHEN EXCLUDED.chunk_md5 IS NOT NULL THEN EXCLUDED.chunk_md5 ELSE file_chunk.chunk_md5 END,
+            is_last_chunk = CASE WHEN EXCLUDED.is_last_chunk IS NOT NULL THEN EXCLUDED.is_last_chunk ELSE file_chunk.is_last_chunk END,
+            chunk_time = now(),
+            start_time = CASE WHEN EXCLUDED.start_time IS NOT NULL THEN EXCLUDED.start_time ELSE file_chunk.start_time END,
+            end_time = CASE WHEN EXCLUDED.end_time IS NOT NULL THEN EXCLUDED.end_time ELSE file_chunk.end_time END
+        </set>
+    </update>
+
+    <update id="operateAll">
+        UPDATE file_chunk
+        SET operate = ${operate}
+        WHERE id IN
+        <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="operateById">
+        UPDATE file_chunk
+        SET operate = ${operate}
+        WHERE id = #{id}
+    </update>
+
+    <update id="removeAll">
+        UPDATE file_chunk
+        SET operate = 32
+        WHERE id IN
+        <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="removeById">
+        UPDATE file_chunk
+        SET operate = 32
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteAll">
+        DELETE FROM file_chunk
+        WHERE id IN
+        <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteById">
+        DELETE FROM file_chunk
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findById" resultMap="fileChunkMap">
+        SELECT<include refid="all_column"/>
+        FROM file_chunk
+        WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="fileChunkMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM file_chunk
+        WHERE id in
+        <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="findAllByWhere" resultMap="fileChunkMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM file_chunk
+        WHERE 1=1
+        <if test="whereSql!=null">
+            ${whereSql}
+        </if>
+    </select>
+
+    <delete id="deleteAllByWhere">
+        DELETE FROM file_chunk
+        WHERE 1=1
+        <if test="whereSql!=null">
+            ${whereSql}
+        </if>
+    </delete>
+
+    <select id="findByFileIdAndChunkIndex" resultMap="fileChunkMap">
+        SELECT<include refid="all_column"/>
+        FROM file_chunk
+        WHERE file_index_id = #{fileId} AND chunk_index = #{chunkIndex}
+    </select>
+
+    <select id="findByFileIdFirstChunk" resultMap="fileChunkMap">
+        SELECT
+        <include refid="filter_all_column"/>
+        FROM file_chunk AS c
+        RIGHT JOIN (
+        SELECT file_index_id, min(chunk_index) AS max_chunk_index
+        FROM file_chunk
+        WHERE file_index_id = #{fileId}
+        GROUP BY file_index_id
+        ) AS l
+        ON l.file_index_id = c.file_index_id AND l.max_chunk_index = c.chunk_index
+    </select>
+
+    <select id="findByFileIdLastChunk" resultMap="fileChunkMap">
+        SELECT
+        <include refid="filter_all_column"/>
+        FROM file_chunk AS c
+        RIGHT JOIN (
+          SELECT file_index_id, max(chunk_index) AS max_chunk_index
+          FROM file_chunk
+          WHERE file_index_id = #{fileId}
+          GROUP BY file_index_id
+        ) AS l
+        ON l.file_index_id = c.file_index_id AND l.max_chunk_index = c.chunk_index
+    </select>
+
+    <select id="findAllByFileId" resultMap="fileChunkMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM file_chunk
+        WHERE file_index_id in
+        <foreach item="fileId" index="index" collection="fileIds" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </select>
+
+    <select id="findAllByFileIds" resultMap="fileChunkMap">
+        SELECT
+        <include refid="all_column"/>
+        FROM file_chunk
+        WHERE file_index_id in
+        <foreach item="fileId" index="index" collection="fileIds" open="(" separator="," close=")">
+            #{fileId}
+        </foreach>
+    </select>
+</mapper>
