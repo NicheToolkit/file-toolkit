@@ -1,0 +1,31 @@
+{
+  "groups": [
+    {
+      "name": "nichetoolkit.file.minio",
+      "sourceType": "io.github.nichetoolkit.file.configure.FileMinioProperties",
+      "type": "io.github.nichetoolkit.file.configure.FileMinioProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "nichetoolkit.file.minio.endpoint",
+      "type": "java.lang.String",
+      "description": "minio endpoint."
+    },
+    {
+      "name": "nichetoolkit.file.minio.bucket-name",
+      "type": "java.lang.String",
+      "description": "minio bucket name."
+    },
+    {
+      "name": "nichetoolkit.file.minio.access-key",
+      "type": "java.lang.String",
+      "description": "minio access key."
+    },
+    {
+      "name": "nichetoolkit.file.minio.secret-key",
+      "type": "java.lang.String",
+      "description": "minio secret key."
+    }
+  ]
+}

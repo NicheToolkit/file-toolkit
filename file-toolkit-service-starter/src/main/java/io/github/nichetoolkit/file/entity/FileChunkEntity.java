@@ -1,11 +1,10 @@
 package io.github.nichetoolkit.file.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.rest.util.BeanUtils;
 import io.github.nichetoolkit.rice.RiceIdEntity;
+import io.github.nichetoolkit.rice.enums.OperateType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,6 +24,8 @@ public class FileChunkEntity extends RiceIdEntity<FileChunkEntity,FileChunk> {
     private String fileId;
     /** 分片序列 */
     private Integer chunkIndex;
+    /** 文件操作 */
+    private Integer operate;
     /** 分片序列 */
     private Long chunkSize;
     /** 分片开始 */
@@ -52,6 +53,7 @@ public class FileChunkEntity extends RiceIdEntity<FileChunkEntity,FileChunk> {
     public FileChunk toModel() {
         FileChunk model = new FileChunk();
         BeanUtils.copyNonullProperties(this, model);
+        model.setOperateType(OperateType.parseKey(this.operate));
         return model;
     }
 }

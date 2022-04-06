@@ -8,6 +8,7 @@ import io.github.nichetoolkit.rest.util.GeneralUtils;
 import io.github.nichetoolkit.rest.util.JsonUtils;
 import io.github.nichetoolkit.rice.IdModel;
 import io.github.nichetoolkit.rice.RiceInfoEntity;
+import io.github.nichetoolkit.rice.enums.OperateType;
 import io.github.nichetoolkit.rice.helper.PropertyHelper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,6 +29,8 @@ public class FileIndexEntity extends RiceInfoEntity<FileIndexEntity, FileIndex> 
     private String originalFilename;
     /** 文件名称 */
     private String filename;
+    /** 文件操作 */
+    private Integer operate;
     /** 文件名别名 */
     private String alias;
     /** 文件扩展名 */
@@ -75,6 +78,7 @@ public class FileIndexEntity extends RiceInfoEntity<FileIndexEntity, FileIndex> 
         model.setFileType(FileType.parseKey(this.fileType));
         model.setProperties(PropertyHelper.toPropertiesList(this.properties));
         model.setHeaders(JsonUtils.parseMapList(this.headers,String.class,String.class));
+        model.setOperateType(OperateType.parseKey(this.operate));
         return model;
     }
 }

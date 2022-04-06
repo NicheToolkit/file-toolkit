@@ -13,7 +13,7 @@
         <result property="chunkTime" column="chunk_time" />
         <result property="startTime" column="start_time" />
         <result property="endTime" column="end_time" />
-        <result property="operate" column="operate"/>
+        <result property="operate" column="operate" />
     </resultMap>
 
     <sql id="all_column">
@@ -50,8 +50,7 @@
             is_last_chunk = CASE WHEN EXCLUDED.is_last_chunk IS NOT NULL THEN EXCLUDED.is_last_chunk ELSE file_chunk.is_last_chunk END,
             chunk_time = now(),
             start_time = CASE WHEN EXCLUDED.start_time IS NOT NULL THEN EXCLUDED.start_time ELSE file_chunk.start_time END,
-            end_time = CASE WHEN EXCLUDED.end_time IS NOT NULL THEN EXCLUDED.end_time ELSE file_chunk.end_time END,
-            "is_del" = CASE WHEN EXCLUDED."is_del" IS NOT NULL THEN EXCLUDED."is_del" ELSE "file_chunk"."is_del" END
+            end_time = CASE WHEN EXCLUDED.end_time IS NOT NULL THEN EXCLUDED.end_time ELSE file_chunk.end_time END
         </set>
     </insert>
 

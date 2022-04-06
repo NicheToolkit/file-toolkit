@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.nichetoolkit.file.entity.FileChunkEntity;
 import io.github.nichetoolkit.rest.util.BeanUtils;
 import io.github.nichetoolkit.rice.RiceIdModel;
+import io.github.nichetoolkit.rice.enums.OperateType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,6 +16,7 @@ import org.springframework.lang.NonNull;
 import java.io.ByteArrayInputStream;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * <p>FileChunk</p>
@@ -38,6 +40,8 @@ public class FileChunk extends RiceIdModel<FileChunk, FileChunkEntity> implement
     private Long chunkEnd;
     /** 分片MD5校验  */
     private String chunkMd5;
+    /** 文件操作 */
+    protected OperateType operateType = OperateType.NONE;
     /** 分片状态 */
     private Boolean isLastChunk = false;
     /** 分片创建时间 */
@@ -71,6 +75,7 @@ public class FileChunk extends RiceIdModel<FileChunk, FileChunkEntity> implement
     public FileChunkEntity toEntity() {
         FileChunkEntity entity = new FileChunkEntity();
         BeanUtils.copyNonullProperties(this, entity);
+        entity.setOperate(Optional.ofNullable(this.operateType).map(OperateType::getKey).orElse(OperateType.NONE.getKey()));
         return entity;
     }
 

@@ -10,6 +10,7 @@ import io.github.nichetoolkit.rest.util.GeneralUtils;
 import io.github.nichetoolkit.rest.util.JsonUtils;
 import io.github.nichetoolkit.rice.RestId;
 import io.github.nichetoolkit.rice.RiceInfoModel;
+import io.github.nichetoolkit.rice.enums.OperateType;
 import io.github.nichetoolkit.rice.helper.PropertyHelper;
 import io.github.nichetoolkit.rice.jsonb.Property;
 import lombok.Data;
@@ -54,6 +55,9 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
 
     /** 文件类型 */
     protected FileType fileType = FileType.IMAGE;
+
+    /** 文件操作 */
+    protected OperateType operateType = OperateType.NONE;
 
     /** 文件附带属性参数 */
     protected List<Property> properties;
@@ -161,6 +165,7 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
         entity.setFileType(Optional.ofNullable(this.fileType).map(FileType::getKey).orElse(null));
         entity.setProperties(PropertyHelper.toPropertiesJson(this.properties));
         entity.setHeaders(JsonUtils.parseJson(this.headers));
+        entity.setOperate(Optional.ofNullable(this.operateType).map(OperateType::getKey).orElse(OperateType.NONE.getKey()));
         return entity;
     }
 }

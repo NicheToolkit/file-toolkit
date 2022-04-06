@@ -16,19 +16,18 @@
         <result property="isSlice" column="is_slice"/>
         <result property="sliceSize" column="slice_size"/>
         <result property="isMerge" column="is_merge"/>
-        <result property="endpoint" column="endpoint"/>
         <result property="etag" column="etag"/>
         <result property="versionId" column="version_id"/>
         <result property="headers" column="headers"/>
         <result property="properties" column="properties"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
-        <result property="operate" column="operate"/>
+        <result property="operate" column="operate" />
     </resultMap>
 
     <sql id="all_column">
         id, user_id, original_filename, filename, alias, suffix, file_md5,
-        file_size, file_type, is_finish, is_condense, is_slice, slice_size, is_merge, endpoint, etag, version_id, headers, properties, create_time, update_time, operate
+        file_size, file_type, is_finish, is_condense, is_slice, slice_size, is_merge, etag, version_id, headers, properties, create_time, update_time, operate
     </sql>
 
     <insert id="save">
@@ -50,7 +49,6 @@
         #{entity.isSlice},
         #{entity.sliceSize},
         #{entity.isMerge},
-        #{entity.endpoint},
         #{entity.etag},
         #{entity.versionId},
         #{entity.headers},
@@ -73,7 +71,6 @@
             is_slice = CASE WHEN EXCLUDED.is_slice IS NOT NULL THEN EXCLUDED.is_slice ELSE file_index.is_slice END,
             slice_size = CASE WHEN EXCLUDED.slice_size IS NOT NULL THEN EXCLUDED.slice_size ELSE file_index.slice_size END,
             is_merge = CASE WHEN EXCLUDED.is_merge IS NOT NULL THEN EXCLUDED.is_merge ELSE file_index.is_merge END,
-            endpoint = CASE WHEN EXCLUDED.endpoint IS NOT NULL THEN EXCLUDED.endpoint ELSE file_index.endpoint END,
             etag = CASE WHEN EXCLUDED.etag IS NOT NULL THEN EXCLUDED.etag ELSE file_index.etag END,
             version_id = CASE WHEN EXCLUDED.version_id IS NOT NULL THEN EXCLUDED.version_id ELSE file_index.version_id END,
             headers = CASE WHEN EXCLUDED.headers IS NOT NULL THEN EXCLUDED.headers ELSE file_index.headers END,
@@ -103,7 +100,6 @@
             #{entity.isSlice},
             #{entity.sliceSize},
             #{entity.isMerge},
-            #{entity.endpoint},
             #{entity.etag},
             #{entity.versionId},
             #{entity.headers},
@@ -128,7 +124,6 @@
             is_slice = CASE WHEN EXCLUDED.is_slice IS NOT NULL THEN EXCLUDED.is_slice ELSE file_index.is_slice END,
             slice_size = CASE WHEN EXCLUDED.slice_size IS NOT NULL THEN EXCLUDED.slice_size ELSE file_index.slice_size END,
             is_merge = CASE WHEN EXCLUDED.is_merge IS NOT NULL THEN EXCLUDED.is_merge ELSE file_index.is_merge END,
-            endpoint = CASE WHEN EXCLUDED.endpoint IS NOT NULL THEN EXCLUDED.endpoint ELSE file_index.endpoint END,
             etag = CASE WHEN EXCLUDED.etag IS NOT NULL THEN EXCLUDED.etag ELSE file_index.etag END,
             version_id = CASE WHEN EXCLUDED.version_id IS NOT NULL THEN EXCLUDED.version_id ELSE file_index.version_id END,
             headers = CASE WHEN EXCLUDED.headers IS NOT NULL THEN EXCLUDED.headers ELSE file_index.headers END,

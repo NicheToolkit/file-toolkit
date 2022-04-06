@@ -1,0 +1,36 @@
+{
+  "groups": [
+    {
+      "name": "nichetoolkit.file.service",
+      "sourceType": "io.github.nichetoolkit.file.configure.FileServiceProperties",
+      "type": "io.github.nichetoolkit.file.configure.FileServiceProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "nichetoolkit.file.service.temp-path",
+      "type": "java.lang.String",
+      "description": "service temp path."
+    },
+    {
+      "name": "nichetoolkit.file.service.max-file-size",
+      "type": "java.lang.Long",
+      "description": "service max file size."
+    },
+    {
+      "name": "nichetoolkit.file.service.max-image-size",
+      "type": "java.lang.Long",
+      "description": "service max image size."
+    },
+    {
+      "name": "nichetoolkit.file.service.min-image-quality",
+      "type": "java.lang.Double",
+      "description": "service min image quality."
+    },
+    {
+      "name": "nichetoolkit.file.service.min-image-scale",
+      "type": "java.lang.Double",
+      "description": "service min image quality."
+    }
+  ]
+}
