@@ -1,7 +1,6 @@
 package io.github.nichetoolkit.file.controller;
 
 
-import io.github.nichetoolkit.file.configure.FileMinioProperties;
 import io.github.nichetoolkit.file.configure.FileServiceProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
@@ -12,7 +11,6 @@ import io.github.nichetoolkit.file.model.FileRequest;
 import io.github.nichetoolkit.file.service.FileService;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.RestResult;
-import io.github.nichetoolkit.rest.error.natives.FileErrorException;
 import io.github.nichetoolkit.rest.error.natives.ServiceErrorException;
 import io.github.nichetoolkit.rest.util.FileUtils;
 import io.github.nichetoolkit.rest.util.JsonUtils;

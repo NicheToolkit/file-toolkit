@@ -8,10 +8,13 @@ import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
 import io.github.nichetoolkit.rest.RestException;
+import io.github.nichetoolkit.rest.actuator.ConsumerActuator;
 import io.github.nichetoolkit.rest.util.GeneralUtils;
 import io.github.nichetoolkit.rice.RiceInfoService;
+import io.github.nichetoolkit.rice.clazz.ClazzHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -31,8 +34,6 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
 
     @Autowired
     private FileChunkService fileChunkService;
-
-
 
     @Override
     public FileIndex queryByNameWithUploadInterrupt(String name) throws RestException {
@@ -62,6 +63,11 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
     @Override
     public String deleteWhereSql(FileFilter filter) throws RestException {
         return filter.toIdSql().toSql();
+    }
+
+    @Override
+    protected ConsumerActuator<FileIndex> updateActuator() {
+        return this::optional;
     }
 
     @Override

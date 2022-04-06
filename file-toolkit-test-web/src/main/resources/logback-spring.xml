@@ -172,6 +172,7 @@
     <springProfile name="default">
         <logger name="io.github.nichetoolkit.rest" level="debug"/>
         <logger name="io.github.nichetoolkit.rice" level="debug"/>
+        <logger name="io.github.nichetoolkit.file" level="debug"/>
         <root level="info" >
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="DEBUG_FILE" />
@@ -185,6 +186,7 @@
     <springProfile name="dev">
         <logger name="io.github.nichetoolkit.rest" level="debug"/>
         <logger name="io.github.nichetoolkit.rice" level="debug"/>
+        <logger name="io.github.nichetoolkit.file" level="debug"/>
         <root level="info" >
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="DEBUG_FILE" />
@@ -196,8 +198,9 @@
 
     <!--生产环境:输出到文件-->
     <springProfile name="pro">
-        <logger name="io.github.nichetoolkit.rest" level="debug"/>
-        <logger name="io.github.nichetoolkit.rice" level="debug"/>
+        <logger name="io.github.nichetoolkit.rest" level="info"/>
+        <logger name="io.github.nichetoolkit.rice" level="info"/>
+        <logger name="io.github.nichetoolkit.file" level="info"/>
         <root level="info">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="DEBUG_FILE" />

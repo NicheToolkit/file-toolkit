@@ -203,10 +203,7 @@
         SELECT
         <include refid="all_column"/>
         FROM file_chunk
-        WHERE file_index_id in
-        <foreach item="fileId" index="index" collection="fileIds" open="(" separator="," close=")">
-            #{fileId}
-        </foreach>
+        WHERE file_index_id = #{fileId}
     </select>
 
     <select id="findAllByFileIds" resultMap="fileChunkMap">
