@@ -83,8 +83,8 @@
         <tk-mybatis-mapper.version>4.1.5</tk-mybatis-mapper.version>
         <tk-mybatis-starter.version>2.1.5</tk-mybatis-starter.version>
 
-        <minio.version>8.3.6</minio.version>
-        <okhttp3.version>4.8.1</okhttp3.version>
+        <minio.version>8.3.7</minio.version>
+        <minio-okhttp3.version>4.8.1</minio-okhttp3.version>
     </properties>
 
     <build>
