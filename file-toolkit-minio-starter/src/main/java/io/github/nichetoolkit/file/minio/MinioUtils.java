@@ -73,7 +73,6 @@ public class MinioUtils {
     /**
      * MinioClient 初始化bucket方法
      * @param bucketName minio配置文件
-     * @return MinioClient MinioClient
      * @throws ServiceErrorException ServiceErrorException
      */
     public static void initDefaultBucket(MinioClient minioClient, String bucketName) throws ServiceErrorException {
