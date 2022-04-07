@@ -5,11 +5,11 @@
     <parent>
         <groupId>io.github.nichetoolkit</groupId>
         <artifactId>file-toolkit-parent</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>file-toolkit-service-starter</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>file-toolkit-service-starter</name>
     <packaging>jar</packaging>
     <description>File toolkit service project for Spring Boot</description>
