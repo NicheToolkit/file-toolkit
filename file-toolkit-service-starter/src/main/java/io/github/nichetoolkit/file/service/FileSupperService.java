@@ -57,13 +57,9 @@ public abstract class FileSupperService implements FileService {
 
     @Autowired
     protected FileChunkService fileChunkService;
-    
+
+    @Autowired
     protected VideoHttpRequestHandler videoHttpRequestHandler;
-    
-    @PostConstruct
-    public void initVideoHttpRequestHandler() {
-        videoHttpRequestHandler = ContextUtils.getBean(VideoHttpRequestHandler.class);
-    }
 
     @Override
     public void remove(FileFilter fileFilter) throws RestException {
@@ -165,7 +161,9 @@ public abstract class FileSupperService implements FileService {
             try (InputStream inputStream = getById(fileIndex.getId());
                  ServletOutputStream outputStream = response.getOutputStream()) {
                 response.addHeader(FileConstants.CONTENT_DISPOSITION_HEADER, FileConstants.ATTACHMENT_FILENAME_VALUE + URLEncoder.encode(filename, StandardCharsets.UTF_8.name()));
-                response.addHeader(FileConstants.CONTENT_LENGTH_HEADER, String.valueOf(fileIndex.getFileSize()));
+                if (GeneralUtils.isNotEmpty(fileIndex.getFileSize())) {
+                    response.addHeader(FileConstants.CONTENT_LENGTH_HEADER, String.valueOf(fileIndex.getFileSize()));
+                }
                 StreamUtils.write(outputStream, inputStream);
             } catch (IOException exception) {
                 log.error("the file service download has error: {}", exception.getMessage());
