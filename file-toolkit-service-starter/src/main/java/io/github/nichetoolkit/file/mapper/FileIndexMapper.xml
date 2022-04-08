@@ -133,7 +133,7 @@
     </update>
 
     <update id="operateAll">
-        UPDATE file_chunk
+        UPDATE file_index
         SET operate = ${operate}
         WHERE id IN
         <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
@@ -142,13 +142,13 @@
     </update>
 
     <update id="operateById">
-        UPDATE file_chunk
+        UPDATE file_index
         SET operate = ${operate}
         WHERE id = #{id}
     </update>
 
     <update id="removeAll">
-        UPDATE file_chunk
+        UPDATE file_index
         SET operate = 32
         WHERE id IN
         <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
@@ -157,7 +157,7 @@
     </update>
 
     <update id="removeById">
-        UPDATE file_chunk
+        UPDATE file_index
         SET operate = 32
         WHERE id = #{id}
     </update>
