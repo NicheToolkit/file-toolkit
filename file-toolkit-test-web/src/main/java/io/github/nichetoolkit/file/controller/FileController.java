@@ -32,7 +32,7 @@ import java.util.concurrent.Future;
 
 @Slf4j
 @RestController
-@RequestMapping
+@RequestMapping("/file")
 public class FileController {
 
     @Autowired
