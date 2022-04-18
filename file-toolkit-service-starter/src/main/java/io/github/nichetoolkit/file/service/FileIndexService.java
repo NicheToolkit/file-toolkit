@@ -5,13 +5,14 @@ import io.github.nichetoolkit.file.filter.FileFilter;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rice.service.FilterService;
+import io.github.nichetoolkit.rice.service.extend.RemoveService;
 
 /**
  * <p>FileIndexService</p>
  * @author Cyan (snow22314@outlook.com)
  * @version v1.0.0
  */
-public interface FileIndexService extends FilterService<String, FileIndex, FileFilter> {
+public interface FileIndexService extends FilterService<String, FileIndex, FileFilter>, RemoveService<String> {
 
     /**
      * 通过id集合查询单个

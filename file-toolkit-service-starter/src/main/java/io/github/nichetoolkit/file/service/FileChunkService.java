@@ -7,6 +7,7 @@ import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rice.RestPage;
 import io.github.nichetoolkit.rice.filter.IdFilter;
 import io.github.nichetoolkit.rice.service.FilterService;
+import io.github.nichetoolkit.rice.service.extend.RemoveService;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author Cyan (snow22314@outlook.com)
  * @version v1.0.0
  */
-public interface FileChunkService extends FilterService<String, FileChunk, FileFilter> {
+public interface FileChunkService extends FilterService<String, FileChunk, FileFilter>, RemoveService<String> {
 
     /**
      * 通过id查询实体

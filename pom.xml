@@ -11,7 +11,7 @@
         <module>file-toolkit-hdfs-starter</module>
         <module>file-toolkit-minio-starter</module>
         <module>file-toolkit-service-starter</module>
-        <!--<module>file-toolkit-test-web</module>-->
+        <module>file-toolkit-test-web</module>
     </modules>
 
     <name>file-toolkit-parent</name>
