@@ -9,9 +9,10 @@ import io.github.nichetoolkit.file.filter.FileFilter;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.model.FileRequest;
+import io.github.nichetoolkit.file.service.AsyncFileService;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
-import io.github.nichetoolkit.file.service.FileSupperService;
+import io.github.nichetoolkit.file.service.impl.FileServiceImpl;
 import io.github.nichetoolkit.file.util.Md5Utils;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
@@ -53,7 +54,7 @@ public class FileServerHelper implements InitializingBean {
     @Autowired
     private FileChunkService fileChunkService;
 
-    private FileSupperService fileSupperService;
+    private AsyncFileService asyncFileService;
 
     private static FileServerHelper INSTANCE = null;
 
@@ -68,7 +69,7 @@ public class FileServerHelper implements InitializingBean {
 
     @PostConstruct
     public void InitFileSupperService() {
-        fileSupperService = ContextUtils.getBean(FileSupperService.class);
+        asyncFileService = ContextUtils.getBean(AsyncFileService.class);
     }
 
     public static void checkRestPage(RestPage restPage) throws RestException {
@@ -83,10 +84,12 @@ public class FileServerHelper implements InitializingBean {
         String zipFilename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.FILE_ZIP_SUFFIX);
         String filePath = randomPath.concat(File.separator).concat(filename);
         File file = FileUtils.createFile(filePath);
-        StreamUtils.write(file, fileIndex.getBytes());
+        StreamUtils.write(file, fileIndex.inputStream());
         File zipFile = ZipUtils.zipFile(randomPath, zipFilename, file);
         buildProperties(zipFilename, zipFile.length(), FileConstants.FILE_ZIP_SUFFIX, fileIndex);
-        buildMd5(zipFile, fileIndex);
+        if (fileIndex.getIsMd5()) {
+            buildMd5(zipFile, fileIndex);
+        }
     }
 
 
@@ -180,7 +183,7 @@ public class FileServerHelper implements InitializingBean {
     }
 
     public static void writeFile(String objectName, String itemFilePath) throws RestException {
-        try (InputStream getObjectResponse = INSTANCE.fileSupperService.getById(objectName)) {
+        try (InputStream getObjectResponse = INSTANCE.asyncFileService.getById(objectName)) {
             StreamUtils.write(itemFilePath, getObjectResponse);
         } catch (IOException exception) {
             log.error("the file service download has error: {}", exception.getMessage());
@@ -412,7 +415,7 @@ public class FileServerHelper implements InitializingBean {
         }
         String originalFilename = file.getOriginalFilename();
         fileIndex.setName(originalFilename);
-        buildMd5(file, fileIndex);
+        fileIndex.setFile(file);
         String filename = FileUtils.filename(originalFilename);
         if (GeneralUtils.isEmpty(fileIndex.getFilename())) {
             fileIndex.setFilename(filename);
@@ -437,9 +440,18 @@ public class FileServerHelper implements InitializingBean {
                 fileIndex.setIsCondense(false);
             }
         }
-
+        if (GeneralUtils.isEmpty(fileIndex.getIsMd5())) {
+            if (fileType == FileType.IMAGE) {
+                fileIndex.setIsMd5(true);
+            } else {
+                fileIndex.setIsMd5(false);
+            }
+        }
         if (!fileIndex.getIsSlice()) {
             fileIndex.setSliceSize(0);
+        }
+        if (fileIndex.getIsMd5()) {
+            buildMd5(file, fileIndex);
         }
         fileIndex.setCreateTime(new Date());
         return fileIndex;

@@ -1,4 +1,4 @@
-package io.github.nichetoolkit.file.service;
+package io.github.nichetoolkit.file.service.impl;
 
 import io.github.nichetoolkit.file.configure.FileServiceProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
@@ -9,6 +9,10 @@ import io.github.nichetoolkit.file.helper.FileServerHelper;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.model.FileRequest;
+import io.github.nichetoolkit.file.service.AsyncFileService;
+import io.github.nichetoolkit.file.service.FileChunkService;
+import io.github.nichetoolkit.file.service.FileIndexService;
+import io.github.nichetoolkit.file.service.FileService;
 import io.github.nichetoolkit.file.video.VideoHttpRequestHandler;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
@@ -21,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -47,7 +52,8 @@ import java.util.stream.Collectors;
  * @version v1.0.0
  */
 @Slf4j
-public abstract class FileSupperService implements FileService {
+@Service
+public class FileServiceImpl implements FileService {
 
     @Autowired
     protected FileServiceProperties serviceProperties;
@@ -57,6 +63,9 @@ public abstract class FileSupperService implements FileService {
 
     @Autowired
     protected FileChunkService fileChunkService;
+
+    @Autowired
+    protected AsyncFileService asyncFileService;
 
     @Autowired
     protected VideoHttpRequestHandler videoHttpRequestHandler;
@@ -74,7 +83,7 @@ public abstract class FileSupperService implements FileService {
         }
         List<String> fileIdList = restPage.getItems().stream().map(RestId::getId).distinct().collect(Collectors.toList());
         if (GeneralUtils.isNotEmpty(fileIdList)) {
-            removeAll(fileIdList);
+            asyncFileService.removeAll(fileIdList);
             if (fileFilter.isChunk()) {
                 if (fileFilter.isDelete()) {
                     fileChunkService.deleteAll(fileIdList);
@@ -92,7 +101,7 @@ public abstract class FileSupperService implements FileService {
 
     }
 
-    abstract public void removeAll(List<String> fileIdList)  throws RestException;
+
 
     @Override
     public void remove(String fileId, Boolean chunk, Boolean delete, Boolean rename) throws RestException {
@@ -119,21 +128,12 @@ public abstract class FileSupperService implements FileService {
         }
         if (isExist) {
             if (rename) {
-                renameById(fileId, fileId.concat("_del"));
+                asyncFileService.renameById(fileId, fileId.concat("_del"));
             }
-            removeById(fileId);
+            asyncFileService.removeById(fileId);
         }
     }
 
-    abstract public void renameById(String fileId,String rename)  throws RestException;
-
-    abstract public void removeById(String fileId)  throws RestException;
-
-    abstract public InputStream getById(String fileId)  throws RestException;
-
-    abstract public void putById(String fileId,InputStream inputStream)  throws RestException;
-
-    abstract public void margeById(String fileId, Collection<String> fileIdList)  throws RestException;
 
     @Override
     public void download(File file, String filename, String contentType, HttpServletRequest request, HttpServletResponse response) throws RestException {
@@ -164,7 +164,7 @@ public abstract class FileSupperService implements FileService {
                 throw new FileErrorException(FileErrorStatus.SERVICE_DOWNLOAD_ERROR);
             }
         } else {
-            try (InputStream inputStream = getById(fileIndex.getId());
+            try (InputStream inputStream = asyncFileService.getById(fileIndex.getId());
                  ServletOutputStream outputStream = response.getOutputStream()) {
                 response.addHeader(FileConstants.CONTENT_DISPOSITION_HEADER, FileConstants.ATTACHMENT_FILENAME_VALUE + URLEncoder.encode(filename, StandardCharsets.UTF_8.name()));
                 if (GeneralUtils.isNotEmpty(fileIndex.getFileSize())) {
@@ -325,7 +325,7 @@ public abstract class FileSupperService implements FileService {
             fileId = IdentityUtils.generateString();
             fileIndex.setId(fileId);
         }
-        putById(fileId,fileIndex.inputStream());
+        asyncFileService.putById(fileId,fileIndex.inputStream());
         FileUtils.clear(randomPath);
         checkFileIndex(fileIndex);
         return fileIndexService.save(fileIndex);
@@ -349,7 +349,7 @@ public abstract class FileSupperService implements FileService {
         FileIndex fileChunkIndex = FileServerHelper.createFileChunk(fileRequest, contentRange);
         FileIndex fileIndex = FileServerHelper.createFileChunk(file, fileChunkIndex);
         FileChunk uploadChunk = fileChunkService.save(fileIndex.getFileChunk());
-        putById(uploadChunk.getId(), uploadChunk.inputStream());
+        asyncFileService.putById(uploadChunk.getId(), uploadChunk.inputStream());
         fileIndex.setFileChunk(uploadChunk);
         if (GeneralUtils.isEmpty(fileIndex.getFileChunks())) {
             fileIndex.setFileChunks(new ArrayList<>());
@@ -360,7 +360,7 @@ public abstract class FileSupperService implements FileService {
         if ((uploadChunk.getIsLastChunk() || uploadChunk.getChunkIndex().equals(fileIndex.getSliceSize())) && fileIndex.getIsMerge()) {
             List<String> sources = fileChunks.stream().map(RestId::getId).collect(Collectors.toList());
             fileIndex.setIsFinish(true);
-            margeById(fileIndex.getId(), sources);
+            asyncFileService.margeById(fileIndex.getId(), sources);
             checkFileIndex(fileIndex);
             fileIndexService.save(fileIndex);
         }

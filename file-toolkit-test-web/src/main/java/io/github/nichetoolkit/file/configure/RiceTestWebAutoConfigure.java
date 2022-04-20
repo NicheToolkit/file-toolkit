@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -12,6 +13,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @version v1.0.0
  */
 @Slf4j
+@EnableAsync
 @Configuration
 @MapperScan(basePackages = {"io.github.nichetoolkit.rice.mapper"})
 @ComponentScan(basePackages = {"io.github.nichetoolkit.rice"})

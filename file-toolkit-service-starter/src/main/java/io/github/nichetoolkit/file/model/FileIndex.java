@@ -17,8 +17,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import okhttp3.Headers;
 import org.springframework.lang.NonNull;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +78,9 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     protected String etag;
 
     /** 是否分片 */
+    private Boolean isMd5;
+
+    /** 是否分片 */
     private Boolean isSlice;
 
     /** 总分片数 */
@@ -101,6 +107,9 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     @JsonIgnore
     protected byte[] bytes;
 
+    @JsonIgnore
+    protected MultipartFile file;
+
 
     public FileIndex() {
     }
@@ -110,8 +119,16 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     }
 
     @JsonIgnore
-    public ByteArrayInputStream inputStream() {
-        return new ByteArrayInputStream(this.bytes);
+    public InputStream inputStream() {
+        if (GeneralUtils.isNotEmpty(this.file)){
+            try {
+                return this.file.getInputStream();
+            } catch (IOException ignored) {
+            }
+        } else {
+            return new ByteArrayInputStream(this.bytes);
+        }
+        return null;
     }
 
     public void setAlias(String alias) {

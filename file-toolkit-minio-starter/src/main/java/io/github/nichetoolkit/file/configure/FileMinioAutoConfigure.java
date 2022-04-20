@@ -1,6 +1,8 @@
 package io.github.nichetoolkit.file.configure;
 
 import io.github.nichetoolkit.file.minio.MinioUtils;
+import io.github.nichetoolkit.file.service.AsyncFileService;
+import io.github.nichetoolkit.file.service.impl.MinioFileService;
 import io.github.nichetoolkit.file.video.MinioHttpRequestHandler;
 import io.github.nichetoolkit.file.video.VideoHttpRequestHandler;
 import io.minio.MinioClient;

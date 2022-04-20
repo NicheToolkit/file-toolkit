@@ -1,7 +1,7 @@
 package io.github.nichetoolkit.file.service.impl;
 
 import io.github.nichetoolkit.file.minio.MinioUtils;
-import io.github.nichetoolkit.file.service.FileSupperService;
+import io.github.nichetoolkit.file.service.AsyncFileService;
 import io.github.nichetoolkit.rest.RestException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
  * @version v1.0.0
  */
 @Service
-public class MinioFileService extends FileSupperService {
+public class MinioFileService extends AsyncFileService {
     @Override
     @Async
     public void removeAll(List<String> fileIdList) throws RestException {
@@ -36,7 +36,6 @@ public class MinioFileService extends FileSupperService {
     }
 
     @Override
-    @Async
     public InputStream getById(String fileId) throws RestException {
         return MinioUtils.getObject(fileId);
     }
