@@ -137,6 +137,7 @@
         SELECT<include refid="all_column"/>
         FROM file_chunk
         WHERE id = #{id}
+        AND operate NOT IN (16,32)
     </select>
 
     <select id="findAll" resultMap="fileChunkMap">
@@ -147,6 +148,7 @@
         <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
             #{id}
         </foreach>
+        AND operate NOT IN (16,32)
     </select>
 
     <select id="findAllByWhere" resultMap="fileChunkMap">
@@ -181,6 +183,7 @@
         SELECT file_index_id, min(chunk_index) AS max_chunk_index
         FROM file_chunk
         WHERE file_index_id = #{fileId}
+        AND operate NOT IN (16,32)
         GROUP BY file_index_id
         ) AS l
         ON l.file_index_id = c.file_index_id AND l.max_chunk_index = c.chunk_index
@@ -194,6 +197,7 @@
           SELECT file_index_id, max(chunk_index) AS max_chunk_index
           FROM file_chunk
           WHERE file_index_id = #{fileId}
+          AND operate NOT IN (16,32)
           GROUP BY file_index_id
         ) AS l
         ON l.file_index_id = c.file_index_id AND l.max_chunk_index = c.chunk_index
@@ -204,6 +208,7 @@
         <include refid="all_column"/>
         FROM file_chunk
         WHERE file_index_id = #{fileId}
+        AND operate NOT IN (16,32)
     </select>
 
     <select id="findAllByFileIds" resultMap="fileChunkMap">
@@ -214,5 +219,6 @@
         <foreach item="fileId" index="index" collection="fileIds" open="(" separator="," close=")">
             #{fileId}
         </foreach>
+        AND operate NOT IN (16,32)
     </select>
 </mapper>

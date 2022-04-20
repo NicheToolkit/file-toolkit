@@ -181,16 +181,18 @@
         <include refid="all_column"/>
         FROM file_index
         WHERE id = #{id}
+        AND operate NOT IN (16,32)
     </select>
 
     <select id="findAll" resultMap="fileIndexMap">
         SELECT
         <include refid="all_column"/>
         FROM file_index
-        WHERE id in
+        WHERE id IN
         <foreach item="id" index="index" collection="idList" open="(" separator="," close=")">
             #{id}
         </foreach>
+        AND operate NOT IN (16,32)
     </select>
 
     <select id="findAllByWhere" resultMap="fileIndexMap">
@@ -216,6 +218,7 @@
         <include refid="all_column"/>
         FROM file_index
         WHERE original_filename = #{name}
+        AND operate NOT IN (16,32)
         AND is_slice = true
         AND is_finish = false
     </select>
@@ -225,6 +228,7 @@
         SET is_finish = true,
             slice_size = ${sliceSize}
         WHERE id = ${id}
+        AND operate NOT IN (16,32)
         AND is_slice = true
     </update>
 
