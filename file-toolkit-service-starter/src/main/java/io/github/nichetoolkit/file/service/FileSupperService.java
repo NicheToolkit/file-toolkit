@@ -95,7 +95,6 @@ public abstract class FileSupperService implements FileService {
     abstract public void removeAll(List<String> fileIdList)  throws RestException;
 
     @Override
-    @Async
     public void remove(String fileId, Boolean chunk, Boolean delete, Boolean rename) throws RestException {
         if (GeneralUtils.isEmpty(fileId)) {
             return;
