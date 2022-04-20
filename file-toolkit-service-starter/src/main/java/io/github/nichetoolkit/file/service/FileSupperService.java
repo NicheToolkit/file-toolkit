@@ -99,23 +99,30 @@ public abstract class FileSupperService implements FileService {
         if (GeneralUtils.isEmpty(fileId)) {
             return;
         }
+        boolean isExist = false;
         if (chunk) {
+            FileChunk fileChunk = fileChunkService.queryById(fileId);
+            isExist = GeneralUtils.isNotEmpty(fileChunk);
             if (delete) {
                 fileChunkService.deleteById(fileId);
             } else {
                 fileChunkService.removeById(fileId);
             }
         } else {
+            FileIndex fileIndex = fileIndexService.queryById(fileId);
+            isExist = GeneralUtils.isNotEmpty(fileIndex);
             if (delete) {
                 fileIndexService.deleteById(fileId);
             } else {
                 fileIndexService.removeById(fileId);
             }
         }
-        if (rename) {
-            renameById(fileId, fileId.concat("_del"));
+        if (isExist) {
+            if (rename) {
+                renameById(fileId, fileId.concat("_del"));
+            }
+            removeById(fileId);
         }
-        removeById(fileId);
     }
 
     abstract public void renameById(String fileId,String rename)  throws RestException;
