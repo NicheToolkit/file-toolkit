@@ -57,7 +57,7 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
 
     @Override
     public String queryWhereSql(FileFilter filter) throws RestException {
-        return filter.toFileIndexSql().toJsonbSql("properties").toTimeSql("create_time").toOperateSql().toIdSql().addSorts("update_time").toSql();
+        return filter.toFileIndexSql().toNameSql("filename").toJsonbSql("properties").toTimeSql("create_time").toOperateSql().toIdSql().addSorts("update_time").toSql();
     }
 
     @Override
