@@ -167,9 +167,6 @@ public class FileServiceImpl implements FileService {
             try (InputStream inputStream = asyncFileService.getById(fileIndex.getId());
                  ServletOutputStream outputStream = response.getOutputStream()) {
                 response.addHeader(FileConstants.CONTENT_DISPOSITION_HEADER, FileConstants.ATTACHMENT_FILENAME_VALUE + URLEncoder.encode(filename, StandardCharsets.UTF_8.name()));
-                if (GeneralUtils.isNotEmpty(fileIndex.getFileSize())) {
-                    response.addHeader(FileConstants.CONTENT_LENGTH_HEADER, String.valueOf(fileIndex.getFileSize()));
-                }
                 StreamUtils.write(outputStream, inputStream);
             } catch (IOException exception) {
                 log.error("the file service download has error: {}", exception.getMessage());
