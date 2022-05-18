@@ -141,7 +141,6 @@ public class FileServiceImpl implements FileService {
              ServletOutputStream outputStream = response.getOutputStream()) {
             log.info("file size: {}", file.length());
             response.addHeader(FileConstants.CONTENT_DISPOSITION_HEADER, FileConstants.ATTACHMENT_FILENAME_VALUE + URLEncoder.encode(filename, StandardCharsets.UTF_8.name()));
-            response.addHeader(FileConstants.CONTENT_LENGTH_HEADER, "" + file.length());
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(contentType);
             StreamUtils.write(outputStream, inputStream);

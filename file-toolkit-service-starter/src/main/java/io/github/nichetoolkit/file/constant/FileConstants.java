@@ -20,7 +20,6 @@ public class FileConstants {
     public static final String CONTENT_RANGE_SIZE_REGEX = "/";
 
     public static final String CONTENT_DISPOSITION_HEADER =  "Content-Disposition";
-    public static final String CONTENT_LENGTH_HEADER =  "Content-Length";
     public static final String ATTACHMENT_FILENAME_VALUE =  "attachment; filename=";
 
     public static final String SUFFIX_REGEX = ".";
