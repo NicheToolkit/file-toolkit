@@ -29,7 +29,7 @@ public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEnti
         if (GeneralUtils.isEmpty(fileId) || GeneralUtils.isEmpty(chunkIndex)) {
             return null;
         }
-        FileChunkEntity entity = ((FileChunkMapper) supperMapper).findByFileIdAndChunkIndex(fileId,chunkIndex);
+        FileChunkEntity entity = ((FileChunkMapper) superMapper).findByFileIdAndChunkIndex(fileId,chunkIndex);
         if (GeneralUtils.isNotEmpty(entity)) {
             return modelActuator(entity);
         }
@@ -41,7 +41,7 @@ public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEnti
         if (GeneralUtils.isEmpty(fileId)) {
             return null;
         }
-        FileChunkEntity entity = ((FileChunkMapper) supperMapper).findByFileIdFirstChunk(fileId);
+        FileChunkEntity entity = ((FileChunkMapper) superMapper).findByFileIdFirstChunk(fileId);
         if (GeneralUtils.isNotEmpty(entity)) {
             return modelActuator(entity);
         }
@@ -53,7 +53,7 @@ public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEnti
         if (GeneralUtils.isEmpty(fileId)) {
             return null;
         }
-        FileChunkEntity entity = ((FileChunkMapper) supperMapper).findByFileIdLastChunk(fileId);
+        FileChunkEntity entity = ((FileChunkMapper) superMapper).findByFileIdLastChunk(fileId);
         if (GeneralUtils.isNotEmpty(entity)) {
             return modelActuator(entity);
         }
@@ -65,7 +65,7 @@ public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEnti
         if (GeneralUtils.isEmpty(fileId)) {
             return Collections.emptyList();
         }
-        List<FileChunkEntity> entityList = ((FileChunkMapper) supperMapper).findAllByFileId(fileId);
+        List<FileChunkEntity> entityList = ((FileChunkMapper) superMapper).findAllByFileId(fileId);
         log.debug("file chunk list has querying successful! size: {}", entityList.size());
         return modelActuator(entityList);
     }
@@ -75,7 +75,7 @@ public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEnti
         if (GeneralUtils.isEmpty(fileIds)) {
             return Collections.emptyList();
         }
-        List<FileChunkEntity> entityList = ((FileChunkMapper) supperMapper).findAllByFileIds(fileIds);
+        List<FileChunkEntity> entityList = ((FileChunkMapper) superMapper).findAllByFileIds(fileIds);
         log.debug("file chunk list has querying successful! size: {}", entityList.size());
         return modelActuator(entityList);
     }

@@ -40,7 +40,7 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
         if (GeneralUtils.isEmpty(name) ) {
             return null;
         }
-        FileIndexEntity entity = ((FileIndexMapper) supperMapper).findByNameWithUploadInterrupt(name);
+        FileIndexEntity entity = ((FileIndexMapper) superMapper).findByNameWithUploadInterrupt(name);
         if (GeneralUtils.isNotEmpty(entity)) {
             return modelActuator(entity);
         }
@@ -52,7 +52,7 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
         if (GeneralUtils.isEmpty(id) || GeneralUtils.isEmpty(sliceSize)) {
             return;
         }
-        ((FileIndexMapper) supperMapper).finishSliceUpload(id,sliceSize);
+        ((FileIndexMapper) superMapper).finishSliceUpload(id,sliceSize);
     }
 
     @Override
