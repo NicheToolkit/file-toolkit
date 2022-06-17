@@ -7,13 +7,12 @@
         <artifactId>file-toolkit-parent</artifactId>
         <version>1.0.3-SNAPSHOT</version>
     </parent>
-
-    <artifactId>file-toolkit-minio-starter</artifactId>
+    <artifactId>file-toolkit-minio-utils</artifactId>
     <version>1.0.3-SNAPSHOT</version>
-    <name>file-toolkit-minio-starter</name>
+    <name>file-toolkit-minio-utils</name>
     <packaging>jar</packaging>
-    <description>File toolkit minio project for Spring Boot</description>
-    <url>https://github.com/NicheToolkit/file-toolkit/tree/master/file-toolkit-minio-starter</url>
+    <description>File toolkit minio utils project for Spring Boot</description>
+    <url>https://github.com/NicheToolkit/file-toolkit/tree/master/file-toolkit-minio-utils</url>
 
     <properties>
         <java.version>1.8</java.version>
@@ -61,15 +60,15 @@
         </dependency>
 
         <dependency>
-            <groupId>io.github.nichetoolkit</groupId>
-            <artifactId>file-toolkit-minio-utils</artifactId>
-            <version>${file-toolkit.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>io.github.nichetoolkit</groupId>
-            <artifactId>file-toolkit-service-starter</artifactId>
-            <version>${file-toolkit.version}</version>
+            <artifactId>rest-toolkit-starter</artifactId>
+            <version>${rest-toolkit.version}</version>
         </dependency>
 
         <dependency>
