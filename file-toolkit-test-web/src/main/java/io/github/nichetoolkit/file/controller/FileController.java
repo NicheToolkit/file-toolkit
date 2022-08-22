@@ -1,6 +1,7 @@
 package io.github.nichetoolkit.file.controller;
 
 
+import io.github.nichetoolkit.file.configure.FileCommonProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
 import io.github.nichetoolkit.file.filter.FileFilter;
@@ -35,7 +36,7 @@ import java.util.concurrent.Future;
 public class FileController {
 
     @Autowired
-    private FileCommonProperties properties;
+    private FileCommonProperties commonProperties;
 
     @Autowired
     private FileService fileService;
@@ -85,10 +86,19 @@ public class FileController {
         return ResponseEntity.ok(fileUpload);
     }
 
-    @PostMapping("/img/upload")
+    @PostMapping("/image/upload")
     public ResponseEntity<FileIndex> imageUpload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException  {
         String originalFilename = file.getOriginalFilename();
         log.info("the image file will be started uploading at 'imageUpload', filename: {}", originalFilename);
+        FileIndex fileUpload = fileService.upload(file, fileRequest);
+        return ResponseEntity.ok(fileUpload);
+    }
+
+    @PostMapping("/image/autograph")
+    public ResponseEntity<FileIndex> imageAutograph(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException  {
+        String originalFilename = file.getOriginalFilename();
+        fileRequest.setIsAutograph(true);
+        log.info("the image file will be started uploading at 'imageAutograph', filename: {}", originalFilename);
         FileIndex fileUpload = fileService.upload(file, fileRequest);
         return ResponseEntity.ok(fileUpload);
     }
@@ -158,7 +168,7 @@ public class FileController {
         assert originalFilename != null;
         log.info("the file will be started slicing with filename: {}", originalFilename);
         String filename = FileUtils.filename(originalFilename);
-        String tempPath = properties.getTempPath();
+        String tempPath = commonProperties.getTempPath();
         try {
             String cachePath = FileUtils.createPath(tempPath, filename);
             File originalFile = FileUtils.createFile(cachePath.concat(originalFilename));

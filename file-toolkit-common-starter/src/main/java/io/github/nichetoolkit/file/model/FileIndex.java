@@ -68,6 +68,9 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     /** 是否压缩 */
     protected Boolean isCondense;
 
+    /** 是否签名*/
+    protected Boolean isAutograph;
+
     /** 当前上传是否结束  */
     protected Boolean isFinish;
 
@@ -110,7 +113,6 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     @JsonIgnore
     protected MultipartFile file;
 
-
     public FileIndex() {
     }
 
@@ -120,13 +122,13 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
 
     @JsonIgnore
     public InputStream inputStream() {
-        if (GeneralUtils.isNotEmpty(this.file)){
+        if (GeneralUtils.isNotEmpty(this.bytes)) {
+            return new ByteArrayInputStream(this.bytes);
+        } else if (GeneralUtils.isNotEmpty(this.file)) {
             try {
                 return this.file.getInputStream();
             } catch (IOException ignored) {
             }
-        } else {
-            return new ByteArrayInputStream(this.bytes);
         }
         return null;
     }

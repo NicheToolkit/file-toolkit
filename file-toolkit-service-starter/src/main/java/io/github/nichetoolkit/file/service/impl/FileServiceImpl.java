@@ -307,6 +307,10 @@ public class FileServiceImpl implements FileService {
         }
         String tempPath = FileUtils.createPath(commonProperties.getTempPath());
         String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
+
+        if (fileIndex.getIsAutograph() != null && fileIndex.getIsAutograph() && fileIndex.getFileType() == FileType.IMAGE) {
+            FileServiceHelper.autographImage(randomPath,fileIndex);
+        }
         if (fileIndex.getIsCondense()) {
             if (fileIndex.getFileType() == FileType.IMAGE) {
                 FileServiceHelper.condenseImage(randomPath,fileIndex);

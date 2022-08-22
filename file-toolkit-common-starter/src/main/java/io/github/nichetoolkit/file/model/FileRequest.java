@@ -51,6 +51,9 @@ public class FileRequest implements Serializable {
     /** 总分片数 */
     protected Integer sliceSize;
 
+    /** 是否签名*/
+    protected Boolean isAutograph;
+
     /** 是否合并分片 */
     protected Boolean isMerge;
 
@@ -59,7 +62,7 @@ public class FileRequest implements Serializable {
 
     public FileIndex toIndex() {
         FileIndex fileIndex = new FileIndex(fileId);
-        BeanUtils.copyNonullProperties(this,fileIndex);
+        BeanUtils.copyNonullProperties(this, fileIndex);
         fileIndex.setFileType(FileType.parseKey(this.fileType));
         if (GeneralUtils.isNotEmpty(this.properties)) {
             Map<String, String> propertiesMap = PropertyHelper.toPropertiesMap(this.properties);

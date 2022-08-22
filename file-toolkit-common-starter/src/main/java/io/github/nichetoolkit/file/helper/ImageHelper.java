@@ -1,14 +1,13 @@
 package io.github.nichetoolkit.file.helper;
 
 import io.github.nichetoolkit.file.error.ImageReadException;
+import io.github.nichetoolkit.file.error.ImageTransferException;
 import io.github.nichetoolkit.file.error.ImageWriteException;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * <p>ImageHelper</p>
@@ -91,5 +90,19 @@ public class ImageHelper {
         }
     }
 
+
+    public static InputStream inputStream(BufferedImage bufferedImage) throws ImageTransferException {
+            InputStream inputStream;
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ImageOutputStream imageOutputStream;
+            try {
+                imageOutputStream = ImageIO.createImageOutputStream(byteArrayOutputStream);
+                ImageIO.write(bufferedImage, "png",imageOutputStream);
+                inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+            } catch (IOException exception) {
+                throw new ImageTransferException(exception.getMessage());
+            }
+            return inputStream;
+    }
 
 }

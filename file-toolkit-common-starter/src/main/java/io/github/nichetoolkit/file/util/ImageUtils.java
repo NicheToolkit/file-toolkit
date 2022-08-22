@@ -1,18 +1,17 @@
 package io.github.nichetoolkit.file.util;
 
 import io.github.nichetoolkit.file.error.ImageReadException;
+import io.github.nichetoolkit.file.error.ImageTransferException;
 import io.github.nichetoolkit.file.error.ImageWriteException;
 import io.github.nichetoolkit.file.helper.ImageHelper;
+import io.github.nichetoolkit.rest.util.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -108,6 +107,26 @@ public class ImageUtils {
             return ImageHelper.read(file);
         } catch (ImageReadException exception) {
             log.error("An error occurred during file to write as BufferedImage!", exception);
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public static InputStream inputStream(BufferedImage bufferedImage) {
+        try {
+            return ImageHelper.inputStream(bufferedImage);
+        } catch (ImageTransferException exception) {
+            log.error("An error occurred during bufferedImage to transfer as inputStream!", exception);
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public static byte[] bytes(File file) {
+        try {
+            return StreamUtils.bytes(new FileInputStream(file));
+        } catch (IOException exception) {
+            log.error("An error occurred during file to transfer as byte!", exception);
             exception.printStackTrace();
             return null;
         }

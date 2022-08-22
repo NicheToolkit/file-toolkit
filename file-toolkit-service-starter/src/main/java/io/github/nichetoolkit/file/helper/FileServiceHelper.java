@@ -5,6 +5,7 @@ import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.entity.FileIndexEntity;
 import io.github.nichetoolkit.file.enums.FileType;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
+import io.github.nichetoolkit.file.error.ImageTransferException;
 import io.github.nichetoolkit.file.filter.FileFilter;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.file.model.FileIndex;
@@ -12,6 +13,7 @@ import io.github.nichetoolkit.file.model.FileRequest;
 import io.github.nichetoolkit.file.service.AsyncFileService;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
+import io.github.nichetoolkit.file.util.ImageUtils;
 import io.github.nichetoolkit.file.util.Md5Utils;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
@@ -28,10 +30,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.naming.NamingEnumeration;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,27 +93,54 @@ public class FileServiceHelper implements InitializingBean {
         }
     }
 
+    public static void autographImage(String randomPath, FileIndex fileIndex) throws RestException {
+        InputStream inputStream = fileIndex.inputStream();
+        BufferedImage bufferedImage = ImageUtils.read(inputStream);
+        BufferedImage binaryImage = ImageUtils.binaryImage(bufferedImage);
+        BufferedImage autographImage = ImageUtils.autograph(binaryImage);
+        String filename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.IMAGE_PNG_SUFFIX);
+        String filePath = randomPath.concat(File.separator).concat(filename);
+        File file = new File(filePath);
+        if (file.exists()) {
+            FileUtils.delete(filePath);
+        }
+        ImageUtils.write(autographImage,file);
+        byte[] bytes = ImageUtils.bytes(file);
+        fileIndex.setBytes(bytes);
+        FileUtils.delete(filePath);
+    }
 
     public static void condenseImage(String randomPath, FileIndex fileIndex) throws RestException {
         Long imageFileSize;
         Double imageFileQuality = 1.0d;
         Double imageFileScale = 1.0d;
-        String filename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.IMAGE_JPG_SUFFIX);
+        String filename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.IMAGE_PNG_SUFFIX);
         String filePath;
         File file;
         Integer width = fileIndex.getWidth();
         Integer height = fileIndex.getHeight();
+        filePath = randomPath.concat(File.separator).concat(filename);
+        file = new File(filePath);
         do {
-            filePath = randomPath.concat(File.separator).concat(filename);
-            file = new File(filePath);
             if (file.exists()) {
                 FileUtils.delete(filePath);
             }
             try {
+                Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
+                BufferedImage bufferedImage = ImageHelper.read(file);
+                int imageWidth = bufferedImage.getWidth();
+                int imageHeight = bufferedImage.getHeight();
                 if (GeneralUtils.isNotEmpty(width) && GeneralUtils.isNotEmpty(height)) {
-                    Thumbnails.of(fileIndex.inputStream()).size(width, height).outputFormat(FileConstants.IMAGE_JPG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
+                    Thumbnails.of(fileIndex.inputStream()).size(width, height).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
+                } else if (GeneralUtils.isNotEmpty(width) || GeneralUtils.isNotEmpty(height)) {
+                    if (GeneralUtils.isNotEmpty(width)) {
+                        imageFileScale = ((double) width / (double) imageWidth >= 1.0D) ? imageFileScale : ((double) width / (double) imageWidth);
+                    }else {
+                        imageFileScale = ((double) height / (double) imageHeight >= 1.0D) ? imageFileScale : ((double) height / (double) imageHeight);
+                    }
+                    Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 } else {
-                    Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_JPG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
+                    Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 }
             } catch (IOException exception) {
                 log.error("the image file has error during condensing: {}", exception.getMessage());
@@ -133,7 +162,7 @@ public class FileServiceHelper implements InitializingBean {
             fileIndex.addProperty(FileConstants.IMAGE_CONDENSE_SCALE_PROPERTY, imageFileScale);
         }
         fileIndex.addProperty(FileConstants.IMAGE_CONDENSE_QUALITY_PROPERTY, imageFileQuality);
-        buildProperties(filename, file.length(), FileConstants.IMAGE_JPG_SUFFIX, fileIndex);
+        buildProperties(filename, file.length(), FileConstants.IMAGE_PNG_SUFFIX, fileIndex);
         buildMd5(file, fileIndex);
         FileUtils.clearFile(randomPath);
     }

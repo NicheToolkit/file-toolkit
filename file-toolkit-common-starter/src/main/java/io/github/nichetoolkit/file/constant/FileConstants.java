@@ -24,6 +24,7 @@ public class FileConstants {
 
     public static final String SUFFIX_REGEX = ".";
     public static final String IMAGE_JPG_SUFFIX = "jpg";
+    public static final String IMAGE_PNG_SUFFIX = "png";
 
     public static final String FILE_ZIP_SUFFIX = "zip";
 
