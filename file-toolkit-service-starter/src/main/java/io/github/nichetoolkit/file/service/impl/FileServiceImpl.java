@@ -1,5 +1,6 @@
 package io.github.nichetoolkit.file.service.impl;
 
+import io.github.nichetoolkit.file.configure.FileCommonProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.enums.FileType;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
@@ -53,7 +54,7 @@ import java.util.stream.Collectors;
 public class FileServiceImpl implements FileService {
 
     @Autowired
-    protected FileCommonProperties serviceProperties;
+    protected FileCommonProperties commonProperties;
 
     @Autowired
     protected FileIndexService fileIndexService;
@@ -211,7 +212,7 @@ public class FileServiceImpl implements FileService {
             log.warn("the file slice upload has not finish !");
             throw new FileErrorException(FileErrorStatus.FILE_NO_FINISH_ERROR);
         }
-        String tempPath = FileUtils.createPath(serviceProperties.getTempPath());
+        String tempPath = FileUtils.createPath(commonProperties.getTempPath());
         String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
 
         if (fileIndices.size() == 1) {
@@ -304,7 +305,7 @@ public class FileServiceImpl implements FileService {
         if (GeneralUtils.isEmpty(fileIndex)) {
             throw new RestException(FileErrorStatus.FILE_INDEX_IS_NULL);
         }
-        String tempPath = FileUtils.createPath(serviceProperties.getTempPath());
+        String tempPath = FileUtils.createPath(commonProperties.getTempPath());
         String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
         if (fileIndex.getIsCondense()) {
             if (fileIndex.getFileType() == FileType.IMAGE) {
