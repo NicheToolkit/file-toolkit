@@ -1,6 +1,6 @@
 package io.github.nichetoolkit.file.helper;
 
-import io.github.nichetoolkit.file.configure.FileServiceProperties;
+import io.github.nichetoolkit.file.configure.FileCommonProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.entity.FileIndexEntity;
 import io.github.nichetoolkit.file.enums.FileType;
@@ -12,7 +12,6 @@ import io.github.nichetoolkit.file.model.FileRequest;
 import io.github.nichetoolkit.file.service.AsyncFileService;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
-import io.github.nichetoolkit.file.service.impl.FileServiceImpl;
 import io.github.nichetoolkit.file.util.Md5Utils;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
@@ -43,10 +42,10 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class FileServerHelper implements InitializingBean {
+public class FileServiceHelper implements InitializingBean {
 
     @Autowired
-    private FileServiceProperties serviceProperties;
+    private FileCommonProperties serviceProperties;
 
     @Autowired
     private FileIndexService fileIndexService;
@@ -56,9 +55,9 @@ public class FileServerHelper implements InitializingBean {
 
     private AsyncFileService asyncFileService;
 
-    private static FileServerHelper INSTANCE = null;
+    private static FileServiceHelper INSTANCE = null;
 
-    public static FileServerHelper getInstance() {
+    public static FileServiceHelper getInstance() {
         return INSTANCE;
     }
 

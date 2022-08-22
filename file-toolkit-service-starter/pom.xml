@@ -73,6 +73,12 @@
         </dependency>
 
         <dependency>
+            <groupId>io.github.nichetoolkit</groupId>
+            <artifactId>file-toolkit-common-starter</artifactId>
+            <version>${file-toolkit.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper</artifactId>
             <version>${tk-mybatis-mapper.version}</version>
@@ -82,12 +88,6 @@
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper-spring-boot-starter</artifactId>
             <version>${tk-mybatis-starter.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-            <version>${thumbnailator.version}</version>
         </dependency>
 
     </dependencies>

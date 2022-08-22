@@ -1,11 +1,10 @@
 package io.github.nichetoolkit.file.controller;
 
 
-import io.github.nichetoolkit.file.configure.FileServiceProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
 import io.github.nichetoolkit.file.filter.FileFilter;
-import io.github.nichetoolkit.file.helper.FileServerHelper;
+import io.github.nichetoolkit.file.helper.FileServiceHelper;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.model.FileRequest;
 import io.github.nichetoolkit.file.service.FileService;
@@ -36,7 +35,7 @@ import java.util.concurrent.Future;
 public class FileController {
 
     @Autowired
-    private FileServiceProperties properties;
+    private FileCommonProperties properties;
 
     @Autowired
     private FileService fileService;
@@ -98,7 +97,7 @@ public class FileController {
     public ResponseEntity<FileIndex> indexUpload(@NonNull @RequestBody FileIndex fileIndex) throws RestException  {
         String originalFilename = fileIndex.getName();
         log.info("the index file will be started uploading at 'indexUpload', filename: {}", originalFilename);
-        FileIndex createIndex = FileServerHelper.createFileIndex(fileIndex);
+        FileIndex createIndex = FileServiceHelper.createFileIndex(fileIndex);
         FileIndex fileUpload = fileService.indexUpload(createIndex);
         return ResponseEntity.ok(fileUpload);
     }

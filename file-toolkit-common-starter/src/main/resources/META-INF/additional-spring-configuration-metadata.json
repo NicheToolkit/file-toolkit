@@ -1,0 +1,36 @@
+{
+  "groups": [
+    {
+      "name": "nichetoolkit.file.common",
+      "sourceType": "io.github.nichetoolkit.file.configure.FileCommonProperties",
+      "type": "io.github.nichetoolkit.file.configure.FileCommonProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "nichetoolkit.file.common.temp-path",
+      "type": "java.lang.String",
+      "description": "common temp path."
+    },
+    {
+      "name": "nichetoolkit.file.common.max-file-size",
+      "type": "java.lang.Long",
+      "description": "common max file size."
+    },
+    {
+      "name": "nichetoolkit.file.common.max-image-size",
+      "type": "java.lang.Long",
+      "description": "common max image size."
+    },
+    {
+      "name": "nichetoolkit.file.common.min-image-quality",
+      "type": "java.lang.Double",
+      "description": "common min image quality."
+    },
+    {
+      "name": "nichetoolkit.file.common.min-image-scale",
+      "type": "java.lang.Double",
+      "description": "common min image quality."
+    }
+  ]
+}

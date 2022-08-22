@@ -1,24 +1,23 @@
 package io.github.nichetoolkit.file.configure;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
 /**
- * <p>FileServiceProperties</p>
+ * <p>FileCommonProperties</p>
  * @author Cyan (snow22314@outlook.com)
  * @version v1.0.0
  */
 @Component
-@ConfigurationProperties(prefix = "nichetoolkit.file.service")
-public class FileServiceProperties {
+@ConfigurationProperties(prefix = "nichetoolkit.file.common")
+public class FileCommonProperties {
     private String tempPath = "/data/server/file/temp";
     private Long maxFileSize = 100 * 1024 * 1024L;
     private Long maxImageSize = 100 * 1024L;
     private Double minImageQuality = 0.5d;
     private Double minImageScale = 0.5d;
 
-    public FileServiceProperties() {
+    public FileCommonProperties() {
     }
 
     public String getTempPath() {

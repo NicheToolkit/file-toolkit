@@ -1,11 +1,10 @@
 package io.github.nichetoolkit.file.service.impl;
 
-import io.github.nichetoolkit.file.configure.FileServiceProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.enums.FileType;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
 import io.github.nichetoolkit.file.filter.FileFilter;
-import io.github.nichetoolkit.file.helper.FileServerHelper;
+import io.github.nichetoolkit.file.helper.FileServiceHelper;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.model.FileRequest;
@@ -28,7 +27,6 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +38,6 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -56,7 +53,7 @@ import java.util.stream.Collectors;
 public class FileServiceImpl implements FileService {
 
     @Autowired
-    protected FileServiceProperties serviceProperties;
+    protected FileCommonProperties serviceProperties;
 
     @Autowired
     protected FileIndexService fileIndexService;
@@ -177,7 +174,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void download(FileIndex fileIndex, String filename, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException {
-        MediaType mediaType = FileServerHelper.parseContentType(filename);
+        MediaType mediaType = FileServiceHelper.parseContentType(filename);
         if (!preview) {
             mediaType = MediaType.APPLICATION_OCTET_STREAM;
         }
@@ -189,7 +186,7 @@ public class FileServiceImpl implements FileService {
         List<FileIndex> fileIndices;
         if (fileFilter.isChunk()) {
             RestPage<FileChunk> fileChunkRestPage = fileChunkService.queryAllWithFilter(fileFilter);
-            FileServerHelper.checkRestPage(fileChunkRestPage);
+            FileServiceHelper.checkRestPage(fileChunkRestPage);
             List<FileChunk> fileChunks = fileChunkRestPage.getItems();
             List<String> fileIndexIds = fileChunks.stream().map(FileChunk::getFileId).distinct().collect(Collectors.toList());
             List<FileIndex> fileIndexList = fileIndexService.queryAll(fileIndexIds);
@@ -205,7 +202,7 @@ public class FileServiceImpl implements FileService {
             fileIndices = fileIndexList;
         } else {
             RestPage<FileIndex> fileIndexRestPage = fileIndexService.queryAllWithFilter(fileFilter);
-            FileServerHelper.checkRestPage(fileIndexRestPage);
+            FileServiceHelper.checkRestPage(fileIndexRestPage);
             fileIndices = fileIndexRestPage.getItems()
                     .stream().filter(FileIndex::getIsFinish).collect(Collectors.toList());
         }
@@ -230,13 +227,13 @@ public class FileServiceImpl implements FileService {
         }
         List<File> fileList = new ArrayList<>();
         if (fileFilter.isChunk()) {
-            FileServerHelper.buildChunkFiles(fileIndices, fileFilter, randomPath, fileList);
+            FileServiceHelper.buildChunkFiles(fileIndices, fileFilter, randomPath, fileList);
         } else {
-            FileServerHelper.buildIndexFiles(fileIndices, fileFilter, randomPath, fileList);
+            FileServiceHelper.buildIndexFiles(fileIndices, fileFilter, randomPath, fileList);
         }
         String filename = DateUtils.format(DateUtils.today(), "yyyyMMdd_HHmmss");
         File zipFile = ZipUtils.zipFiles(randomPath, filename, fileList);
-        MediaType mediaType = FileServerHelper.parseContentType(filename);
+        MediaType mediaType = FileServiceHelper.parseContentType(filename);
         download(zipFile, zipFile.getName(), mediaType.toString(), request, response);
         FileUtils.clear(randomPath);
     }
@@ -298,7 +295,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public FileIndex upload(MultipartFile file, FileRequest fileRequest) throws RestException {
-        FileIndex createIndex = FileServerHelper.createFileIndex(file, fileRequest.toIndex());
+        FileIndex createIndex = FileServiceHelper.createFileIndex(file, fileRequest.toIndex());
         return upload(createIndex);
     }
 
@@ -311,9 +308,9 @@ public class FileServiceImpl implements FileService {
         String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
         if (fileIndex.getIsCondense()) {
             if (fileIndex.getFileType() == FileType.IMAGE) {
-                FileServerHelper.condenseImage(randomPath,fileIndex);
+                FileServiceHelper.condenseImage(randomPath,fileIndex);
             } else {
-                FileServerHelper.condenseFile(randomPath,fileIndex);
+                FileServiceHelper.condenseFile(randomPath,fileIndex);
             }
         }
         String fileId = fileIndex.getId();
@@ -342,8 +339,8 @@ public class FileServiceImpl implements FileService {
     @Override
     @Async
     public Future<FileIndex> chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException {
-        FileIndex fileChunkIndex = FileServerHelper.createFileChunk(fileRequest, contentRange);
-        FileIndex fileIndex = FileServerHelper.createFileChunk(file, fileChunkIndex);
+        FileIndex fileChunkIndex = FileServiceHelper.createFileChunk(fileRequest, contentRange);
+        FileIndex fileIndex = FileServiceHelper.createFileChunk(file, fileChunkIndex);
         FileChunk uploadChunk = fileChunkService.save(fileIndex.getFileChunk());
         asyncFileService.putById(uploadChunk.getId(), uploadChunk.inputStream());
         fileIndex.setFileChunk(uploadChunk);
