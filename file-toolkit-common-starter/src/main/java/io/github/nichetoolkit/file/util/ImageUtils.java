@@ -1,11 +1,14 @@
 package io.github.nichetoolkit.file.util;
 
+import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.error.ImageReadException;
 import io.github.nichetoolkit.file.error.ImageTransferException;
 import io.github.nichetoolkit.file.error.ImageWriteException;
 import io.github.nichetoolkit.file.helper.ImageHelper;
+import io.github.nichetoolkit.rest.util.GeneralUtils;
 import io.github.nichetoolkit.rest.util.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -130,6 +133,67 @@ public class ImageUtils {
             exception.printStackTrace();
             return null;
         }
+    }
+
+    public static BufferedImage scale(Double scale, BufferedImage bufferedImage) {
+        try {
+            return Thumbnails.of(bufferedImage).scale(scale)
+                    .outputFormat(FileConstants.IMAGE_PNG_SUFFIX)
+                    .outputQuality(1d).asBufferedImage();
+        } catch (IOException exception) {
+            log.error("An error occurred during bufferedImage to scale as BufferedImage!", exception);
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+    public static BufferedImage scale(Double scale, InputStream inputStream) {
+        try {
+            return Thumbnails.of(inputStream).scale(scale)
+                    .outputFormat(FileConstants.IMAGE_PNG_SUFFIX)
+                    .outputQuality(1d).asBufferedImage();
+        } catch (IOException exception) {
+            log.error("An error occurred during inputStream to scale as BufferedImage!", exception);
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static BufferedImage scale(Integer width, Integer height, InputStream inputStream) {
+        BufferedImage bufferedImage = read(inputStream);
+        return scale(width,height,bufferedImage);
+    }
+
+    public static BufferedImage scale(Integer width, Integer height, BufferedImage bufferedImage) {
+        double scale = 1.0d;
+        if (GeneralUtils.isNotEmpty(bufferedImage)) {
+            int imageWidth = bufferedImage.getWidth();
+            int imageHeight = bufferedImage.getHeight();
+            if (GeneralUtils.isNotEmpty(width)) {
+                scale = ((double) width / (double) imageWidth >= 1.0D) ? scale : ((double) width / (double) imageWidth);
+            } else if (GeneralUtils.isNotEmpty(width)) {
+                scale = ((double) height / (double) imageHeight >= 1.0D) ? scale : ((double) height / (double) imageHeight);
+            }
+            return scale(scale,bufferedImage);
+        }
+        return null;
+    }
+
+    public static BufferedImage scaleWidth(Integer width, BufferedImage bufferedImage) {
+        return scale(width,null,bufferedImage);
+    }
+
+    public static BufferedImage scaleHeight(Integer height, BufferedImage bufferedImage) {
+        return scale(null, height, bufferedImage);
+    }
+
+    public static BufferedImage scaleWidth(Integer width, InputStream inputStream) {
+        return scale(width,null, inputStream);
+    }
+
+    public static BufferedImage scaleHeight(Integer height, InputStream inputStream) {
+        return scale(null, height, inputStream);
     }
 
     public static int rgbR(int rgb) {
