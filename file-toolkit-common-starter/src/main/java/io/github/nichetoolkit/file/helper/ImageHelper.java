@@ -105,4 +105,16 @@ public class ImageHelper {
             return inputStream;
     }
 
+    public static byte[] bytes(BufferedImage bufferedImage) throws ImageTransferException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageOutputStream imageOutputStream;
+        try {
+            imageOutputStream = ImageIO.createImageOutputStream(byteArrayOutputStream);
+            ImageIO.write(bufferedImage, "png",imageOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException exception) {
+            throw new ImageTransferException(exception.getMessage());
+        }
+    }
+
 }

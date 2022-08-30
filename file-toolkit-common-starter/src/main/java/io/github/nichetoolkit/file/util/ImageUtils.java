@@ -125,6 +125,16 @@ public class ImageUtils {
         }
     }
 
+    public static byte[] bytes(BufferedImage bufferedImage) {
+        try {
+            return ImageHelper.bytes(bufferedImage);
+        } catch (ImageTransferException exception) {
+            log.error("An error occurred during bufferedImage to transfer as inputStream!", exception);
+            exception.printStackTrace();
+            return null;
+        }
+    }
+
     public static byte[] bytes(File file) {
         try {
             return StreamUtils.bytes(new FileInputStream(file));
@@ -172,10 +182,12 @@ public class ImageUtils {
             int imageHeight = bufferedImage.getHeight();
             if (GeneralUtils.isNotEmpty(width)) {
                 scale = ((double) width / (double) imageWidth >= 1.0D) ? scale : ((double) width / (double) imageWidth);
-            } else if (GeneralUtils.isNotEmpty(width)) {
+                log.debug("the image keep width is {} to scale: {}", width, scale);
+            } else if (GeneralUtils.isNotEmpty(height)) {
                 scale = ((double) height / (double) imageHeight >= 1.0D) ? scale : ((double) height / (double) imageHeight);
+                log.debug("the image keep height is {} to scale: {}", height, scale);
             }
-            return scale(scale,bufferedImage);
+            return scale(scale, bufferedImage);
         }
         return null;
     }
