@@ -5,11 +5,11 @@
     <parent>
         <groupId>io.github.nichetoolkit</groupId>
         <artifactId>file-toolkit-parent</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>file-toolkit-hdfs-starter</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <name>file-toolkit-hdfs-starter</name>
     <packaging>jar</packaging>
     <description>File toolkit hdfs project for Spring Boot</description>
