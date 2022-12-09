@@ -5,10 +5,10 @@
     <parent>
         <groupId>io.github.nichetoolkit</groupId>
         <artifactId>file-toolkit-parent</artifactId>
-        <version>1.0.3-SNAPSHOT</version>
+        <version>1.0.3</version>
     </parent>
     <artifactId>file-toolkit-minio-utils</artifactId>
-    <version>1.0.3-SNAPSHOT</version>
+    <version>1.0.3</version>
     <name>file-toolkit-minio-utils</name>
     <packaging>jar</packaging>
     <description>File toolkit minio utils project for Spring Boot</description>
