@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@JsonInclude(value= JsonInclude.Include.NON_NULL)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FileRequest implements Serializable {
     /** 上传用户 */
@@ -51,7 +51,7 @@ public class FileRequest implements Serializable {
     /** 总分片数 */
     protected Integer sliceSize;
 
-    /** 是否签名*/
+    /** 是否签名 */
     protected Boolean isAutograph;
 
     /** 是否合并分片 */

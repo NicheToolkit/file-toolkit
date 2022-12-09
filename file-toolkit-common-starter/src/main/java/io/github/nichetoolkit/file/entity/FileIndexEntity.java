@@ -41,8 +41,8 @@ public class FileIndexEntity extends RiceInfoEntity<FileIndexEntity, FileIndex> 
     private Long fileSize;
     /** 文件类型 */
     private Integer fileType;
-    /** 是否完成*/
-    private Boolean  isFinish;
+    /** 是否完成 */
+    private Boolean isFinish;
     /** 是否压缩 */
     private Boolean isCondense;
     /** 是否分片 */
@@ -69,7 +69,7 @@ public class FileIndexEntity extends RiceInfoEntity<FileIndexEntity, FileIndex> 
 
     public FileIndex toModel() {
         FileIndex model = new FileIndex();
-        BeanUtils.copyNonullProperties(this,model);
+        BeanUtils.copyNonullProperties(this, model);
         if (GeneralUtils.isNotEmpty(this.userId)) {
             IdModel<String> user = new IdModel<>(this.userId);
             model.setUser(user);
@@ -77,7 +77,7 @@ public class FileIndexEntity extends RiceInfoEntity<FileIndexEntity, FileIndex> 
         model.setName(this.originalFilename);
         model.setFileType(FileType.parseKey(this.fileType));
         model.setProperties(PropertyHelper.toPropertiesList(this.properties));
-        model.setHeaders(JsonUtils.parseMapList(this.headers,String.class,String.class));
+        model.setHeaders(JsonUtils.parseMapList(this.headers, String.class, String.class));
         model.setOperateType(OperateType.parseKey(this.operate));
         return model;
     }

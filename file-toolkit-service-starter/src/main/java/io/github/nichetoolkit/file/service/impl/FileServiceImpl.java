@@ -88,7 +88,7 @@ public class FileServiceImpl implements FileService {
                 } else {
                     fileChunkService.removeAll(fileIdList);
                 }
-            }  else {
+            } else {
                 if (fileFilter.isDelete()) {
                     fileIndexService.deleteAll(fileIdList);
                 } else {
@@ -98,7 +98,6 @@ public class FileServiceImpl implements FileService {
         }
 
     }
-
 
 
     @Override
@@ -155,7 +154,7 @@ public class FileServiceImpl implements FileService {
         if (fileType == FileType.VIDEO && preview) {
             request.setAttribute(VideoHttpRequestHandler.VIDEO_FILE, fileIndex);
             try {
-                videoHttpRequestHandler.handleRequest(request,response);
+                videoHttpRequestHandler.handleRequest(request, response);
             } catch (ServletException | IOException exception) {
                 log.error("the file service download has error: {}", exception.getMessage());
                 throw new FileErrorException(FileErrorStatus.SERVICE_DOWNLOAD_ERROR);
@@ -222,7 +221,7 @@ public class FileServiceImpl implements FileService {
                 if (fileFilter.isOriginal()) {
                     filename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
                 }
-                download(fileIndex, filename, true, fileIndex.getFileType(),request, response);
+                download(fileIndex, filename, true, fileIndex.getFileType(), request, response);
                 return;
             }
         }
@@ -240,7 +239,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void fileDownload(String fileId, Boolean chunk, Boolean preview, Boolean original,HttpServletRequest request, HttpServletResponse response) throws RestException {
+    public void fileDownload(String fileId, Boolean chunk, Boolean preview, Boolean original, HttpServletRequest request, HttpServletResponse response) throws RestException {
         FileIndex fileIndex;
         if (chunk) {
             FileChunk fileChunk = fileChunkService.queryById(fileId);
@@ -277,7 +276,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void imageDownload(String fileId, Boolean preview, Boolean original,HttpServletRequest request, HttpServletResponse response) throws RestException {
+    public void imageDownload(String fileId, Boolean preview, Boolean original, HttpServletRequest request, HttpServletResponse response) throws RestException {
         String filename = fileId.concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.IMAGE_JPG_SUFFIX);
         FileIndex fileIndex = null;
         if (original) {
@@ -309,13 +308,13 @@ public class FileServiceImpl implements FileService {
         String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
 
         if (fileIndex.getIsAutograph() != null && fileIndex.getIsAutograph() && fileIndex.getFileType() == FileType.IMAGE) {
-            FileServiceHelper.autographImage(randomPath,fileIndex);
+            FileServiceHelper.autographImage(randomPath, fileIndex);
         }
         if (fileIndex.getIsCondense()) {
             if (fileIndex.getFileType() == FileType.IMAGE) {
-                FileServiceHelper.condenseImage(randomPath,fileIndex);
+                FileServiceHelper.condenseImage(randomPath, fileIndex);
             } else {
-                FileServiceHelper.condenseFile(randomPath,fileIndex);
+                FileServiceHelper.condenseFile(randomPath, fileIndex);
             }
         }
         String fileId = fileIndex.getId();
@@ -323,7 +322,7 @@ public class FileServiceImpl implements FileService {
             fileId = IdentityUtils.generateString();
             fileIndex.setId(fileId);
         }
-        asyncFileService.putById(fileId,fileIndex.inputStream());
+        asyncFileService.putById(fileId, fileIndex.inputStream());
         FileUtils.clear(randomPath);
         checkFileIndex(fileIndex);
         return fileIndexService.save(fileIndex);
@@ -381,7 +380,7 @@ public class FileServiceImpl implements FileService {
         if (GeneralUtils.isEmpty(fileIndex.getIsMerge())) {
             fileIndex.setIsMerge(true);
         }
-    } 
-    
-    
+    }
+
+
 }

@@ -29,7 +29,7 @@ public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEnti
         if (GeneralUtils.isEmpty(fileId) || GeneralUtils.isEmpty(chunkIndex)) {
             return null;
         }
-        FileChunkEntity entity = ((FileChunkMapper) superMapper).findByFileIdAndChunkIndex(fileId,chunkIndex);
+        FileChunkEntity entity = ((FileChunkMapper) superMapper).findByFileIdAndChunkIndex(fileId, chunkIndex);
         if (GeneralUtils.isNotEmpty(entity)) {
             return modelActuator(entity);
         }

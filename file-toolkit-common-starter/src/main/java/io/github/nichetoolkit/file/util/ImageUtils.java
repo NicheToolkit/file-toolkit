@@ -31,7 +31,7 @@ public class ImageUtils {
 
     public static void write(BufferedImage bufferedImage, OutputStream outputStream) {
         try {
-            ImageHelper.write(bufferedImage,outputStream);
+            ImageHelper.write(bufferedImage, outputStream);
         } catch (ImageWriteException exception) {
             log.error("An error occurred during bufferedImage to write as outputStream!", exception);
             exception.printStackTrace();
@@ -40,7 +40,7 @@ public class ImageUtils {
 
     public static void write(BufferedImage bufferedImage, String imagePath) {
         try {
-            ImageHelper.write(bufferedImage,imagePath);
+            ImageHelper.write(bufferedImage, imagePath);
         } catch (ImageWriteException exception) {
             log.error("An error occurred during bufferedImage to write as file!", exception);
             exception.printStackTrace();
@@ -172,7 +172,7 @@ public class ImageUtils {
 
     public static BufferedImage scale(Integer width, Integer height, InputStream inputStream) {
         BufferedImage bufferedImage = read(inputStream);
-        return scale(width,height,bufferedImage);
+        return scale(width, height, bufferedImage);
     }
 
     public static BufferedImage scale(Integer width, Integer height, BufferedImage bufferedImage) {
@@ -193,7 +193,7 @@ public class ImageUtils {
     }
 
     public static BufferedImage scaleWidth(Integer width, BufferedImage bufferedImage) {
-        return scale(width,null,bufferedImage);
+        return scale(width, null, bufferedImage);
     }
 
     public static BufferedImage scaleHeight(Integer height, BufferedImage bufferedImage) {
@@ -201,7 +201,7 @@ public class ImageUtils {
     }
 
     public static BufferedImage scaleWidth(Integer width, InputStream inputStream) {
-        return scale(width,null, inputStream);
+        return scale(width, null, inputStream);
     }
 
     public static BufferedImage scaleHeight(Integer height, InputStream inputStream) {
@@ -209,15 +209,15 @@ public class ImageUtils {
     }
 
     public static int rgbR(int rgb) {
-        return (rgb & 0xff0000) >>16;
+        return (rgb & 0xff0000) >> 16;
     }
 
     public static int rgbG(int rgb) {
-        return (rgb & 0xff0000) >>16;
+        return (rgb & 0xff0000) >> 16;
     }
 
     public static int rgbB(int rgb) {
-        return (rgb & 0xff0000) >>16;
+        return (rgb & 0xff0000) >> 16;
     }
 
     public static BufferedImage typeImage(BufferedImage bufferedImage, int type) {
@@ -232,22 +232,22 @@ public class ImageUtils {
     }
 
     public static BufferedImage abgrImage(BufferedImage bufferedImage) {
-        return typeImage(bufferedImage,BufferedImage.TYPE_4BYTE_ABGR);
+        return typeImage(bufferedImage, BufferedImage.TYPE_4BYTE_ABGR);
     }
 
     public static BufferedImage binaryImage(BufferedImage bufferedImage) {
-        return typeImage(bufferedImage,BufferedImage.TYPE_BYTE_BINARY);
+        return typeImage(bufferedImage, BufferedImage.TYPE_BYTE_BINARY);
     }
 
-    public static BufferedImage autograph(BufferedImage bufferedImage,int backgroundRgb) {
+    public static BufferedImage autograph(BufferedImage bufferedImage, int backgroundRgb) {
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
         BufferedImage abgrImage = abgrImage(bufferedImage);
         int alpha;
         List<Integer> xCoordinates = new ArrayList<>();
         List<Integer> yCoordinates = new ArrayList<>();
-        for(int x = abgrImage.getMinX(); x < width; x++) {
-            for(int y = abgrImage.getMinY(); y < height; y++) {
+        for (int x = abgrImage.getMinX(); x < width; x++) {
+            for (int y = abgrImage.getMinY(); y < height; y++) {
                 int contentRgb = abgrImage.getRGB(x, y);
                 if (contentRgb != backgroundRgb) {
                     xCoordinates.add(x);
@@ -261,13 +261,13 @@ public class ImageUtils {
                 int backgroundB = rgbB(backgroundRgb);
                 /** a为色差范围值，渐变色边缘处理，数值需要具体测试，50左右的效果比较可以 */
                 int a = 45;
-                if(Math.abs(backgroundR - contentR) < a && Math.abs(backgroundG - contentG) < a && Math.abs(backgroundB-contentB) < a ) {
+                if (Math.abs(backgroundR - contentR) < a && Math.abs(backgroundG - contentG) < a && Math.abs(backgroundB - contentB) < a) {
                     alpha = 0;
                 } else {
                     alpha = 255;
                 }
                 contentRgb = (alpha << 24) | (contentRgb & 0x00ffffff);
-                abgrImage.setRGB( x, y, contentRgb);
+                abgrImage.setRGB(x, y, contentRgb);
             }
         }
         List<Integer> xCoordinateList = xCoordinates.stream().filter(Objects::nonNull).distinct().collect(Collectors.toList());
@@ -284,6 +284,6 @@ public class ImageUtils {
     }
 
     public static BufferedImage autograph(BufferedImage bufferedImage) {
-        return autograph(bufferedImage,-1);
+        return autograph(bufferedImage, -1);
     }
 }

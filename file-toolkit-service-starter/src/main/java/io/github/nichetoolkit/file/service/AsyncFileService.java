@@ -14,20 +14,20 @@ import java.util.List;
  */
 public abstract class AsyncFileService {
     @Async
-    abstract public void removeAll(List<String> fileIdList)  throws RestException;
+    abstract public void removeAll(List<String> fileIdList) throws RestException;
 
     @Async
-    abstract public void renameById(String fileId,String rename)  throws RestException;
+    abstract public void renameById(String fileId, String rename) throws RestException;
 
     @Async
-    abstract public void removeById(String fileId)  throws RestException;
+    abstract public void removeById(String fileId) throws RestException;
 
-    abstract public InputStream getById(String fileId)  throws RestException;
-
-    @Async
-    abstract public void putById(String fileId,InputStream inputStream)  throws RestException;
+    abstract public InputStream getById(String fileId) throws RestException;
 
     @Async
-    abstract public void margeById(String fileId, Collection<String> fileIdList)  throws RestException;
+    abstract public void putById(String fileId, InputStream inputStream) throws RestException;
+
+    @Async
+    abstract public void margeById(String fileId, Collection<String> fileIdList) throws RestException;
 
 }

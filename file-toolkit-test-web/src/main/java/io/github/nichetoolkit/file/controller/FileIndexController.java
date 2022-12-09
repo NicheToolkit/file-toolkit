@@ -25,7 +25,7 @@ public class FileIndexController {
 
     @Autowired
     private FileChunkService fileChunkService;
-    
+
     @PostMapping("/query/{id}")
     public ResponseEntity queryById(@PathVariable String id,
                                     @RequestParam(value = "chunk", required = false, defaultValue = "false") Boolean chunk) throws RestException {

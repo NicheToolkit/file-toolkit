@@ -104,7 +104,7 @@ public class FileServiceHelper implements InitializingBean {
         if (file.exists()) {
             FileUtils.delete(filePath);
         }
-        ImageUtils.write(autographImage,file);
+        ImageUtils.write(autographImage, file);
         byte[] bytes = ImageUtils.bytes(file);
         fileIndex.setBytes(bytes);
         FileUtils.delete(filePath);
@@ -135,7 +135,7 @@ public class FileServiceHelper implements InitializingBean {
                 } else if (GeneralUtils.isNotEmpty(width) || GeneralUtils.isNotEmpty(height)) {
                     if (GeneralUtils.isNotEmpty(width)) {
                         imageFileScale = ((double) width / (double) imageWidth >= 1.0D) ? imageFileScale : ((double) width / (double) imageWidth);
-                    }else {
+                    } else {
                         imageFileScale = ((double) height / (double) imageHeight >= 1.0D) ? imageFileScale : ((double) height / (double) imageHeight);
                     }
                     Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
@@ -187,7 +187,7 @@ public class FileServiceHelper implements InitializingBean {
                     itemFilename = fileIndex.getFilename().concat("_").concat(String.valueOf(fileChunk.getChunkIndex())).concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
                 }
                 String itemFilePath = randomPath.concat(File.separator).concat(itemFilename);
-                writeFile(fileChunk.getId(),itemFilePath);
+                writeFile(fileChunk.getId(), itemFilePath);
                 fileList.add(new File(itemFilePath));
             }
         }
@@ -205,7 +205,7 @@ public class FileServiceHelper implements InitializingBean {
                 itemFilename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
             }
             String itemFilePath = randomPath.concat(File.separator).concat(itemFilename);
-            writeFile(fileIndex.getId(),itemFilePath);
+            writeFile(fileIndex.getId(), itemFilePath);
             fileList.add(new File(itemFilePath));
         }
     }
@@ -308,7 +308,7 @@ public class FileServiceHelper implements InitializingBean {
             buildMd5(new FileInputStream(file), fileChunk);
         } catch (IOException exception) {
             log.error("the chunk read with bytes has error, chunk index: {}, error: {}", fileChunk.getChunkIndex(), exception.getMessage());
-            throw new FileErrorException(FileErrorStatus.FILE_READ_BYTE_ERROR,exception.getMessage());
+            throw new FileErrorException(FileErrorStatus.FILE_READ_BYTE_ERROR, exception.getMessage());
         }
     }
 

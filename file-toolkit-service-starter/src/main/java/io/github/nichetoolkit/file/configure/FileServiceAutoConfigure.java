@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan(basePackages = {"io.github.nichetoolkit.file"})
 public class FileServiceAutoConfigure {
-    
+
     public FileServiceAutoConfigure() {
         log.debug("================= file-service-auto-config initiated ！ ===================");
     }

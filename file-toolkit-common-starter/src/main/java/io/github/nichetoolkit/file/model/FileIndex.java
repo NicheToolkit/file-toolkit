@@ -34,7 +34,7 @@ import java.util.Optional;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@JsonInclude(value= JsonInclude.Include.NON_NULL)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
 
@@ -68,10 +68,10 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     /** 是否压缩 */
     protected Boolean isCondense;
 
-    /** 是否签名*/
+    /** 是否签名 */
     protected Boolean isAutograph;
 
-    /** 当前上传是否结束  */
+    /** 当前上传是否结束 */
     protected Boolean isFinish;
 
     /** 文件附带属性参数 */
@@ -135,22 +135,22 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
 
     public void setAlias(String alias) {
         this.alias = alias;
-        addProperty("alias",alias);
+        addProperty("alias", alias);
     }
 
     public void setSuffix(String suffix) {
         this.suffix = suffix;
-        addProperty("suffix",suffix);
+        addProperty("suffix", suffix);
     }
 
     public void setFileMd5(String fileMd5) {
         this.fileMd5 = fileMd5;
-        addProperty("fileMd5",fileMd5);
+        addProperty("fileMd5", fileMd5);
     }
 
     public void setFileSize(Long fileSize) {
         this.fileSize = fileSize;
-        addProperty("fileSize",fileSize);
+        addProperty("fileSize", fileSize);
     }
 
     @Override
@@ -171,14 +171,14 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
             } else {
                 this.properties.remove(new Property(name));
             }
-            this.properties.add(new Property(name,value));
+            this.properties.add(new Property(name, value));
         }
     }
 
     @Override
     public FileIndexEntity toEntity() {
         FileIndexEntity entity = new FileIndexEntity();
-        BeanUtils.copyNonullProperties(this,entity);
+        BeanUtils.copyNonullProperties(this, entity);
         entity.setUserId(Optional.ofNullable(this.user).map(RestId::getId).orElse(null));
         entity.setOriginalFilename(this.name);
         entity.setFileType(Optional.ofNullable(this.fileType).map(FileType::getKey).orElse(null));

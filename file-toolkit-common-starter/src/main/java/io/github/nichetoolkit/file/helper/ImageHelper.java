@@ -92,17 +92,17 @@ public class ImageHelper {
 
 
     public static InputStream inputStream(BufferedImage bufferedImage) throws ImageTransferException {
-            InputStream inputStream;
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ImageOutputStream imageOutputStream;
-            try {
-                imageOutputStream = ImageIO.createImageOutputStream(byteArrayOutputStream);
-                ImageIO.write(bufferedImage, "png",imageOutputStream);
-                inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-            } catch (IOException exception) {
-                throw new ImageTransferException(exception.getMessage());
-            }
-            return inputStream;
+        InputStream inputStream;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageOutputStream imageOutputStream;
+        try {
+            imageOutputStream = ImageIO.createImageOutputStream(byteArrayOutputStream);
+            ImageIO.write(bufferedImage, "png", imageOutputStream);
+            inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        } catch (IOException exception) {
+            throw new ImageTransferException(exception.getMessage());
+        }
+        return inputStream;
     }
 
     public static byte[] bytes(BufferedImage bufferedImage) throws ImageTransferException {
@@ -110,7 +110,7 @@ public class ImageHelper {
         ImageOutputStream imageOutputStream;
         try {
             imageOutputStream = ImageIO.createImageOutputStream(byteArrayOutputStream);
-            ImageIO.write(bufferedImage, "png",imageOutputStream);
+            ImageIO.write(bufferedImage, "png", imageOutputStream);
             return byteArrayOutputStream.toByteArray();
         } catch (IOException exception) {
             throw new ImageTransferException(exception.getMessage());

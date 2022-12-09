@@ -37,7 +37,7 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
 
     @Override
     public FileIndex queryByNameWithUploadInterrupt(String name) throws RestException {
-        if (GeneralUtils.isEmpty(name) ) {
+        if (GeneralUtils.isEmpty(name)) {
             return null;
         }
         FileIndexEntity entity = ((FileIndexMapper) superMapper).findByNameWithUploadInterrupt(name);
@@ -52,7 +52,7 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
         if (GeneralUtils.isEmpty(id) || GeneralUtils.isEmpty(sliceSize)) {
             return;
         }
-        ((FileIndexMapper) superMapper).finishSliceUpload(id,sliceSize);
+        ((FileIndexMapper) superMapper).finishSliceUpload(id, sliceSize);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
         }
         String fileId = entity.getId();
         List<FileChunk> fileChunks = fileChunkService.queryAllByFileId(fileId);
-        buildLastChunk(model,fileChunks);
+        buildLastChunk(model, fileChunks);
     }
 
     @Override
@@ -94,14 +94,14 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
                     if (fileIndex.getIsSlice()) {
                         String fileIndexId = fileIndex.getId();
                         List<FileChunk> fileChunkList = fileChunkMap.get(fileIndexId);
-                        buildLastChunk(fileIndex,fileChunkList);
+                        buildLastChunk(fileIndex, fileChunkList);
                     }
                 }
             }
         }
     }
 
-    private void buildLastChunk(FileIndex fileIndex,List<FileChunk> fileChunkList) {
+    private void buildLastChunk(FileIndex fileIndex, List<FileChunk> fileChunkList) {
         if (GeneralUtils.isNotEmpty(fileChunkList)) {
             Collections.sort(fileChunkList);
             fileIndex.setFileChunks(fileChunkList);

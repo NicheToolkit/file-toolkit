@@ -46,7 +46,7 @@ public class FileServiceAsyncConfigure implements AsyncConfigurer {
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (throwable, method, objects) -> {
-            log.error("the async method has error, method: {}, error: {}",method.getName(), throwable.getMessage());
+            log.error("the async method has error, method: {}, error: {}", method.getName(), throwable.getMessage());
             throwable.printStackTrace();
         };
     }

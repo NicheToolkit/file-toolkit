@@ -56,7 +56,7 @@ public class FileController {
                              @RequestParam(value = "chunk", required = false, defaultValue = "false") Boolean chunk,
                              @RequestParam(value = "preview", required = false, defaultValue = "true") Boolean preview,
                              @RequestParam(value = "original", required = false, defaultValue = "true") Boolean original,
-                             HttpServletRequest request, HttpServletResponse response) throws RestException  {
+                             HttpServletRequest request, HttpServletResponse response) throws RestException {
         log.info("the file will be started downloading with file Id: {}", fileId);
         fileService.fileDownload(fileId, chunk, preview, original, request, response);
     }
@@ -67,19 +67,19 @@ public class FileController {
                          @RequestParam(value = "chunk", required = false, defaultValue = "false") Boolean chunk,
                          @RequestParam(value = "preview", required = false, defaultValue = "true") Boolean preview,
                          @RequestParam(value = "original", required = false, defaultValue = "true") Boolean original,
-                         HttpServletRequest request, HttpServletResponse response) throws RestException  {
+                         HttpServletRequest request, HttpServletResponse response) throws RestException {
         log.info("the file will be started downloading with file Id: {}", fileId);
-        fileService.fileDownload(fileId, chunk, preview, original, request,response);
+        fileService.fileDownload(fileId, chunk, preview, original, request, response);
     }
 
     @GetMapping("/filter/download")
-    public void download(FileFilter fileFilter, HttpServletRequest request, HttpServletResponse response) throws RestException  {
+    public void download(FileFilter fileFilter, HttpServletRequest request, HttpServletResponse response) throws RestException {
         log.info("the file will be started downloading with file filter: {}", JsonUtils.parseJson(fileFilter));
         fileService.download(fileFilter, request, response);
     }
 
     @PostMapping("/file/upload")
-    public ResponseEntity<FileIndex> fileUpload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException  {
+    public ResponseEntity<FileIndex> fileUpload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         log.info("the file will be started uploading at 'fileUpload', filename: {}", originalFilename);
         FileIndex fileUpload = fileService.upload(file, fileRequest);
@@ -87,7 +87,7 @@ public class FileController {
     }
 
     @PostMapping("/image/upload")
-    public ResponseEntity<FileIndex> imageUpload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException  {
+    public ResponseEntity<FileIndex> imageUpload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         log.info("the image file will be started uploading at 'imageUpload', filename: {}", originalFilename);
         FileIndex fileUpload = fileService.upload(file, fileRequest);
@@ -95,7 +95,7 @@ public class FileController {
     }
 
     @PostMapping("/image/autograph")
-    public ResponseEntity<FileIndex> imageAutograph(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException  {
+    public ResponseEntity<FileIndex> imageAutograph(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         fileRequest.setIsAutograph(true);
         log.info("the image file will be started uploading at 'imageAutograph', filename: {}", originalFilename);
@@ -104,7 +104,7 @@ public class FileController {
     }
 
     @PostMapping("/index/upload")
-    public ResponseEntity<FileIndex> indexUpload(@NonNull @RequestBody FileIndex fileIndex) throws RestException  {
+    public ResponseEntity<FileIndex> indexUpload(@NonNull @RequestBody FileIndex fileIndex) throws RestException {
         String originalFilename = fileIndex.getName();
         log.info("the index file will be started uploading at 'indexUpload', filename: {}", originalFilename);
         FileIndex createIndex = FileServiceHelper.createFileIndex(fileIndex);
@@ -114,15 +114,15 @@ public class FileController {
 
     @PostMapping("/chunk/upload")
     public ResponseEntity chunkUpload(@NonNull @RequestPart("file") MultipartFile file,
-                                               @RequestHeader(value = FileConstants.CONTENT_RANGE_HEADER) String contentRange,
-                                               FileRequest fileRequest) throws RestException  {
+                                      @RequestHeader(value = FileConstants.CONTENT_RANGE_HEADER) String contentRange,
+                                      FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         log.info("the chunk file will be started uploading at 'chunkUpload', filename: {}", originalFilename);
         Future<FileIndex> indexFuture = fileService.chunkUpload(file, contentRange, fileRequest);
         try {
             return RestResult.ok(indexFuture.get());
         } catch (InterruptedException | ExecutionException exception) {
-            throw new ServiceErrorException(FileErrorStatus.SERVICE_DOWNLOAD_ERROR,exception.getMessage());
+            throw new ServiceErrorException(FileErrorStatus.SERVICE_DOWNLOAD_ERROR, exception.getMessage());
         }
     }
 
@@ -138,8 +138,8 @@ public class FileController {
 
     @PostMapping("/img/remove")
     public ResponseEntity imgRemove(@RequestParam(value = "fileId") String fileId,
-                                  @RequestParam(value = "delete", required = false, defaultValue = "false") Boolean delete,
-                                  @RequestParam(value = "rename", required = false, defaultValue = "false") Boolean rename) throws RestException  {
+                                    @RequestParam(value = "delete", required = false, defaultValue = "false") Boolean delete,
+                                    @RequestParam(value = "rename", required = false, defaultValue = "false") Boolean rename) throws RestException {
         log.info("the image will be started removing with file Id: {}", fileId);
         fileService.remove(fileId, false, delete, rename);
         return RestResult.ok();
@@ -147,23 +147,23 @@ public class FileController {
 
     @PostMapping("/file/remove")
     public ResponseEntity fileRemove(@RequestParam(value = "fileId") String fileId,
-                                   @RequestParam(value = "chunk", required = false, defaultValue = "false") Boolean chunk,
-                                   @RequestParam(value = "delete", required = false, defaultValue = "false") Boolean delete,
-                                   @RequestParam(value = "rename", required = false, defaultValue = "true") Boolean rename) throws RestException  {
+                                     @RequestParam(value = "chunk", required = false, defaultValue = "false") Boolean chunk,
+                                     @RequestParam(value = "delete", required = false, defaultValue = "false") Boolean delete,
+                                     @RequestParam(value = "rename", required = false, defaultValue = "true") Boolean rename) throws RestException {
         log.info("the file will be started removing with file Id: {}", fileId);
-        fileService.remove(fileId,  chunk, delete, rename);
+        fileService.remove(fileId, chunk, delete, rename);
         return RestResult.ok();
     }
 
     @PostMapping("/filter/remove")
-    public ResponseEntity filterRemove(FileFilter fileFilter) throws RestException  {
+    public ResponseEntity filterRemove(FileFilter fileFilter) throws RestException {
         log.info("the file will be started removing with file filter: {}", JsonUtils.parseJson(fileFilter));
         fileService.remove(fileFilter);
         return RestResult.ok();
     }
 
     @PostMapping("/slice")
-    public ResponseEntity slice(@NonNull @RequestPart("file") MultipartFile file) throws RestException  {
+    public ResponseEntity slice(@NonNull @RequestPart("file") MultipartFile file) throws RestException {
         String originalFilename = file.getOriginalFilename();
         assert originalFilename != null;
         log.info("the file will be started slicing with filename: {}", originalFilename);

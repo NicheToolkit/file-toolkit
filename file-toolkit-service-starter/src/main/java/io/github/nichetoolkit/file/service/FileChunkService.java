@@ -21,7 +21,7 @@ public interface FileChunkService extends FilterService<String, FileChunk, FileF
 
     /**
      * 通过id查询实体
-     * @param fileId 文件id
+     * @param fileId     文件id
      * @param chunkIndex 分片序号
      * @return T 查询的数据
      */

@@ -19,7 +19,7 @@ import java.util.Date;
 @Data
 @TableName("file_chunk")
 @EqualsAndHashCode(callSuper = false)
-public class FileChunkEntity extends RiceIdEntity<FileChunkEntity,FileChunk> {
+public class FileChunkEntity extends RiceIdEntity<FileChunkEntity, FileChunk> {
     /** 文件id */
     private String fileId;
     /** 分片序列 */

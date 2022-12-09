@@ -560,49 +560,49 @@ public class MinioUtils {
     /**
      * 上传文件
      * @param objectName 对象名称
-     * @param filename 文件名
+     * @param filename   文件名
      * @return ObjectWriteResponse
      * @throws FileErrorException FileErrorException
      */
     public static ObjectWriteResponse uploadObject(String objectName, String filename) throws FileErrorException {
-        return uploadObject(objectName,filename,0L);
+        return uploadObject(objectName, filename, 0L);
     }
 
     /**
      * 上传文件
      * @param objectName 对象名称
-     * @param filename 文件名
+     * @param filename   文件名
      * @return ObjectWriteResponse
      * @throws FileErrorException FileErrorException
      */
-    public static ObjectWriteResponse uploadObject(String objectName, String filename,long partSize) throws FileErrorException {
-        return uploadObject(INSTANCE.defaultBucket,objectName,filename,partSize);
+    public static ObjectWriteResponse uploadObject(String objectName, String filename, long partSize) throws FileErrorException {
+        return uploadObject(INSTANCE.defaultBucket, objectName, filename, partSize);
     }
 
     /**
      * 上传文件
      * @param bucketName 数据桶
      * @param objectName 对象名称
-     * @param filename 文件名
+     * @param filename   文件名
      * @return ObjectWriteResponse
      * @throws FileErrorException FileErrorException
      */
     public static ObjectWriteResponse uploadObject(String bucketName, String objectName, String filename) throws FileErrorException {
-        return uploadObject(bucketName,objectName,filename,0L);
+        return uploadObject(bucketName, objectName, filename, 0L);
     }
 
     /**
      * 上传文件
      * @param bucketName 数据桶
      * @param objectName 对象名称
-     * @param filename 文件名
+     * @param filename   文件名
      * @return ObjectWriteResponse
      * @throws FileErrorException FileErrorException
      */
     public static ObjectWriteResponse uploadObject(String bucketName, String objectName, String filename, long partSize) throws FileErrorException {
         try {
             return INSTANCE.minioClient.uploadObject(UploadObjectArgs.builder().bucket(bucketName)
-                    .object(objectName).filename(filename,partSize).build());
+                    .object(objectName).filename(filename, partSize).build());
         } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException exception) {
             log.error("the minio server upload object has error, object: {}, bucket: {}, error: {}", objectName, bucketName, exception.getMessage());
             throw new FileErrorException(MinioErrorStatus.MINIO_UPLOAD_OBJECT_ERROR);
@@ -613,7 +613,7 @@ public class MinioUtils {
      * 上传文件
      * @param bucketName 数据桶
      * @param objectName 对象名称
-     * @param objects 对象名称
+     * @param objects    对象名称
      * @return ObjectWriteResponse
      * @throws FileErrorException FileErrorException
      */

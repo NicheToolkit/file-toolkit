@@ -17,11 +17,11 @@ public class MinioInputStreamResource extends VideoInputStreamResource {
     private StatObjectResponse statObject;
 
     public MinioInputStreamResource(InputStream inputStream, FileIndex fileIndex) throws IOException {
-        super(inputStream,fileIndex);
+        super(inputStream, fileIndex);
         try {
             this.statObject = MinioUtils.statObject(fileIndex.getId());
         } catch (FileErrorException exception) {
-            throw new IOException(exception.getMessage(),exception);
+            throw new IOException(exception.getMessage(), exception);
         }
     }
 

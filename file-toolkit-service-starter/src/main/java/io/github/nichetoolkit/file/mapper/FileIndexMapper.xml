@@ -22,12 +22,13 @@
         <result property="properties" column="properties"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
-        <result property="operate" column="operate" />
+        <result property="operate" column="operate"/>
     </resultMap>
 
     <sql id="all_column">
         id, user_id, original_filename, filename, alias, suffix, file_md5,
-        file_size, file_type, is_finish, is_condense, is_slice, slice_size, is_merge, etag, version_id, headers, properties, create_time, update_time, operate
+        file_size, file_type, is_finish, is_condense, is_slice, slice_size, is_merge, etag, version_id, headers,
+        properties, create_time, update_time, operate
     </sql>
 
     <insert id="save">
@@ -59,7 +60,8 @@
         ) ON CONFLICT (id) DO UPDATE
         <set>
             user_id = CASE WHEN EXCLUDED.user_id IS NOT NULL THEN EXCLUDED.user_id ELSE file_index.user_id END,
-            original_filename = CASE WHEN EXCLUDED.original_filename IS NOT NULL THEN EXCLUDED.original_filename ELSE file_index.original_filename END,
+            original_filename = CASE WHEN EXCLUDED.original_filename IS NOT NULL THEN EXCLUDED.original_filename ELSE
+            file_index.original_filename END,
             filename = CASE WHEN EXCLUDED.filename IS NOT NULL THEN EXCLUDED.filename ELSE file_index.filename END,
             alias = CASE WHEN EXCLUDED.alias IS NOT NULL THEN EXCLUDED.alias ELSE file_index.alias END,
             suffix = CASE WHEN EXCLUDED.suffix IS NOT NULL THEN EXCLUDED.suffix ELSE file_index.suffix END,
@@ -67,14 +69,18 @@
             file_size = CASE WHEN EXCLUDED.file_size IS NOT NULL THEN EXCLUDED.file_size ELSE file_index.file_size END,
             file_type = CASE WHEN EXCLUDED.file_type IS NOT NULL THEN EXCLUDED.file_type ELSE file_index.file_type END,
             is_finish = CASE WHEN EXCLUDED.is_finish IS NOT NULL THEN EXCLUDED.is_finish ELSE file_index.is_finish END,
-            is_condense = CASE WHEN EXCLUDED.is_condense IS NOT NULL THEN EXCLUDED.is_condense ELSE file_index.is_condense END,
+            is_condense = CASE WHEN EXCLUDED.is_condense IS NOT NULL THEN EXCLUDED.is_condense ELSE
+            file_index.is_condense END,
             is_slice = CASE WHEN EXCLUDED.is_slice IS NOT NULL THEN EXCLUDED.is_slice ELSE file_index.is_slice END,
-            slice_size = CASE WHEN EXCLUDED.slice_size IS NOT NULL THEN EXCLUDED.slice_size ELSE file_index.slice_size END,
+            slice_size = CASE WHEN EXCLUDED.slice_size IS NOT NULL THEN EXCLUDED.slice_size ELSE file_index.slice_size
+            END,
             is_merge = CASE WHEN EXCLUDED.is_merge IS NOT NULL THEN EXCLUDED.is_merge ELSE file_index.is_merge END,
             etag = CASE WHEN EXCLUDED.etag IS NOT NULL THEN EXCLUDED.etag ELSE file_index.etag END,
-            version_id = CASE WHEN EXCLUDED.version_id IS NOT NULL THEN EXCLUDED.version_id ELSE file_index.version_id END,
+            version_id = CASE WHEN EXCLUDED.version_id IS NOT NULL THEN EXCLUDED.version_id ELSE file_index.version_id
+            END,
             headers = CASE WHEN EXCLUDED.headers IS NOT NULL THEN EXCLUDED.headers ELSE file_index.headers END,
-            properties = CASE WHEN EXCLUDED.properties IS NOT NULL THEN EXCLUDED.properties ELSE file_index.properties END,
+            properties = CASE WHEN EXCLUDED.properties IS NOT NULL THEN EXCLUDED.properties ELSE file_index.properties
+            END,
             update_time = now()
         </set>
     </insert>
@@ -112,7 +118,8 @@
         ON CONFLICT (id) DO UPDATE
         <set>
             user_id = CASE WHEN EXCLUDED.user_id IS NOT NULL THEN EXCLUDED.user_id ELSE file_index.user_id END,
-            original_filename = CASE WHEN EXCLUDED.original_filename IS NOT NULL THEN EXCLUDED.original_filename ELSE file_index.original_filename END,
+            original_filename = CASE WHEN EXCLUDED.original_filename IS NOT NULL THEN EXCLUDED.original_filename ELSE
+            file_index.original_filename END,
             filename = CASE WHEN EXCLUDED.filename IS NOT NULL THEN EXCLUDED.filename ELSE file_index.filename END,
             alias = CASE WHEN EXCLUDED.alias IS NOT NULL THEN EXCLUDED.alias ELSE file_index.alias END,
             suffix = CASE WHEN EXCLUDED.suffix IS NOT NULL THEN EXCLUDED.suffix ELSE file_index.suffix END,
@@ -120,14 +127,18 @@
             file_size = CASE WHEN EXCLUDED.file_size IS NOT NULL THEN EXCLUDED.file_size ELSE file_index.file_size END,
             file_type = CASE WHEN EXCLUDED.file_type IS NOT NULL THEN EXCLUDED.file_type ELSE file_index.file_type END,
             is_finish = CASE WHEN EXCLUDED.is_finish IS NOT NULL THEN EXCLUDED.is_finish ELSE file_index.is_finish END,
-            is_condense = CASE WHEN EXCLUDED.is_condense IS NOT NULL THEN EXCLUDED.is_condense ELSE file_index.is_condense END,
+            is_condense = CASE WHEN EXCLUDED.is_condense IS NOT NULL THEN EXCLUDED.is_condense ELSE
+            file_index.is_condense END,
             is_slice = CASE WHEN EXCLUDED.is_slice IS NOT NULL THEN EXCLUDED.is_slice ELSE file_index.is_slice END,
-            slice_size = CASE WHEN EXCLUDED.slice_size IS NOT NULL THEN EXCLUDED.slice_size ELSE file_index.slice_size END,
+            slice_size = CASE WHEN EXCLUDED.slice_size IS NOT NULL THEN EXCLUDED.slice_size ELSE file_index.slice_size
+            END,
             is_merge = CASE WHEN EXCLUDED.is_merge IS NOT NULL THEN EXCLUDED.is_merge ELSE file_index.is_merge END,
             etag = CASE WHEN EXCLUDED.etag IS NOT NULL THEN EXCLUDED.etag ELSE file_index.etag END,
-            version_id = CASE WHEN EXCLUDED.version_id IS NOT NULL THEN EXCLUDED.version_id ELSE file_index.version_id END,
+            version_id = CASE WHEN EXCLUDED.version_id IS NOT NULL THEN EXCLUDED.version_id ELSE file_index.version_id
+            END,
             headers = CASE WHEN EXCLUDED.headers IS NOT NULL THEN EXCLUDED.headers ELSE file_index.headers END,
-            properties = CASE WHEN EXCLUDED.properties IS NOT NULL THEN EXCLUDED.properties ELSE file_index.properties END,
+            properties = CASE WHEN EXCLUDED.properties IS NOT NULL THEN EXCLUDED.properties ELSE file_index.properties
+            END,
             update_time = now()
         </set>
     </update>
@@ -226,7 +237,7 @@
     <update id="finishSliceUpload">
         UPDATE file_index
         SET is_finish = true,
-            slice_size = ${sliceSize}
+        slice_size = ${sliceSize}
         WHERE id = ${id}
         AND operate NOT IN (16,32)
         AND is_slice = true

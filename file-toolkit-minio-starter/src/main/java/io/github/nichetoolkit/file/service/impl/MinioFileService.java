@@ -26,7 +26,7 @@ public class MinioFileService extends AsyncFileService {
     @Override
     @Async
     public void renameById(String fileId, String rename) throws RestException {
-        MinioUtils.copyObject(fileId,rename);
+        MinioUtils.copyObject(fileId, rename);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MinioFileService extends AsyncFileService {
     @Override
     @Async
     public void putById(String fileId, InputStream inputStream) throws RestException {
-        MinioUtils.putObject(fileId,inputStream);
+        MinioUtils.putObject(fileId, inputStream);
     }
 
     @Override

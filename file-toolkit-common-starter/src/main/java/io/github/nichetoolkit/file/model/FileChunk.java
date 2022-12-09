@@ -25,9 +25,9 @@ import java.util.Optional;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@JsonInclude(value= JsonInclude.Include.NON_NULL)
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FileChunk extends RiceIdModel<FileChunk, FileChunkEntity> implements Comparator<FileChunk>, Comparable<FileChunk>{
+public class FileChunk extends RiceIdModel<FileChunk, FileChunkEntity> implements Comparator<FileChunk>, Comparable<FileChunk> {
     /** 文件id */
     private String fileId;
     /** 分片序列 */
@@ -36,9 +36,9 @@ public class FileChunk extends RiceIdModel<FileChunk, FileChunkEntity> implement
     private Long chunkSize;
     /** 起始位置 */
     private Long chunkStart;
-    /** 终止位置  */
+    /** 终止位置 */
     private Long chunkEnd;
-    /** 分片MD5校验  */
+    /** 分片MD5校验 */
     private String chunkMd5;
     /** 文件操作 */
     protected OperateType operateType = OperateType.NONE;
@@ -65,10 +65,10 @@ public class FileChunk extends RiceIdModel<FileChunk, FileChunkEntity> implement
         return new ByteArrayInputStream(this.bytes);
     }
 
-    public FileChunk(){
+    public FileChunk() {
     }
 
-    public FileChunk(String id){
+    public FileChunk(String id) {
         super(id);
     }
 
@@ -81,11 +81,11 @@ public class FileChunk extends RiceIdModel<FileChunk, FileChunkEntity> implement
 
     @Override
     public int compare(FileChunk source, FileChunk target) {
-        return Integer.compare(source.getChunkIndex(),target.getChunkIndex());
+        return Integer.compare(source.getChunkIndex(), target.getChunkIndex());
     }
 
     @Override
     public int compareTo(@NonNull FileChunk target) {
-        return Integer.compare(this.getChunkIndex(),target.getChunkIndex());
+        return Integer.compare(this.getChunkIndex(), target.getChunkIndex());
     }
 }

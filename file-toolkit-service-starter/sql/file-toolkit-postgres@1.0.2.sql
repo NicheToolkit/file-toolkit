@@ -1,26 +1,25 @@
-
-
 -- ----------------------------
 -- Table structure for file
 -- ----------------------------
 DROP TABLE IF EXISTS "public"."file_index";
-CREATE TABLE "public"."file_index" (
-  "id" VARCHAR(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "user_id" VARCHAR(64) COLLATE "pg_catalog"."default",
+CREATE TABLE "public"."file_index"
+(
+  "id"                VARCHAR(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "user_id"           VARCHAR(64) COLLATE "pg_catalog"."default",
   "original_filename" VARCHAR(512) COLLATE "pg_catalog"."default",
-  "filename" VARCHAR(256) COLLATE "pg_catalog"."default",
-  "alias" VARCHAR(256) COLLATE "pg_catalog"."default",
-  "suffix" VARCHAR(32) COLLATE "pg_catalog"."default",
-  "file_md5" VARCHAR(2048) COLLATE "pg_catalog"."default",
+  "filename"          VARCHAR(256) COLLATE "pg_catalog"."default",
+  "alias"             VARCHAR(256) COLLATE "pg_catalog"."default",
+  "suffix"            VARCHAR(32) COLLATE "pg_catalog"."default",
+  "file_md5"          VARCHAR(2048) COLLATE "pg_catalog"."default",
   "file_size" INT8,
   "file_type" INT2,
-  "is_finish" BOOLEAN DEFAULT TRUE,
-  "is_condense" BOOLEAN DEFAULT FALSE,
-  "is_slice" BOOLEAN DEFAULT FALSE,
+  "is_finish"         BOOLEAN DEFAULT TRUE,
+  "is_condense"       BOOLEAN DEFAULT FALSE,
+  "is_slice"          BOOLEAN DEFAULT FALSE,
   "slice_size" INT4,
-  "is_merge" BOOLEAN DEFAULT TRUE,
-  "etag" VARCHAR(512) COLLATE "pg_catalog"."default",
-  "version_id" VARCHAR(512) COLLATE "pg_catalog"."default",
+  "is_merge"          BOOLEAN DEFAULT TRUE,
+  "etag"              VARCHAR(512) COLLATE "pg_catalog"."default",
+  "version_id"        VARCHAR(512) COLLATE "pg_catalog"."default",
   "headers" jsonb,
   "properties" jsonb,
   "update_time" TIMESTAMPTZ,
@@ -52,7 +51,8 @@ COMMENT ON COLUMN "public"."file_index"."operate" IS '文件操作';
 -- ----------------------------
 -- Primary Key structure for table file
 -- ----------------------------
-ALTER TABLE "public"."file_index" ADD CONSTRAINT "PK_FILE_INDEX_ID" PRIMARY KEY ("id");
+ALTER TABLE "public"."file_index"
+  ADD CONSTRAINT "PK_FILE_INDEX_ID" PRIMARY KEY ("id");
 
 CREATE INDEX "IDX_FILE_INDEX_USER_ID" ON "public"."file_index" USING btree (
   "user_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
@@ -87,14 +87,15 @@ CREATE INDEX "IDX_FILE_INDEX_OPERATE" ON "public"."file_index" USING btree (
 );
 
 DROP TABLE IF EXISTS "public"."file_chunk";
-CREATE TABLE "public"."file_chunk" (
-  "id" VARCHAR(64) COLLATE "pg_catalog"."default" NOT NULL,
+CREATE TABLE "public"."file_chunk"
+(
+  "id"            VARCHAR(64) COLLATE "pg_catalog"."default" NOT NULL,
   "file_index_id" VARCHAR(64) COLLATE "pg_catalog"."default" NOT NULL,
   "chunk_index" INT4 NOT NULL,
   "chunk_size" INT8,
   "chunk_start" INT8,
   "chunk_end" INT8,
-  "chunk_md5" VARCHAR(1024) COLLATE "pg_catalog"."default",
+  "chunk_md5"     VARCHAR(1024) COLLATE "pg_catalog"."default",
   "is_last_chunk" BOOLEAN DEFAULT FALSE,
   "chunk_time" TIMESTAMPTZ,
   "start_time" TIMESTAMPTZ,
@@ -115,9 +116,11 @@ COMMENT ON COLUMN "public"."file_chunk"."start_time" IS '第一片上传时间';
 COMMENT ON COLUMN "public"."file_chunk"."end_time" IS '最后一片上传时间';
 COMMENT ON COLUMN "public"."file_chunk"."operate" IS '文件操作';
 
-ALTER TABLE "public"."file_chunk" ADD CONSTRAINT "PK_FILE_CHUNK_ID" PRIMARY KEY ("id");
+ALTER TABLE "public"."file_chunk"
+  ADD CONSTRAINT "PK_FILE_CHUNK_ID" PRIMARY KEY ("id");
 
-ALTER TABLE "public"."file_chunk" ADD CONSTRAINT "UK_FILE_CHUNK_FILE_INDEX_ID_CHUNK_INDEX" UNIQUE ("file_index_id", "chunk_index");
+ALTER TABLE "public"."file_chunk"
+  ADD CONSTRAINT "UK_FILE_CHUNK_FILE_INDEX_ID_CHUNK_INDEX" UNIQUE ("file_index_id", "chunk_index");
 
 CREATE INDEX "IDX_FILE_CHUNK_FILE_INDEX_ID" ON "public"."file_chunk" USING btree (
   "file_index_id" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST

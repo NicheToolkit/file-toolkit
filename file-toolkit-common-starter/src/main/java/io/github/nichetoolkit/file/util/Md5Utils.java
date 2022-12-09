@@ -36,7 +36,7 @@ public class Md5Utils {
             return null;
         } finally {
             try {
-                if (fileInputStream != null){
+                if (fileInputStream != null) {
                     fileInputStream.close();
                 }
             } catch (IOException e) {
@@ -45,7 +45,7 @@ public class Md5Utils {
         }
     }
 
-    public static String md5(byte[] bytes){
+    public static String md5(byte[] bytes) {
         if (GeneralUtils.isEmpty(bytes)) {
             return null;
         }

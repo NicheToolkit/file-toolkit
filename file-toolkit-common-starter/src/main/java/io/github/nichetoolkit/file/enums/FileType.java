@@ -12,39 +12,39 @@ import java.util.Optional;
  * @author Cyan (snow22314@outlook.com)
  * @version v1.0.0
  */
-public enum FileType implements RestValue<Integer,String> {
+public enum FileType implements RestValue<Integer, String> {
     /**
      * JPG、PNG、PDF、TIFF、SWF
      */
-    IMAGE(1,"图片"),
+    IMAGE(1, "图片"),
     /**
      * TXT、DOC、XLS、PPT、DOCX、XLSX、PPTX
      */
-    DOCUMENT(2,"文档"),
+    DOCUMENT(2, "文档"),
     /**
      * FLV、RMVB、MP4、MVB
      */
-    VIDEO(3,"视频"),
+    VIDEO(3, "视频"),
 
     /**
      * SH、EXE、BAT
      */
-    EXE(4,"可执行文件"),
+    EXE(4, "可执行文件"),
 
     /**
      * RAR、ZIP、TAR、JAR、WAR
      */
-    RAR(5,"压缩文件"),
+    RAR(5, "压缩文件"),
 
     /**
      * 其他文件类型
      */
-    OTHER(99,"其他文件"),
+    OTHER(99, "其他文件"),
 
     /**
      * 未知文件类型
      */
-    UNKNOWN(999,"未知文件"),
+    UNKNOWN(999, "未知文件"),
     ;
 
     private final Integer key;

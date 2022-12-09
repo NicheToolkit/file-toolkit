@@ -29,7 +29,7 @@ public interface FileService {
     /**
      * 文件移除
      * @param fileId 文件id
-     * @param chunk 是否是分片
+     * @param chunk  是否是分片
      * @param delete 是否真实删除
      * @param rename 是否重命名删除
      * @throws RestException 服务异常
@@ -38,30 +38,29 @@ public interface FileService {
 
     /**
      * 下载文件
-     * @param file 文件数据
-     * @param filename 文件名称
+     * @param file        文件数据
+     * @param filename    文件名称
      * @param contentType contentType
-     * @param response 返回体
+     * @param response    返回体
      * @throws RestException 服务异常
      */
     void download(File file, String filename, String contentType, HttpServletRequest request, HttpServletResponse response) throws RestException;
 
     /**
      * 下载文件
-     * @param fileIndex 文件id
-     * @param filename 文件名称
+     * @param fileIndex   文件id
+     * @param filename    文件名称
      * @param contentType contentType
-     * @param response 返回体
+     * @param response    返回体
      * @throws RestException 服务异常
      */
     void download(FileIndex fileIndex, String filename, String contentType, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException;
 
     /**
-     *
      * @param fileIndex 文件id
-     * @param filename 文件名称
-     * @param preview 是否预览图片
-     * @param response 返回体
+     * @param filename  文件名称
+     * @param preview   是否预览图片
+     * @param response  返回体
      * @throws RestException 服务异常
      */
     void download(FileIndex fileIndex, String filename, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException;
@@ -69,16 +68,16 @@ public interface FileService {
     /**
      * 下载多文件
      * @param fileFilter 查询过滤器
-     * @param response 返回体
+     * @param response   返回体
      * @throws RestException 服务异常
      */
     void download(FileFilter fileFilter, HttpServletRequest request, HttpServletResponse response) throws RestException;
 
     /**
      * 下载文件
-     * @param fileId 文件id
-     * @param chunk 是否下载分片文件
-     * @param preview 是否预览图片
+     * @param fileId   文件id
+     * @param chunk    是否下载分片文件
+     * @param preview  是否预览图片
      * @param original 是否原始命名
      * @param response 返回体
      * @throws RestException 服务异常
@@ -87,8 +86,8 @@ public interface FileService {
 
     /**
      * 下载图片
-     * @param fileId 文件id
-     * @param preview 是否预览图片
+     * @param fileId   文件id
+     * @param preview  是否预览图片
      * @param original 是否原始命名
      * @param response 返回体
      * @throws RestException 服务异常
@@ -97,7 +96,7 @@ public interface FileService {
 
     /**
      * 上传文件
-     * @param file 文件数据
+     * @param file        文件数据
      * @param fileRequest 文件信息
      * @return FileIndex
      * @throws RestException 服务异常
@@ -122,9 +121,9 @@ public interface FileService {
 
     /**
      * 分片上传
-     * @param file 分片文件数据
+     * @param file         分片文件数据
      * @param contentRange 分片header
-     * @param fileRequest 文件信息
+     * @param fileRequest  文件信息
      * @return FileIndex
      * @throws RestException 服务异常
      */
