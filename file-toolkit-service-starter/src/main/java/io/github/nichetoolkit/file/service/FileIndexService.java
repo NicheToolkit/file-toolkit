@@ -12,7 +12,7 @@ import io.github.nichetoolkit.rice.service.extend.RemoveService;
  * @author Cyan (snow22314@outlook.com)
  * @version v1.0.0
  */
-public interface FileIndexService extends FilterService<String, FileIndex, FileFilter>, RemoveService<String> {
+public interface FileIndexService extends FilterService<String,String, FileIndex, FileFilter>, RemoveService<String,String> {
 
     /**
      * 通过id集合查询单个

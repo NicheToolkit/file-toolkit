@@ -17,7 +17,7 @@ import java.util.List;
  * @author Cyan (snow22314@outlook.com)
  * @version v1.0.0
  */
-public interface FileChunkService extends FilterService<String, FileChunk, FileFilter>, RemoveService<String> {
+public interface FileChunkService extends FilterService<String,String, FileChunk, FileFilter>, RemoveService<String,String> {
 
     /**
      * 通过id查询实体

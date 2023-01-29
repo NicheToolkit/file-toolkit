@@ -8,6 +8,7 @@ import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
 import io.github.nichetoolkit.rest.RestException;
+import io.github.nichetoolkit.rest.actuator.BiConsumerActuator;
 import io.github.nichetoolkit.rest.actuator.ConsumerActuator;
 import io.github.nichetoolkit.rest.util.GeneralUtils;
 import io.github.nichetoolkit.rice.RiceInfoService;
@@ -61,13 +62,8 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
     }
 
     @Override
-    public String deleteWhereSql(FileFilter filter) throws RestException {
-        return filter.toIdSql().toSql();
-    }
-
-    @Override
-    protected ConsumerActuator<FileIndex> updateActuator() {
-        return this::optional;
+    protected BiConsumerActuator<String,FileIndex> updateActuator() {
+        return (tableKey,fileIndex) -> this.optional(fileIndex);
     }
 
     @Override
