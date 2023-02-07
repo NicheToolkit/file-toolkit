@@ -37,6 +37,16 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
     private FileChunkService fileChunkService;
 
     @Override
+    protected Boolean isIdInvade() {
+        return false;
+    }
+
+    @Override
+    protected Boolean isIdExist() {
+        return false;
+    }
+
+    @Override
     public FileIndex queryByNameWithUploadInterrupt(String name) throws RestException {
         if (GeneralUtils.isEmpty(name)) {
             return null;
