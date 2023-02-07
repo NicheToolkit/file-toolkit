@@ -38,7 +38,7 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
 
     @Override
     protected Boolean isIdInvade() {
-        return false;
+        return true;
     }
 
     @Override
