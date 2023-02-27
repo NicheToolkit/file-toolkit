@@ -44,22 +44,18 @@ public class FileUploadServiceImpl implements FileUploadService {
     @Async
     @Override
     public void uploadFileIndex(FileIndex fileIndex) throws RestException {
-        String tempPath = FileUtils.createPath(commonProperties.getTempPath());
-        String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
-
         if (fileIndex.getIsAutograph() != null && fileIndex.getIsAutograph() && fileIndex.getFileType() == FileType.IMAGE) {
-            fileHandleService.autographImage(randomPath, fileIndex);
+            fileHandleService.autographImage(fileIndex);
         }
         if (fileIndex.getIsCondense()) {
             if (fileIndex.getFileType() == FileType.IMAGE) {
-                fileHandleService.condenseImage(randomPath, fileIndex);
+                fileHandleService.condenseImage(fileIndex);
             } else {
-                fileHandleService.condenseFile(randomPath, fileIndex);
+                fileHandleService.condenseFile(fileIndex);
             }
         }
         String fileId = fileIndex.getId();
         asyncFileService.putById(fileId, fileIndex.inputStream());
-        FileUtils.clear(randomPath);
         fileIndexService.save(fileIndex);
     }
 

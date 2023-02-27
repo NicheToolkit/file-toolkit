@@ -10,9 +10,9 @@ import io.github.nichetoolkit.rest.RestException;
  */
 public interface FileHandleService {
 
-    void autographImage(String randomPath, FileIndex fileIndex) throws RestException;
+    void autographImage(FileIndex fileIndex) throws RestException;
 
-    void condenseImage(String randomPath, FileIndex fileIndex) throws RestException;
+    void condenseImage(FileIndex fileIndex) throws RestException;
 
-    void condenseFile(String randomPath, FileIndex fileIndex) throws RestException;
+    void condenseFile(FileIndex fileIndex) throws RestException;
 }
