@@ -9,10 +9,7 @@ import io.github.nichetoolkit.file.helper.FileServiceHelper;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.model.FileRequest;
-import io.github.nichetoolkit.file.service.AsyncFileService;
-import io.github.nichetoolkit.file.service.FileChunkService;
-import io.github.nichetoolkit.file.service.FileIndexService;
-import io.github.nichetoolkit.file.service.FileService;
+import io.github.nichetoolkit.file.service.*;
 import io.github.nichetoolkit.file.video.VideoHttpRequestHandler;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
@@ -61,6 +58,9 @@ public class FileServiceImpl implements FileService {
 
     @Autowired
     protected FileChunkService fileChunkService;
+
+    @Autowired
+    protected FileUploadService fileUploadService;
 
     @Autowired
     protected AsyncFileService asyncFileService;
@@ -304,28 +304,13 @@ public class FileServiceImpl implements FileService {
         if (GeneralUtils.isEmpty(fileIndex)) {
             throw new RestException(FileErrorStatus.FILE_INDEX_IS_NULL);
         }
-        String tempPath = FileUtils.createPath(commonProperties.getTempPath());
-        String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
-
-        if (fileIndex.getIsAutograph() != null && fileIndex.getIsAutograph() && fileIndex.getFileType() == FileType.IMAGE) {
-            FileServiceHelper.autographImage(randomPath, fileIndex);
-        }
-        if (fileIndex.getIsCondense()) {
-            if (fileIndex.getFileType() == FileType.IMAGE) {
-                FileServiceHelper.condenseImage(randomPath, fileIndex);
-            } else {
-                FileServiceHelper.condenseFile(randomPath, fileIndex);
-            }
-        }
-        String fileId = fileIndex.getId();
         if (GeneralUtils.isEmpty(fileIndex.getId())) {
-            fileId = IdentityUtils.generateString();
+            String fileId = IdentityUtils.generateString();
             fileIndex.setId(fileId);
         }
-        asyncFileService.putById(fileId, fileIndex.inputStream());
-        FileUtils.clear(randomPath);
+        fileUploadService.uploadFileIndex(fileIndex);
         checkFileIndex(fileIndex);
-        return fileIndexService.save(fileIndex);
+        return fileIndex;
     }
 
     @Override
@@ -341,27 +326,23 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    @Async
-    public Future<FileIndex> chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException {
+    public FileIndex chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException {
         FileIndex fileChunkIndex = FileServiceHelper.createFileChunk(fileRequest, contentRange);
         FileIndex fileIndex = FileServiceHelper.createFileChunk(file, fileChunkIndex);
-        FileChunk uploadChunk = fileChunkService.save(fileIndex.getFileChunk());
-        asyncFileService.putById(uploadChunk.getId(), uploadChunk.inputStream());
-        fileIndex.setFileChunk(uploadChunk);
+        fileUploadService.uploadChunk(fileIndex);
         if (GeneralUtils.isEmpty(fileIndex.getFileChunks())) {
             fileIndex.setFileChunks(new ArrayList<>());
         }
         List<FileChunk> fileChunks = fileIndex.getFileChunks();
+        FileChunk uploadChunk = fileIndex.getFileChunk();
         fileChunks.add(uploadChunk);
         fileIndex.setCurrentIndex(uploadChunk.getChunkIndex());
         if ((uploadChunk.getIsLastChunk() || uploadChunk.getChunkIndex().equals(fileIndex.getSliceSize())) && fileIndex.getIsMerge()) {
-            List<String> sources = fileChunks.stream().map(RestId::getId).collect(Collectors.toList());
             fileIndex.setIsFinish(true);
-            asyncFileService.margeById(fileIndex.getId(), sources);
             checkFileIndex(fileIndex);
-            fileIndexService.save(fileIndex);
+            fileUploadService.lastChunk(fileIndex);
         }
-        return AsyncResult.forValue(fileIndex);
+        return fileIndex;
     }
 
     private void checkFileIndex(FileIndex fileIndex) {

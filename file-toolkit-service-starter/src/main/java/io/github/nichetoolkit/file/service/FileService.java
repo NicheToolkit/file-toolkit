@@ -127,6 +127,6 @@ public interface FileService {
      * @return FileIndex
      * @throws RestException 服务异常
      */
-    Future<FileIndex> chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException;
+    FileIndex chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException;
 
 }
