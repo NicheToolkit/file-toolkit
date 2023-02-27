@@ -304,10 +304,6 @@ public class FileServiceImpl implements FileService {
         if (GeneralUtils.isEmpty(fileIndex)) {
             throw new RestException(FileErrorStatus.FILE_INDEX_IS_NULL);
         }
-        if (GeneralUtils.isEmpty(fileIndex.getId())) {
-            String fileId = IdentityUtils.generateString();
-            fileIndex.setId(fileId);
-        }
         fileUploadService.uploadFileIndex(fileIndex);
         checkFileIndex(fileIndex);
         return fileIndex;

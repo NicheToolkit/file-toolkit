@@ -17,6 +17,7 @@ import io.github.nichetoolkit.file.util.ImageUtils;
 import io.github.nichetoolkit.file.util.Md5Utils;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
+import io.github.nichetoolkit.rest.identity.IdentityUtils;
 import io.github.nichetoolkit.rest.util.*;
 import io.github.nichetoolkit.rice.RestPage;
 import io.github.nichetoolkit.rice.helper.PropertyHelper;
@@ -47,7 +48,7 @@ import java.util.stream.Collectors;
 public class FileServiceHelper implements InitializingBean {
 
     @Autowired
-    private FileCommonProperties serviceProperties;
+    private FileCommonProperties commonProperties;
 
     @Autowired
     private FileIndexService fileIndexService;
@@ -109,7 +110,7 @@ public class FileServiceHelper implements InitializingBean {
 
     public static void buildIndexFiles(List<FileIndex> fileIndices, FileFilter fileFilter, String randomPath, List<File> fileList) throws RestException {
         for (FileIndex fileIndex : fileIndices) {
-            if (fileIndex.getFileSize() > INSTANCE.serviceProperties.getMaxFileSize()) {
+            if (fileIndex.getFileSize() > INSTANCE.commonProperties.getMaxFileSize()) {
                 log.warn("the file size is too large, id: {}, size: {}", fileIndex.getId(), fileIndex.getFileSize());
                 throw new FileErrorException(FileErrorStatus.FILE_TOO_LARGE_ERROR);
             }
@@ -240,7 +241,7 @@ public class FileServiceHelper implements InitializingBean {
         fileChunk.setChunkMd5(md5);
     }
 
-    public static FileIndex createFileChunk(MultipartFile file, FileIndex fileIndex) throws RestException {
+    public static FileIndex createFileChunk(MultipartFile multipartFile, FileIndex fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileIndex)) {
             log.warn("the file index is null!");
             throw new FileErrorException(FileErrorStatus.FILE_INDEX_IS_NULL);
@@ -272,8 +273,8 @@ public class FileServiceHelper implements InitializingBean {
         }
         Long chunkSize = fileChunk.getChunkSize();
         if (GeneralUtils.isEmpty(chunkSize)) {
-            chunkSize = file.getSize();
-            fileChunk.setChunkSize(file.getSize());
+            chunkSize = multipartFile.getSize();
+            fileChunk.setChunkSize(multipartFile.getSize());
         }
         Long chunkStart = fileChunk.getChunkStart();
         if (chunkStart == null) {
@@ -289,7 +290,7 @@ public class FileServiceHelper implements InitializingBean {
             log.error("the param of 'chunkEnd' or 'chunkStart' or 'chunkSize' for file chunk is invalid! ");
             throw new FileErrorException(FileErrorStatus.FILE_CHUNK_PARAM_INVALID);
         }
-        buildMd5(file, fileChunk);
+        buildMd5(multipartFile, fileChunk);
 
         fileChunk.setChunkTime(new Date());
         if (fileChunk.getChunkIndex() == 1) {
@@ -350,12 +351,19 @@ public class FileServiceHelper implements InitializingBean {
         return fileIndex;
     }
 
-    public static FileIndex createFileIndex(MultipartFile file, FileIndex fileIndex) throws RestException {
+    public static FileIndex createFileIndex(MultipartFile multipartFile, FileIndex fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileIndex)) {
             fileIndex = new FileIndex();
         }
-        String originalFilename = file.getOriginalFilename();
+        if (GeneralUtils.isEmpty(fileIndex.getId())) {
+            String fileId = IdentityUtils.generateString();
+            fileIndex.setId(fileId);
+        }
+        String originalFilename = multipartFile.getOriginalFilename();
         fileIndex.setName(originalFilename);
+        String tempPath = FileUtils.createPath(INSTANCE.commonProperties.getTempPath());
+        String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
+        File file = FileUtils.cacheFile(cachePath, multipartFile);
         fileIndex.setFile(file);
         String filename = FileUtils.filename(originalFilename);
         if (GeneralUtils.isEmpty(fileIndex.getFilename())) {
@@ -368,7 +376,7 @@ public class FileServiceHelper implements InitializingBean {
         if (GeneralUtils.isEmpty(fileIndex.getSuffix())) {
             fileIndex.setSuffix(suffix);
         }
-        fileIndex.setFileSize(file.getSize());
+        fileIndex.setFileSize(multipartFile.getSize());
         FileType fileType = parseType(suffix);
         if (GeneralUtils.isEmpty(fileIndex.getIsSlice())) {
             fileIndex.setIsSlice(false);
