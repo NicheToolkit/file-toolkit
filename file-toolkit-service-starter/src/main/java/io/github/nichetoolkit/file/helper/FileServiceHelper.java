@@ -17,6 +17,7 @@ import io.github.nichetoolkit.file.util.ImageUtils;
 import io.github.nichetoolkit.file.util.Md5Utils;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
+import io.github.nichetoolkit.rest.identity.IdentityUtils;
 import io.github.nichetoolkit.rest.util.*;
 import io.github.nichetoolkit.rice.RestPage;
 import io.github.nichetoolkit.rice.helper.PropertyHelper;
@@ -47,7 +48,7 @@ import java.util.stream.Collectors;
 public class FileServiceHelper implements InitializingBean {
 
     @Autowired
-    private FileCommonProperties serviceProperties;
+    private FileCommonProperties commonProperties;
 
     @Autowired
     private FileIndexService fileIndexService;
@@ -80,94 +81,6 @@ public class FileServiceHelper implements InitializingBean {
         }
     }
 
-    public static void condenseFile(String randomPath, FileIndex fileIndex) throws RestException {
-        String filename = fileIndex.getName();
-        String zipFilename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.FILE_ZIP_SUFFIX);
-        String filePath = randomPath.concat(File.separator).concat(filename);
-        File file = FileUtils.createFile(filePath);
-        StreamUtils.write(file, fileIndex.inputStream());
-        File zipFile = ZipUtils.zipFile(randomPath, zipFilename, file);
-        buildProperties(zipFilename, zipFile.length(), FileConstants.FILE_ZIP_SUFFIX, fileIndex);
-        if (fileIndex.getIsMd5()) {
-            buildMd5(zipFile, fileIndex);
-        }
-    }
-
-    public static void autographImage(String randomPath, FileIndex fileIndex) throws RestException {
-        InputStream inputStream = fileIndex.inputStream();
-        BufferedImage bufferedImage = ImageUtils.read(inputStream);
-        BufferedImage binaryImage = ImageUtils.binaryImage(bufferedImage);
-        BufferedImage autographImage = ImageUtils.autograph(binaryImage);
-        String filename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.IMAGE_PNG_SUFFIX);
-        String filePath = randomPath.concat(File.separator).concat(filename);
-        File file = new File(filePath);
-        if (file.exists()) {
-            FileUtils.delete(filePath);
-        }
-        ImageUtils.write(autographImage, file);
-        byte[] bytes = ImageUtils.bytes(file);
-        fileIndex.setBytes(bytes);
-        FileUtils.delete(filePath);
-    }
-
-    public static void condenseImage(String randomPath, FileIndex fileIndex) throws RestException {
-        Long imageFileSize;
-        Double imageFileQuality = 1.0d;
-        Double imageFileScale = 1.0d;
-        String filename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.IMAGE_PNG_SUFFIX);
-        String filePath;
-        File file;
-        Integer width = fileIndex.getWidth();
-        Integer height = fileIndex.getHeight();
-        filePath = randomPath.concat(File.separator).concat(filename);
-        file = new File(filePath);
-        do {
-            if (file.exists()) {
-                FileUtils.delete(filePath);
-            }
-            try {
-                Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
-                BufferedImage bufferedImage = ImageHelper.read(file);
-                int imageWidth = bufferedImage.getWidth();
-                int imageHeight = bufferedImage.getHeight();
-                if (GeneralUtils.isNotEmpty(width) && GeneralUtils.isNotEmpty(height)) {
-                    Thumbnails.of(fileIndex.inputStream()).size(width, height).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
-                } else if (GeneralUtils.isNotEmpty(width) || GeneralUtils.isNotEmpty(height)) {
-                    if (GeneralUtils.isNotEmpty(width)) {
-                        imageFileScale = ((double) width / (double) imageWidth >= 1.0D) ? imageFileScale : ((double) width / (double) imageWidth);
-                    } else {
-                        imageFileScale = ((double) height / (double) imageHeight >= 1.0D) ? imageFileScale : ((double) height / (double) imageHeight);
-                    }
-                    Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
-                } else {
-                    imageFileQuality = INSTANCE.serviceProperties.getMinImageQuality();
-                    Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
-                }
-            } catch (IOException exception) {
-                log.error("the image file has error during condensing: {}", exception.getMessage());
-                throw new FileErrorException(FileErrorStatus.FILE_IMAGE_CONDENSE_ERROR);
-            }
-            imageFileSize = file.length();
-            if (imageFileQuality.equals(INSTANCE.serviceProperties.getMinImageQuality())) {
-                imageFileScale += -0.1d;
-            } else {
-                imageFileQuality += -0.1d;
-            }
-        } while (imageFileSize > INSTANCE.serviceProperties.getMaxImageSize()
-                && imageFileQuality > INSTANCE.serviceProperties.getMinImageQuality()
-                && imageFileScale > INSTANCE.serviceProperties.getMinImageScale());
-        if (GeneralUtils.isNotEmpty(width) && GeneralUtils.isNotEmpty(height)) {
-            fileIndex.addProperty(FileConstants.IMAGE_CONDENSE_WIDTH_PROPERTY, width);
-            fileIndex.addProperty(FileConstants.IMAGE_CONDENSE_HEIGHT_PROPERTY, height);
-        } else {
-            fileIndex.addProperty(FileConstants.IMAGE_CONDENSE_SCALE_PROPERTY, imageFileScale);
-        }
-        fileIndex.addProperty(FileConstants.IMAGE_CONDENSE_QUALITY_PROPERTY, imageFileQuality);
-        buildProperties(filename, file.length(), FileConstants.IMAGE_PNG_SUFFIX, fileIndex);
-        buildMd5(file, fileIndex);
-        FileUtils.clearFile(randomPath);
-    }
-
     public static void buildProperties(String filename, long size, String suffix, FileIndex fileIndex) {
         fileIndex.addProperty(FileConstants.ORIGINAL_SUFFIX_PROPERTY, fileIndex.getSuffix());
         fileIndex.setSuffix(suffix);
@@ -197,7 +110,7 @@ public class FileServiceHelper implements InitializingBean {
 
     public static void buildIndexFiles(List<FileIndex> fileIndices, FileFilter fileFilter, String randomPath, List<File> fileList) throws RestException {
         for (FileIndex fileIndex : fileIndices) {
-            if (fileIndex.getFileSize() > INSTANCE.serviceProperties.getMaxFileSize()) {
+            if (fileIndex.getFileSize() > INSTANCE.commonProperties.getMaxFileSize()) {
                 log.warn("the file size is too large, id: {}, size: {}", fileIndex.getId(), fileIndex.getFileSize());
                 throw new FileErrorException(FileErrorStatus.FILE_TOO_LARGE_ERROR);
             }
@@ -328,7 +241,7 @@ public class FileServiceHelper implements InitializingBean {
         fileChunk.setChunkMd5(md5);
     }
 
-    public static FileIndex createFileChunk(MultipartFile file, FileIndex fileIndex) throws RestException {
+    public static FileIndex createFileChunk(MultipartFile multipartFile, FileIndex fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileIndex)) {
             log.warn("the file index is null!");
             throw new FileErrorException(FileErrorStatus.FILE_INDEX_IS_NULL);
@@ -360,8 +273,8 @@ public class FileServiceHelper implements InitializingBean {
         }
         Long chunkSize = fileChunk.getChunkSize();
         if (GeneralUtils.isEmpty(chunkSize)) {
-            chunkSize = file.getSize();
-            fileChunk.setChunkSize(file.getSize());
+            chunkSize = multipartFile.getSize();
+            fileChunk.setChunkSize(multipartFile.getSize());
         }
         Long chunkStart = fileChunk.getChunkStart();
         if (chunkStart == null) {
@@ -377,7 +290,7 @@ public class FileServiceHelper implements InitializingBean {
             log.error("the param of 'chunkEnd' or 'chunkStart' or 'chunkSize' for file chunk is invalid! ");
             throw new FileErrorException(FileErrorStatus.FILE_CHUNK_PARAM_INVALID);
         }
-        buildMd5(file, fileChunk);
+        buildMd5(multipartFile, fileChunk);
 
         fileChunk.setChunkTime(new Date());
         if (fileChunk.getChunkIndex() == 1) {
@@ -438,12 +351,19 @@ public class FileServiceHelper implements InitializingBean {
         return fileIndex;
     }
 
-    public static FileIndex createFileIndex(MultipartFile file, FileIndex fileIndex) throws RestException {
+    public static FileIndex createFileIndex(MultipartFile multipartFile, FileIndex fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileIndex)) {
             fileIndex = new FileIndex();
         }
-        String originalFilename = file.getOriginalFilename();
+        if (GeneralUtils.isEmpty(fileIndex.getId())) {
+            String fileId = IdentityUtils.generateString();
+            fileIndex.setId(fileId);
+        }
+        String originalFilename = multipartFile.getOriginalFilename();
         fileIndex.setName(originalFilename);
+        String tempPath = FileUtils.createPath(INSTANCE.commonProperties.getTempPath());
+        String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
+        File file = FileUtils.cacheFile(cachePath, multipartFile);
         fileIndex.setFile(file);
         String filename = FileUtils.filename(originalFilename);
         if (GeneralUtils.isEmpty(fileIndex.getFilename())) {
@@ -456,7 +376,7 @@ public class FileServiceHelper implements InitializingBean {
         if (GeneralUtils.isEmpty(fileIndex.getSuffix())) {
             fileIndex.setSuffix(suffix);
         }
-        fileIndex.setFileSize(file.getSize());
+        fileIndex.setFileSize(multipartFile.getSize());
         FileType fileType = parseType(suffix);
         if (GeneralUtils.isEmpty(fileIndex.getIsSlice())) {
             fileIndex.setIsSlice(false);
