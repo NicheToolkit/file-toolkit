@@ -61,6 +61,7 @@ public class FileHandleServiceImpl implements FileHandleService {
         byte[] bytes = ImageUtils.bytes(file);
         fileIndex.setBytes(bytes);
         FileUtils.delete(filePath);
+        FileUtils.clear(randomPath);
         FileUtils.clear(cachePath);
     }
 
@@ -123,7 +124,8 @@ public class FileHandleServiceImpl implements FileHandleService {
         fileIndex.addProperty(FileConstants.IMAGE_CONDENSE_QUALITY_PROPERTY, imageFileQuality);
         FileServiceHelper.buildProperties(filename, file.length(), FileConstants.IMAGE_PNG_SUFFIX, fileIndex);
         FileServiceHelper.buildMd5(file, fileIndex);
-        FileUtils.clearFile(randomPath);
+        FileUtils.delete(filePath);
+        FileUtils.clear(randomPath);
         FileUtils.clear(cachePath);
     }
 
@@ -143,6 +145,8 @@ public class FileHandleServiceImpl implements FileHandleService {
         if (fileIndex.getIsMd5()) {
             FileServiceHelper.buildMd5(zipFile, fileIndex);
         }
+        FileUtils.delete(filePath);
+        FileUtils.clear(randomPath);
         FileUtils.clear(cachePath);
     }
 }
