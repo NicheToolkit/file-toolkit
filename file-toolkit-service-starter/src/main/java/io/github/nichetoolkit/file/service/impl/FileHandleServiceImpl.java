@@ -47,21 +47,17 @@ public class FileHandleServiceImpl implements FileHandleService {
         String tempPath = FileUtils.createPath(commonProperties.getTempPath());
         String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
         String randomPath = FileUtils.createPath(cachePath, GeneralUtils.uuid());
+        InputStream inputStream = fileIndex.inputStream();
+        BufferedImage bufferedImage = ImageUtils.read(inputStream);
+        BufferedImage binaryImage = ImageUtils.binaryImage(bufferedImage);
+        BufferedImage autographImage = ImageUtils.autograph(binaryImage);
         String filename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.IMAGE_PNG_SUFFIX);
         String filePath = randomPath.concat(File.separator).concat(filename);
         File file = new File(filePath);
         if (file.exists()) {
             FileUtils.delete(filePath);
         }
-        try(InputStream inputStream = fileIndex.inputStream()) {
-            BufferedImage bufferedImage = ImageUtils.read(inputStream);
-            BufferedImage binaryImage = ImageUtils.binaryImage(bufferedImage);
-            BufferedImage autographImage = ImageUtils.autograph(binaryImage);
-            ImageUtils.write(autographImage, file);
-        } catch (IOException exception) {
-            log.error("the image file has error during autograph: {}", exception.getMessage());
-            throw new FileErrorException(FileErrorStatus.FILE_IMAGE_CONDENSE_ERROR);
-        }
+        ImageUtils.write(autographImage, file);
         byte[] bytes = ImageUtils.bytes(file);
         fileIndex.setBytes(bytes);
         FileUtils.delete(filePath);
@@ -143,12 +139,8 @@ public class FileHandleServiceImpl implements FileHandleService {
         String zipFilename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.FILE_ZIP_SUFFIX);
         String filePath = randomPath.concat(File.separator).concat(filename);
         File file = FileUtils.createFile(filePath);
-        try(InputStream inputStream = fileIndex.inputStream()) {
-            StreamUtils.write(file, inputStream);
-        } catch (IOException exception) {
-            log.error("the file has error during autograph: {}", exception.getMessage());
-            throw new FileErrorException(FileErrorStatus.FILE_CONDENSE_ERROR);
-        }
+        InputStream inputStream = fileIndex.inputStream();
+        StreamUtils.write(file, inputStream);
         File zipFile = ZipUtils.zipFile(randomPath, zipFilename, file);
         FileServiceHelper.buildProperties(zipFilename, zipFile.length(), FileConstants.FILE_ZIP_SUFFIX, fileIndex);
         if (fileIndex.getIsMd5()) {
