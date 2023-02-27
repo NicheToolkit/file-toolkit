@@ -85,7 +85,8 @@ public class FileHandleServiceImpl implements FileHandleService {
             if (file.exists()) {
                 FileUtils.delete(filePath);
             }
-            try(InputStream inputStream = fileIndex.inputStream()) {
+            try{
+                InputStream inputStream = fileIndex.inputStream();
                 Thumbnails.of(inputStream).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 BufferedImage bufferedImage = ImageHelper.read(file);
                 int imageWidth = bufferedImage.getWidth();
