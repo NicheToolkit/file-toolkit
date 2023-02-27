@@ -185,8 +185,8 @@ public class FileServiceHelper implements InitializingBean {
     }
 
     public static void buildMd5(File file, FileIndex fileIndex) throws RestException {
-        try {
-            buildMd5(new FileInputStream(file), fileIndex);
+        try(FileInputStream fileInputStream = new FileInputStream(file)) {
+            buildMd5(fileInputStream, fileIndex);
         } catch (IOException exception) {
             log.error("the file read with bytes has error, filename: {}, error: {}", fileIndex.getName(), exception.getMessage());
             throw new FileErrorException(FileErrorStatus.FILE_READ_BYTE_ERROR);

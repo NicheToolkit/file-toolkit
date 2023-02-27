@@ -118,12 +118,8 @@ public class FileController {
                                       FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         log.info("the chunk file will be started uploading at 'chunkUpload', filename: {}", originalFilename);
-        Future<FileIndex> indexFuture = fileService.chunkUpload(file, contentRange, fileRequest);
-        try {
-            return RestResult.ok(indexFuture.get());
-        } catch (InterruptedException | ExecutionException exception) {
-            throw new ServiceErrorException(FileErrorStatus.SERVICE_DOWNLOAD_ERROR, exception.getMessage());
-        }
+        FileIndex fileIndex = fileService.chunkUpload(file, contentRange, fileRequest);
+        return ResponseEntity.ok(fileIndex);
     }
 
     @Deprecated
