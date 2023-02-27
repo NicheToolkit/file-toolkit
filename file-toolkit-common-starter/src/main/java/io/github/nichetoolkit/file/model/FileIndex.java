@@ -19,7 +19,9 @@ import okhttp3.Headers;
 import org.springframework.lang.NonNull;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +111,7 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     protected byte[] bytes;
 
     @JsonIgnore
-    protected String file;
+    protected MultipartFile file;
 
     public FileIndex() {
     }
@@ -124,7 +126,7 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
             return new ByteArrayInputStream(this.bytes);
         } else if (GeneralUtils.isNotEmpty(this.file)) {
             try {
-                return new FileInputStream(new File(this.file));
+                return this.file.getInputStream();
             } catch (IOException ignored) {
             }
         }
