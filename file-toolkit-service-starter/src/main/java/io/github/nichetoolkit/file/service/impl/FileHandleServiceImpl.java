@@ -45,7 +45,8 @@ public class FileHandleServiceImpl implements FileHandleService {
     @Override
     public void autographImage(FileIndex fileIndex) throws RestException {
         String tempPath = FileUtils.createPath(commonProperties.getTempPath());
-        String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
+        String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
+        String randomPath = FileUtils.createPath(cachePath, GeneralUtils.uuid());
         InputStream inputStream = fileIndex.inputStream();
         BufferedImage bufferedImage = ImageUtils.read(inputStream);
         BufferedImage binaryImage = ImageUtils.binaryImage(bufferedImage);
@@ -61,13 +62,15 @@ public class FileHandleServiceImpl implements FileHandleService {
         fileIndex.setBytes(bytes);
         FileUtils.delete(filePath);
         FileUtils.clear(randomPath);
+        FileUtils.clear(cachePath);
     }
 
     @Async
     @Override
     public void condenseImage(FileIndex fileIndex) throws RestException {
         String tempPath = FileUtils.createPath(commonProperties.getTempPath());
-        String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
+        String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
+        String randomPath = FileUtils.createPath(cachePath, GeneralUtils.uuid());
         Long imageFileSize;
         Double imageFileQuality = 1.0d;
         Double imageFileScale = 1.0d;
@@ -123,13 +126,15 @@ public class FileHandleServiceImpl implements FileHandleService {
         FileServiceHelper.buildMd5(file, fileIndex);
         FileUtils.delete(filePath);
         FileUtils.clear(randomPath);
+        FileUtils.clear(cachePath);
     }
 
     @Async
     @Override
     public void condenseFile(FileIndex fileIndex) throws RestException {
         String tempPath = FileUtils.createPath(commonProperties.getTempPath());
-        String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
+        String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
+        String randomPath = FileUtils.createPath(cachePath, GeneralUtils.uuid());
         String filename = fileIndex.getName();
         String zipFilename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.FILE_ZIP_SUFFIX);
         String filePath = randomPath.concat(File.separator).concat(filename);
@@ -142,5 +147,6 @@ public class FileHandleServiceImpl implements FileHandleService {
         }
         FileUtils.delete(filePath);
         FileUtils.clear(randomPath);
+        FileUtils.clear(cachePath);
     }
 }
