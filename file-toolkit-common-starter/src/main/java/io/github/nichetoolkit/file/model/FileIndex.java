@@ -17,7 +17,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import okhttp3.Headers;
 import org.springframework.lang.NonNull;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -125,8 +124,7 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
             return new ByteArrayInputStream(this.bytes);
         } else if (GeneralUtils.isNotEmpty(this.file)) {
             try {
-                this.bytes = StreamUtils.copyToByteArray(new FileInputStream(file));
-                return new ByteArrayInputStream(this.bytes) ;
+                return new FileInputStream(this.file);
             } catch (IOException ignored) {
             }
         }

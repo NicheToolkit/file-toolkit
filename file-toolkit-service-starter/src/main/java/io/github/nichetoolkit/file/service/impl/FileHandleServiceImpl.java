@@ -61,7 +61,7 @@ public class FileHandleServiceImpl implements FileHandleService {
         byte[] bytes = ImageUtils.bytes(file);
         fileIndex.setBytes(bytes);
         FileUtils.delete(filePath);
-        FileUtils.clearFile(randomPath);
+        FileUtils.clear(randomPath);
         FileUtils.clear(cachePath);
     }
 
@@ -85,23 +85,22 @@ public class FileHandleServiceImpl implements FileHandleService {
             if (file.exists()) {
                 FileUtils.delete(filePath);
             }
-            try{
-                InputStream inputStream = fileIndex.inputStream();
-                Thumbnails.of(inputStream).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
+            try {
+                Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 BufferedImage bufferedImage = ImageHelper.read(file);
                 int imageWidth = bufferedImage.getWidth();
                 int imageHeight = bufferedImage.getHeight();
                 if (GeneralUtils.isNotEmpty(width) && GeneralUtils.isNotEmpty(height)) {
-                    Thumbnails.of(inputStream).size(width, height).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
+                    Thumbnails.of(fileIndex.inputStream()).size(width, height).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 } else if (GeneralUtils.isNotEmpty(width) || GeneralUtils.isNotEmpty(height)) {
                     if (GeneralUtils.isNotEmpty(width)) {
                         imageFileScale = ((double) width / (double) imageWidth >= 1.0D) ? imageFileScale : ((double) width / (double) imageWidth);
                     } else {
                         imageFileScale = ((double) height / (double) imageHeight >= 1.0D) ? imageFileScale : ((double) height / (double) imageHeight);
                     }
-                    Thumbnails.of(inputStream).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
+                    Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 } else {
-                    Thumbnails.of(inputStream).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
+                    Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 }
             } catch (IOException exception) {
                 log.error("the image file has error during condensing: {}", exception.getMessage());
@@ -126,7 +125,7 @@ public class FileHandleServiceImpl implements FileHandleService {
         FileServiceHelper.buildProperties(filename, file.length(), FileConstants.IMAGE_PNG_SUFFIX, fileIndex);
         FileServiceHelper.buildMd5(file, fileIndex);
         FileUtils.delete(filePath);
-        FileUtils.clearFile(randomPath);
+        FileUtils.clear(randomPath);
         FileUtils.clear(cachePath);
     }
 
@@ -140,15 +139,14 @@ public class FileHandleServiceImpl implements FileHandleService {
         String zipFilename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.FILE_ZIP_SUFFIX);
         String filePath = randomPath.concat(File.separator).concat(filename);
         File file = FileUtils.createFile(filePath);
-        InputStream inputStream = fileIndex.inputStream();
-        StreamUtils.write(file, inputStream);
+        StreamUtils.write(file, fileIndex.inputStream());
         File zipFile = ZipUtils.zipFile(randomPath, zipFilename, file);
         FileServiceHelper.buildProperties(zipFilename, zipFile.length(), FileConstants.FILE_ZIP_SUFFIX, fileIndex);
         if (fileIndex.getIsMd5()) {
             FileServiceHelper.buildMd5(zipFile, fileIndex);
         }
         FileUtils.delete(filePath);
-        FileUtils.clearFile(randomPath);
+        FileUtils.clear(randomPath);
         FileUtils.clear(cachePath);
     }
 }
