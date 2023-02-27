@@ -92,8 +92,6 @@ public class FileHandleServiceImpl implements FileHandleService {
                     }
                     Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 } else {
-                    imageFileQuality = serviceProperties.getMinImageQuality();
-                    imageFileScale = serviceProperties.getMinImageScale();
                     Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 }
             } catch (IOException exception) {
