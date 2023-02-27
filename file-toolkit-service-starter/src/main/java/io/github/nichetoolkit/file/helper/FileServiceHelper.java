@@ -5,7 +5,6 @@ import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.entity.FileIndexEntity;
 import io.github.nichetoolkit.file.enums.FileType;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
-import io.github.nichetoolkit.file.error.ImageTransferException;
 import io.github.nichetoolkit.file.filter.FileFilter;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.file.model.FileIndex;
@@ -13,16 +12,17 @@ import io.github.nichetoolkit.file.model.FileRequest;
 import io.github.nichetoolkit.file.service.AsyncFileService;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
-import io.github.nichetoolkit.file.util.ImageUtils;
 import io.github.nichetoolkit.file.util.Md5Utils;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
 import io.github.nichetoolkit.rest.identity.IdentityUtils;
-import io.github.nichetoolkit.rest.util.*;
+import io.github.nichetoolkit.rest.util.ContextUtils;
+import io.github.nichetoolkit.rest.util.FileUtils;
+import io.github.nichetoolkit.rest.util.GeneralUtils;
+import io.github.nichetoolkit.rest.util.StreamUtils;
 import io.github.nichetoolkit.rice.RestPage;
 import io.github.nichetoolkit.rice.helper.PropertyHelper;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -31,10 +31,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import javax.naming.NamingEnumeration;
-import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -361,10 +361,12 @@ public class FileServiceHelper implements InitializingBean {
         }
         String originalFilename = multipartFile.getOriginalFilename();
         fileIndex.setName(originalFilename);
-        String tempPath = FileUtils.createPath(INSTANCE.commonProperties.getTempPath());
-        String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
-        File file = FileUtils.cacheFile(cachePath, multipartFile);
-        fileIndex.setFile(file);
+        try {
+            byte[] bytes = StreamUtils.bytes(multipartFile.getInputStream());
+            fileIndex.setBytes(bytes);
+        } catch (IOException ignored) {
+        }
+
         String filename = FileUtils.filename(originalFilename);
         if (GeneralUtils.isEmpty(fileIndex.getFilename())) {
             fileIndex.setFilename(filename);
@@ -400,7 +402,7 @@ public class FileServiceHelper implements InitializingBean {
             fileIndex.setSliceSize(0);
         }
         if (fileIndex.getIsMd5()) {
-            buildMd5(file, fileIndex);
+            buildMd5(fileIndex.getBytes(), fileIndex);
         }
         fileIndex.setCreateTime(new Date());
         return fileIndex;

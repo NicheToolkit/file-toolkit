@@ -108,9 +108,6 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     @JsonIgnore
     protected byte[] bytes;
 
-    @JsonIgnore
-    protected File file;
-
     public FileIndex() {
     }
 
@@ -122,11 +119,6 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     public InputStream inputStream() {
         if (GeneralUtils.isNotEmpty(this.bytes)) {
             return new ByteArrayInputStream(this.bytes);
-        } else if (GeneralUtils.isNotEmpty(this.file)) {
-            try {
-                return new FileInputStream(this.file);
-            } catch (IOException ignored) {
-            }
         }
         return null;
     }
