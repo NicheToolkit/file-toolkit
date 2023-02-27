@@ -140,6 +140,8 @@ public class FileServiceHelper implements InitializingBean {
                     }
                     Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 } else {
+                    imageFileQuality = INSTANCE.serviceProperties.getMinImageQuality();
+                    imageFileScale = INSTANCE.serviceProperties.getMinImageScale();
                     Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
                 }
             } catch (IOException exception) {
