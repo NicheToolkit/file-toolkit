@@ -316,8 +316,8 @@ public class FileServiceImpl implements FileService {
         }
         String fileId = fileIndex.getId();
         asyncFileService.putById(fileId, fileIndex.inputStream());
-        fileIndexService.save(fileIndex);
         checkFileIndex(fileIndex);
+        fileIndexService.save(fileIndex);
         return fileIndex;
     }
 
