@@ -337,6 +337,7 @@ public class FileServiceImpl implements FileService {
     public FileIndex chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException {
         FileIndex fileChunkIndex = FileServiceHelper.createFileChunk(fileRequest, contentRange);
         FileIndex fileIndex = FileServiceHelper.createFileChunk(file, fileChunkIndex);
+        checkFileIndex(fileIndex);
         FileChunk uploadChunk = fileChunkService.save(fileIndex.getFileChunk());
         asyncFileService.putById(uploadChunk.getId(), uploadChunk.inputStream());
         fileIndex.setFileChunk(uploadChunk);
