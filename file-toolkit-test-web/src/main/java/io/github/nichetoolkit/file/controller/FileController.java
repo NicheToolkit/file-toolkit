@@ -12,8 +12,10 @@ import io.github.nichetoolkit.file.service.FileService;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.RestResult;
 import io.github.nichetoolkit.rest.error.natives.ServiceErrorException;
+import io.github.nichetoolkit.rest.userlog.stereotype.RestNotelog;
 import io.github.nichetoolkit.rest.util.FileUtils;
 import io.github.nichetoolkit.rest.util.JsonUtils;
+import io.github.nichetoolkit.rice.stereotype.RestSkip;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 @Slf4j
+@RestSkip
+@RestNotelog
 @RestController
 @RequestMapping("/file")
 public class FileController {
@@ -41,6 +45,12 @@ public class FileController {
     @Autowired
     private FileService fileService;
 
+    @GetMapping("/error")
+    public ResponseEntity<RestResult> error() throws RestException {
+        Object test = null;
+        test.toString();
+        return RestResult.ok();
+    }
 
     @GetMapping("/img/download")
     public void imgDownload(@RequestParam(value = "fileId") String fileId,
