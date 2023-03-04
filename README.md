@@ -1,7 +1,9 @@
 ## [file-Toolkit](https://github.com/NicheToolkit/file-toolkit) file开发工具组
 
-[![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/NicheToolkit/file-toolkit/blob/master/LICENSE)
-[![Maven Release](https://img.shields.io/maven-central/v/io.github.nichetoolkit/file-toolkit-starter.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22io.github.nichetoolkit%22%20AND%20a%3A%file-toolkit-service-starter%22)
+[![GitHub License](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/NicheToolkit/file-toolkit/blob/master/LICENSE)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.nichetoolkit/file-toolkit-service-starter)](https://central.sonatype.com/search?smo=true&q=file-toolkit-service-starter&namespace=io.github.nichetoolkit)
+[![Nexus Release](https://img.shields.io/nexus/r/io.github.nichetoolkit/file-toolkit-service-starter?server=https%3A%2F%2Fs01.oss.sonatype.org)](https://s01.oss.sonatype.org/content/repositories/releases/io/github/nichetoolkit/file-toolkit-service-starter/)
+[![Nexus Snapshot](https://img.shields.io/nexus/s/io.github.nichetoolkit/file-toolkit-service-starter?server=https%3A%2F%2Fs01.oss.sonatype.org)](https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/nichetoolkit/file-toolkit-service-starter/)
 ![Tests](https://github.com/NicheToolkit/file-toolkit/workflows/Tests/badge.svg)
 
 &emsp;&emsp; 依赖[rice-toolkit](https://github.com/NicheToolkit/rice-toolkit/rice-toolkit-starter)组件下的基于[postgresql](https://www.postgresql.org/)数据库环境下的简单业务通用服务开发组件.
