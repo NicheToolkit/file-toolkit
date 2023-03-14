@@ -1,4 +1,4 @@
-package io.github.nichetoolkit.file.service;
+package io.github.nichetoolkit.file.handle;
 
 import io.github.nichetoolkit.rest.RestException;
 import org.springframework.scheduling.annotation.Async;
@@ -8,11 +8,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * <p>AsyncFileService</p>
+ * <p>FileStoreService</p>
  * @author Cyan (snow22314@outlook.com)
  * @version v1.0.0
  */
-public abstract class AsyncFileService {
+public abstract class FileStoreService {
     @Async
     abstract public void removeAll(List<String> fileIdList) throws RestException;
 

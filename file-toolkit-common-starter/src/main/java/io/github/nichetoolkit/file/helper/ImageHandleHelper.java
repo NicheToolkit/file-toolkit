@@ -14,7 +14,7 @@ import java.io.*;
  * @author Cyan (snow22314@outlook.com)
  * @version v1.0.0
  */
-public class ImageHelper {
+public class ImageHandleHelper {
 
     public static void write(BufferedImage bufferedImage, OutputStream outputStream) throws ImageWriteException {
         try {

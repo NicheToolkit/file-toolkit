@@ -5,26 +5,28 @@ import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.enums.FileType;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
 import io.github.nichetoolkit.file.filter.FileFilter;
+import io.github.nichetoolkit.file.handle.FileStoreService;
 import io.github.nichetoolkit.file.helper.FileServiceHelper;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.model.FileRequest;
-import io.github.nichetoolkit.file.service.*;
+import io.github.nichetoolkit.file.service.FileChunkService;
+import io.github.nichetoolkit.file.service.FileHandleService;
+import io.github.nichetoolkit.file.service.FileIndexService;
+import io.github.nichetoolkit.file.service.FileService;
 import io.github.nichetoolkit.file.video.VideoHttpRequestHandler;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
-import io.github.nichetoolkit.rest.identity.IdentityUtils;
 import io.github.nichetoolkit.rest.util.*;
 import io.github.nichetoolkit.rice.RestId;
 import io.github.nichetoolkit.rice.RestPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +40,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -62,10 +63,10 @@ public class FileServiceImpl implements FileService {
     @Autowired
     protected FileHandleService fileHandleService;
 
-    @Autowired
-    protected AsyncFileService asyncFileService;
+    @Resource
+    protected FileStoreService fileStoreService;
 
-    @Autowired
+    @Resource
     protected VideoHttpRequestHandler videoHttpRequestHandler;
 
     @Override
@@ -81,7 +82,7 @@ public class FileServiceImpl implements FileService {
         }
         List<String> fileIdList = restPage.getItems().stream().map(RestId::getId).distinct().collect(Collectors.toList());
         if (GeneralUtils.isNotEmpty(fileIdList)) {
-            asyncFileService.removeAll(fileIdList);
+            fileStoreService.removeAll(fileIdList);
             if (fileFilter.isChunk()) {
                 if (fileFilter.isDelete()) {
                     fileChunkService.deleteAll(fileIdList);
@@ -125,9 +126,9 @@ public class FileServiceImpl implements FileService {
         }
         if (isExist) {
             if (rename) {
-                asyncFileService.renameById(fileId, fileId.concat("_del"));
+                fileStoreService.renameById(fileId, fileId.concat("_del"));
             }
-            asyncFileService.removeById(fileId);
+            fileStoreService.removeById(fileId);
         }
     }
 
@@ -160,7 +161,7 @@ public class FileServiceImpl implements FileService {
                 throw new FileErrorException(FileErrorStatus.SERVICE_DOWNLOAD_ERROR);
             }
         } else {
-            try (InputStream inputStream = asyncFileService.getById(fileIndex.getId());
+            try (InputStream inputStream = fileStoreService.getById(fileIndex.getId());
                  ServletOutputStream outputStream = response.getOutputStream()) {
                 response.addHeader(FileConstants.CONTENT_DISPOSITION_HEADER, FileConstants.ATTACHMENT_FILENAME_VALUE + URLEncoder.encode(filename, StandardCharsets.UTF_8.name()));
                 StreamUtils.write(outputStream, inputStream);
@@ -315,7 +316,7 @@ public class FileServiceImpl implements FileService {
             }
         }
         String fileId = fileIndex.getId();
-        asyncFileService.putById(fileId, fileIndex.inputStream());
+        fileStoreService.putById(fileId, fileIndex.inputStream());
         checkFileIndex(fileIndex);
         fileIndexService.save(fileIndex);
         return fileIndex;
@@ -339,7 +340,7 @@ public class FileServiceImpl implements FileService {
         FileIndex fileIndex = FileServiceHelper.createFileChunk(file, fileChunkIndex);
         checkFileIndex(fileIndex);
         FileChunk uploadChunk = fileChunkService.save(fileIndex.getFileChunk());
-        asyncFileService.putById(uploadChunk.getId(), uploadChunk.inputStream());
+        fileStoreService.putById(uploadChunk.getId(), uploadChunk.inputStream());
         fileIndex.setFileChunk(uploadChunk);
         if (GeneralUtils.isEmpty(fileIndex.getFileChunks())) {
             fileIndex.setFileChunks(new ArrayList<>());
@@ -350,7 +351,7 @@ public class FileServiceImpl implements FileService {
         if ((uploadChunk.getIsLastChunk() || uploadChunk.getChunkIndex().equals(fileIndex.getSliceSize())) && fileIndex.getIsMerge()) {
             fileIndex.setIsFinish(true);
             List<String> sources = fileIndex.getFileChunks().stream().map(RestId::getId).collect(Collectors.toList());
-            asyncFileService.margeById(fileIndex.getId(), sources);
+            fileStoreService.margeById(fileIndex.getId(), sources);
             checkFileIndex(fileIndex);
             fileIndexService.save(fileIndex);
         }

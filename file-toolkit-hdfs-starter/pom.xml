@@ -56,7 +56,7 @@
 
         <dependency>
             <groupId>io.github.nichetoolkit</groupId>
-            <artifactId>file-toolkit-service-starter</artifactId>
+            <artifactId>file-toolkit-postgres-starter</artifactId>
             <version>${file-toolkit.version}</version>
         </dependency>
 

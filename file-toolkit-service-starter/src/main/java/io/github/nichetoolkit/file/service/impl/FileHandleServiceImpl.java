@@ -1,17 +1,15 @@
-package io.github.nichetoolkit.file.service.impl;
+package io.github.nichetoolkit.file.service;
 
 import io.github.nichetoolkit.file.configure.FileCommonProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
-import io.github.nichetoolkit.file.enums.FileType;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
 import io.github.nichetoolkit.file.helper.FileServiceHelper;
-import io.github.nichetoolkit.file.helper.ImageHelper;
+import io.github.nichetoolkit.file.helper.ImageHandleHelper;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.service.FileHandleService;
 import io.github.nichetoolkit.file.util.ImageUtils;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
-import io.github.nichetoolkit.rest.identity.IdentityUtils;
 import io.github.nichetoolkit.rest.util.FileUtils;
 import io.github.nichetoolkit.rest.util.GeneralUtils;
 import io.github.nichetoolkit.rest.util.StreamUtils;
@@ -87,7 +85,7 @@ public class FileHandleServiceImpl implements FileHandleService {
             }
             try {
                 Thumbnails.of(fileIndex.inputStream()).scale(imageFileScale).outputFormat(FileConstants.IMAGE_PNG_SUFFIX).outputQuality(imageFileQuality).toFile(filePath);
-                BufferedImage bufferedImage = ImageHelper.read(file);
+                BufferedImage bufferedImage = ImageHandleHelper.read(file);
                 int imageWidth = bufferedImage.getWidth();
                 int imageHeight = bufferedImage.getHeight();
                 if (GeneralUtils.isNotEmpty(width) && GeneralUtils.isNotEmpty(height)) {

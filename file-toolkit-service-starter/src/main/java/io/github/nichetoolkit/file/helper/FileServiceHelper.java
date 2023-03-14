@@ -5,15 +5,12 @@ import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.entity.FileIndexEntity;
 import io.github.nichetoolkit.file.enums.FileType;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
-import io.github.nichetoolkit.file.error.ImageTransferException;
 import io.github.nichetoolkit.file.filter.FileFilter;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.model.FileRequest;
-import io.github.nichetoolkit.file.service.AsyncFileService;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
-import io.github.nichetoolkit.file.util.ImageUtils;
 import io.github.nichetoolkit.file.util.Md5Utils;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
@@ -22,7 +19,6 @@ import io.github.nichetoolkit.rest.util.*;
 import io.github.nichetoolkit.rice.RestPage;
 import io.github.nichetoolkit.rice.helper.PropertyHelper;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,10 +26,6 @@ import org.springframework.http.MediaTypeFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
-import javax.naming.NamingEnumeration;
-import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,8 +48,6 @@ public class FileServiceHelper implements InitializingBean {
     @Autowired
     private FileChunkService fileChunkService;
 
-    private AsyncFileService asyncFileService;
-
     private static FileServiceHelper INSTANCE = null;
 
     public static FileServiceHelper getInstance() {
@@ -67,11 +57,6 @@ public class FileServiceHelper implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         INSTANCE = this;
-    }
-
-    @PostConstruct
-    public void InitFileSupperService() {
-        asyncFileService = ContextUtils.getBean(AsyncFileService.class);
     }
 
     public static void checkRestPage(RestPage restPage) throws RestException {
@@ -101,7 +86,7 @@ public class FileServiceHelper implements InitializingBean {
                     itemFilename = fileIndex.getFilename().concat("_").concat(String.valueOf(fileChunk.getChunkIndex())).concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
                 }
                 String itemFilePath = randomPath.concat(File.separator).concat(itemFilename);
-                writeFile(fileChunk.getId(), itemFilePath);
+                FileHandleHelper.writeFile(fileChunk.getId(), itemFilePath);
                 fileList.add(new File(itemFilePath));
             }
         }
@@ -119,20 +104,10 @@ public class FileServiceHelper implements InitializingBean {
                 itemFilename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
             }
             String itemFilePath = randomPath.concat(File.separator).concat(itemFilename);
-            writeFile(fileIndex.getId(), itemFilePath);
+            FileHandleHelper.writeFile(fileIndex.getId(), itemFilePath);
             fileList.add(new File(itemFilePath));
         }
     }
-
-    public static void writeFile(String objectName, String itemFilePath) throws RestException {
-        try (InputStream getObjectResponse = INSTANCE.asyncFileService.getById(objectName)) {
-            StreamUtils.write(itemFilePath, getObjectResponse);
-        } catch (IOException exception) {
-            log.error("the file service download has error: {}", exception.getMessage());
-            throw new FileErrorException(FileErrorStatus.SERVICE_DOWNLOAD_ERROR);
-        }
-    }
-
 
     public static FileIndex createFileIndex(FileIndex fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileIndex)) {

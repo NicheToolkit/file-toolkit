@@ -1,4 +1,4 @@
-package io.github.nichetoolkit.file.service.impl;
+package io.github.nichetoolkit.file.service;
 
 import io.github.nichetoolkit.file.entity.FileIndexEntity;
 import io.github.nichetoolkit.file.filter.FileFilter;

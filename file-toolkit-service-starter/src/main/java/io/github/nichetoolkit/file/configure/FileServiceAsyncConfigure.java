@@ -1,5 +1,6 @@
 package io.github.nichetoolkit.file.configure;
 
+import io.github.nichetoolkit.rest.logback.RestThreadPoolTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
@@ -29,7 +30,7 @@ public class FileServiceAsyncConfigure implements AsyncConfigurer {
      */
     @Override
     public Executor getAsyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        RestThreadPoolTaskExecutor executor = new RestThreadPoolTaskExecutor();
         executor.setDaemon(true);
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(100);

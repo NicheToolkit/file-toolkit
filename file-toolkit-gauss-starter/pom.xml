@@ -8,12 +8,12 @@
         <version>1.0.4-SNAPSHOT</version>
     </parent>
 
-    <artifactId>file-toolkit-minio-starter</artifactId>
+    <artifactId>file-toolkit-gauss-starter</artifactId>
     <version>1.0.4-SNAPSHOT</version>
-    <name>file-toolkit-minio-starter</name>
+    <name>file-toolkit-gauss-starter</name>
     <packaging>jar</packaging>
-    <description>File toolkit minio project for Spring Boot</description>
-    <url>https://github.com/NicheToolkit/file-toolkit/tree/master/file-toolkit-minio-starter</url>
+    <description>File toolkit service project for Spring Boot</description>
+    <url>https://github.com/NicheToolkit/file-toolkit/tree/master/file-toolkit-gauss-starter</url>
 
     <properties>
         <java.version>1.8</java.version>
@@ -56,14 +56,20 @@
 
         <dependency>
             <groupId>io.github.nichetoolkit</groupId>
-            <artifactId>file-toolkit-minio-utils</artifactId>
+            <artifactId>file-toolkit-service-starter</artifactId>
             <version>${file-toolkit.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>io.github.nichetoolkit</groupId>
-            <artifactId>file-toolkit-common-starter</artifactId>
-            <version>${file-toolkit.version}</version>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper</artifactId>
+            <version>${tk-mybatis-mapper.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+            <version>${tk-mybatis-starter.version}</version>
         </dependency>
 
     </dependencies>

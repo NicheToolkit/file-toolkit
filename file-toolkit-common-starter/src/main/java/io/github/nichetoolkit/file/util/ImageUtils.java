@@ -4,13 +4,12 @@ import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.error.ImageReadException;
 import io.github.nichetoolkit.file.error.ImageTransferException;
 import io.github.nichetoolkit.file.error.ImageWriteException;
-import io.github.nichetoolkit.file.helper.ImageHelper;
+import io.github.nichetoolkit.file.helper.ImageHandleHelper;
 import io.github.nichetoolkit.rest.util.GeneralUtils;
 import io.github.nichetoolkit.rest.util.StreamUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -31,7 +30,7 @@ public class ImageUtils {
 
     public static void write(BufferedImage bufferedImage, OutputStream outputStream) {
         try {
-            ImageHelper.write(bufferedImage, outputStream);
+            ImageHandleHelper.write(bufferedImage, outputStream);
         } catch (ImageWriteException exception) {
             log.error("An error occurred during bufferedImage to write as outputStream!", exception);
             exception.printStackTrace();
@@ -40,7 +39,7 @@ public class ImageUtils {
 
     public static void write(BufferedImage bufferedImage, String imagePath) {
         try {
-            ImageHelper.write(bufferedImage, imagePath);
+            ImageHandleHelper.write(bufferedImage, imagePath);
         } catch (ImageWriteException exception) {
             log.error("An error occurred during bufferedImage to write as file!", exception);
             exception.printStackTrace();
@@ -49,7 +48,7 @@ public class ImageUtils {
 
     public static void write(BufferedImage bufferedImage, File file) {
         try {
-            ImageHelper.write(bufferedImage, "png", file);
+            ImageHandleHelper.write(bufferedImage, "png", file);
         } catch (ImageWriteException exception) {
             log.error("An error occurred during bufferedImage to write as file!", exception);
             exception.printStackTrace();
@@ -59,7 +58,7 @@ public class ImageUtils {
 
     public static void write(BufferedImage bufferedImage, String formatName, OutputStream outputStream) {
         try {
-            ImageHelper.write(bufferedImage, formatName, outputStream);
+            ImageHandleHelper.write(bufferedImage, formatName, outputStream);
         } catch (ImageWriteException exception) {
             log.error("An error occurred during bufferedImage to write as outputStream!", exception);
             exception.printStackTrace();
@@ -68,7 +67,7 @@ public class ImageUtils {
 
     public static void write(BufferedImage bufferedImage, String formatName, String imagePath) {
         try {
-            ImageHelper.write(bufferedImage, formatName, new File(imagePath));
+            ImageHandleHelper.write(bufferedImage, formatName, new File(imagePath));
         } catch (ImageWriteException exception) {
             log.error("An error occurred during bufferedImage to write as file!", exception);
             exception.printStackTrace();
@@ -77,7 +76,7 @@ public class ImageUtils {
 
     public static void write(BufferedImage bufferedImage, String formatName, File file) {
         try {
-            ImageHelper.write(bufferedImage, formatName, file);
+            ImageHandleHelper.write(bufferedImage, formatName, file);
         } catch (ImageWriteException exception) {
             log.error("An error occurred during bufferedImage to read as file!", exception);
             exception.printStackTrace();
@@ -86,7 +85,7 @@ public class ImageUtils {
 
     public static BufferedImage read(InputStream inputStream) {
         try {
-            return ImageHelper.read(inputStream);
+            return ImageHandleHelper.read(inputStream);
         } catch (ImageReadException exception) {
             log.error("An error occurred during inputStream to read as BufferedImage!", exception);
             exception.printStackTrace();
@@ -96,7 +95,7 @@ public class ImageUtils {
 
     public static BufferedImage read(String imagePath) {
         try {
-            return ImageHelper.read(imagePath);
+            return ImageHandleHelper.read(imagePath);
         } catch (ImageReadException exception) {
             log.error("An error occurred during file to read as BufferedImage!", exception);
             exception.printStackTrace();
@@ -107,7 +106,7 @@ public class ImageUtils {
 
     public static BufferedImage read(File file) {
         try {
-            return ImageHelper.read(file);
+            return ImageHandleHelper.read(file);
         } catch (ImageReadException exception) {
             log.error("An error occurred during file to write as BufferedImage!", exception);
             exception.printStackTrace();
@@ -117,7 +116,7 @@ public class ImageUtils {
 
     public static InputStream inputStream(BufferedImage bufferedImage) {
         try {
-            return ImageHelper.inputStream(bufferedImage);
+            return ImageHandleHelper.inputStream(bufferedImage);
         } catch (ImageTransferException exception) {
             log.error("An error occurred during bufferedImage to transfer as inputStream!", exception);
             exception.printStackTrace();
@@ -127,7 +126,7 @@ public class ImageUtils {
 
     public static byte[] bytes(BufferedImage bufferedImage) {
         try {
-            return ImageHelper.bytes(bufferedImage);
+            return ImageHandleHelper.bytes(bufferedImage);
         } catch (ImageTransferException exception) {
             log.error("An error occurred during bufferedImage to transfer as inputStream!", exception);
             exception.printStackTrace();
