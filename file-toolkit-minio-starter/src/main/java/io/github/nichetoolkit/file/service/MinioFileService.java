@@ -1,7 +1,7 @@
 package io.github.nichetoolkit.file.service;
 
+import io.github.nichetoolkit.file.handle.FileStoreService;
 import io.github.nichetoolkit.file.minio.MinioUtils;
-import io.github.nichetoolkit.file.handle.FileHandleService;
 import io.github.nichetoolkit.rest.RestException;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
  * @version v1.0.0
  */
 @Service
-public class MinioFileService extends FileHandleService {
+public class MinioFileService extends FileStoreService {
     @Override
     @Async
     public void removeAll(List<String> fileIdList) throws RestException {
