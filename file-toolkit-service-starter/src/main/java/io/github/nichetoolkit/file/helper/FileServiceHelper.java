@@ -335,6 +335,9 @@ public class FileServiceHelper implements InitializingBean {
             fileIndex.setId(fileId);
         }
         String originalFilename = multipartFile.getOriginalFilename();
+        if (GeneralUtils.isNotEmpty(originalFilename)) {
+            originalFilename=originalFilename.trim().toLowerCase();
+        }
         fileIndex.setName(originalFilename);
         String tempPath = FileUtils.createPath(INSTANCE.commonProperties.getTempPath());
         String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
