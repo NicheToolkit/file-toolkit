@@ -5,11 +5,11 @@
     <parent>
         <groupId>io.github.nichetoolkit</groupId>
         <artifactId>file-toolkit-parent</artifactId>
-        <version>1.0.4-SNAPSHOT</version>
+        <version>1.0.4</version>
     </parent>
 
     <artifactId>file-toolkit-gauss-starter</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
     <name>file-toolkit-gauss-starter</name>
     <packaging>jar</packaging>
     <description>File toolkit service project for Spring Boot</description>
