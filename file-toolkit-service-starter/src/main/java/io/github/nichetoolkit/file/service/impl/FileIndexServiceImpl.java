@@ -1,4 +1,4 @@
-package io.github.nichetoolkit.file.service.impl;
+package io.github.nichetoolkit.file.service;
 
 import io.github.nichetoolkit.file.entity.FileIndexEntity;
 import io.github.nichetoolkit.file.filter.FileFilter;
@@ -8,6 +8,7 @@ import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
 import io.github.nichetoolkit.rest.RestException;
+import io.github.nichetoolkit.rest.actuator.BiConsumerActuator;
 import io.github.nichetoolkit.rest.actuator.ConsumerActuator;
 import io.github.nichetoolkit.rest.util.GeneralUtils;
 import io.github.nichetoolkit.rice.RiceInfoService;
@@ -36,6 +37,16 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
     private FileChunkService fileChunkService;
 
     @Override
+    protected Boolean isIdInvade() {
+        return true;
+    }
+
+    @Override
+    protected Boolean isIdExist() {
+        return false;
+    }
+
+    @Override
     public FileIndex queryByNameWithUploadInterrupt(String name) throws RestException {
         if (GeneralUtils.isEmpty(name)) {
             return null;
@@ -61,13 +72,8 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
     }
 
     @Override
-    public String deleteWhereSql(FileFilter filter) throws RestException {
-        return filter.toIdSql().toSql();
-    }
-
-    @Override
-    protected ConsumerActuator<FileIndex> updateActuator() {
-        return this::optional;
+    protected BiConsumerActuator<String,FileIndex> updateActuator() {
+        return (tableKey,fileIndex) -> this.optional(fileIndex);
     }
 
     @Override

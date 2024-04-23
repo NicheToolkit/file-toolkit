@@ -5,29 +5,28 @@ import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.enums.FileType;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
 import io.github.nichetoolkit.file.filter.FileFilter;
+import io.github.nichetoolkit.file.handle.FileStoreService;
 import io.github.nichetoolkit.file.helper.FileServiceHelper;
 import io.github.nichetoolkit.file.model.FileChunk;
 import io.github.nichetoolkit.file.model.FileIndex;
 import io.github.nichetoolkit.file.model.FileRequest;
-import io.github.nichetoolkit.file.service.AsyncFileService;
 import io.github.nichetoolkit.file.service.FileChunkService;
+import io.github.nichetoolkit.file.service.FileHandleService;
 import io.github.nichetoolkit.file.service.FileIndexService;
 import io.github.nichetoolkit.file.service.FileService;
 import io.github.nichetoolkit.file.video.VideoHttpRequestHandler;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
-import io.github.nichetoolkit.rest.identity.IdentityUtils;
 import io.github.nichetoolkit.rest.util.*;
 import io.github.nichetoolkit.rice.RestId;
 import io.github.nichetoolkit.rice.RestPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +40,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -63,9 +61,12 @@ public class FileServiceImpl implements FileService {
     protected FileChunkService fileChunkService;
 
     @Autowired
-    protected AsyncFileService asyncFileService;
+    protected FileHandleService fileHandleService;
 
-    @Autowired
+    @Resource
+    protected FileStoreService fileStoreService;
+
+    @Resource
     protected VideoHttpRequestHandler videoHttpRequestHandler;
 
     @Override
@@ -81,7 +82,7 @@ public class FileServiceImpl implements FileService {
         }
         List<String> fileIdList = restPage.getItems().stream().map(RestId::getId).distinct().collect(Collectors.toList());
         if (GeneralUtils.isNotEmpty(fileIdList)) {
-            asyncFileService.removeAll(fileIdList);
+            fileStoreService.removeAll(fileIdList);
             if (fileFilter.isChunk()) {
                 if (fileFilter.isDelete()) {
                     fileChunkService.deleteAll(fileIdList);
@@ -125,9 +126,9 @@ public class FileServiceImpl implements FileService {
         }
         if (isExist) {
             if (rename) {
-                asyncFileService.renameById(fileId, fileId.concat("_del"));
+                fileStoreService.renameById(fileId, fileId.concat("_del"));
             }
-            asyncFileService.removeById(fileId);
+            fileStoreService.removeById(fileId);
         }
     }
 
@@ -160,7 +161,7 @@ public class FileServiceImpl implements FileService {
                 throw new FileErrorException(FileErrorStatus.SERVICE_DOWNLOAD_ERROR);
             }
         } else {
-            try (InputStream inputStream = asyncFileService.getById(fileIndex.getId());
+            try (InputStream inputStream = fileStoreService.getById(fileIndex.getId());
                  ServletOutputStream outputStream = response.getOutputStream()) {
                 response.addHeader(FileConstants.CONTENT_DISPOSITION_HEADER, FileConstants.ATTACHMENT_FILENAME_VALUE + URLEncoder.encode(filename, StandardCharsets.UTF_8.name()));
                 StreamUtils.write(outputStream, inputStream);
@@ -304,28 +305,21 @@ public class FileServiceImpl implements FileService {
         if (GeneralUtils.isEmpty(fileIndex)) {
             throw new RestException(FileErrorStatus.FILE_INDEX_IS_NULL);
         }
-        String tempPath = FileUtils.createPath(commonProperties.getTempPath());
-        String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
-
         if (fileIndex.getIsAutograph() != null && fileIndex.getIsAutograph() && fileIndex.getFileType() == FileType.IMAGE) {
-            FileServiceHelper.autographImage(randomPath, fileIndex);
+            fileHandleService.autographImage(fileIndex);
         }
         if (fileIndex.getIsCondense()) {
             if (fileIndex.getFileType() == FileType.IMAGE) {
-                FileServiceHelper.condenseImage(randomPath, fileIndex);
+                fileHandleService.condenseImage(fileIndex);
             } else {
-                FileServiceHelper.condenseFile(randomPath, fileIndex);
+                fileHandleService.condenseFile(fileIndex);
             }
         }
         String fileId = fileIndex.getId();
-        if (GeneralUtils.isEmpty(fileIndex.getId())) {
-            fileId = IdentityUtils.generateString();
-            fileIndex.setId(fileId);
-        }
-        asyncFileService.putById(fileId, fileIndex.inputStream());
-        FileUtils.clear(randomPath);
+        fileStoreService.putById(fileId, fileIndex.inputStream());
         checkFileIndex(fileIndex);
-        return fileIndexService.save(fileIndex);
+        fileIndexService.save(fileIndex);
+        return fileIndex;
     }
 
     @Override
@@ -341,12 +335,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    @Async
-    public Future<FileIndex> chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException {
+    public FileIndex chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException {
         FileIndex fileChunkIndex = FileServiceHelper.createFileChunk(fileRequest, contentRange);
         FileIndex fileIndex = FileServiceHelper.createFileChunk(file, fileChunkIndex);
+        checkFileIndex(fileIndex);
         FileChunk uploadChunk = fileChunkService.save(fileIndex.getFileChunk());
-        asyncFileService.putById(uploadChunk.getId(), uploadChunk.inputStream());
+        fileStoreService.putById(uploadChunk.getId(), uploadChunk.inputStream());
         fileIndex.setFileChunk(uploadChunk);
         if (GeneralUtils.isEmpty(fileIndex.getFileChunks())) {
             fileIndex.setFileChunks(new ArrayList<>());
@@ -355,13 +349,13 @@ public class FileServiceImpl implements FileService {
         fileChunks.add(uploadChunk);
         fileIndex.setCurrentIndex(uploadChunk.getChunkIndex());
         if ((uploadChunk.getIsLastChunk() || uploadChunk.getChunkIndex().equals(fileIndex.getSliceSize())) && fileIndex.getIsMerge()) {
-            List<String> sources = fileChunks.stream().map(RestId::getId).collect(Collectors.toList());
             fileIndex.setIsFinish(true);
-            asyncFileService.margeById(fileIndex.getId(), sources);
+            List<String> sources = fileIndex.getFileChunks().stream().map(RestId::getId).collect(Collectors.toList());
+            fileStoreService.margeById(fileIndex.getId(), sources);
             checkFileIndex(fileIndex);
             fileIndexService.save(fileIndex);
         }
-        return AsyncResult.forValue(fileIndex);
+        return fileIndex;
     }
 
     private void checkFileIndex(FileIndex fileIndex) {

@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import tk.mybatis.spring.annotation.MapperScan;
 
 /**
  * <p>FileMinioStarterAutoConfigure</p>
@@ -16,8 +15,6 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @Slf4j
 @Configuration
-@org.mybatis.spring.annotation.MapperScan("io.github.nichetoolkit.file.mapper")
-@MapperScan("io.github.nichetoolkit.file.mapper")
 @ComponentScan(basePackages = {"io.github.nichetoolkit.file"})
 public class FileMinioStarterAutoConfigure {
     public FileMinioStarterAutoConfigure() {
