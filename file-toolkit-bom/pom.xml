@@ -107,7 +107,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.nichetoolkit</groupId>
-                <artifactId>file-toolkit-service</artifactId>
+                <artifactId>file-toolkit-starter</artifactId>
                 <version>${file-toolkit.version}</version>
             </dependency>
             <dependency>
@@ -201,7 +201,6 @@
                     <serverId>sonatype-nexus-central</serverId>
                     <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
                 </configuration>
             </plugin>
             <plugin>

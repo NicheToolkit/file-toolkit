@@ -2,8 +2,8 @@
   "groups": [
     {
       "name": "nichetoolkit.file.common",
-      "sourceType": "io.github.nichetoolkit.file.configure.FileCommonProperties",
-      "type": "io.github.nichetoolkit.file.configure.FileCommonProperties"
+      "sourceType": "io.github.nichetoolkit.file.configure.FileProperties",
+      "type": "io.github.nichetoolkit.file.configure.FileProperties"
     }
   ],
   "properties": [

@@ -1,6 +1,6 @@
 package io.github.nichetoolkit.file.controller;
 
-import io.github.nichetoolkit.file.filter.FileFilter;
+import io.github.nichetoolkit.file.FileFilter;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
 import io.github.nichetoolkit.rest.RestException;

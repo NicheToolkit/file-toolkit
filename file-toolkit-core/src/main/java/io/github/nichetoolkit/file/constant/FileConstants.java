@@ -1,40 +1,45 @@
 package io.github.nichetoolkit.file.constant;
 
-/**
- * <p>FileConstants</p>
- * @author Cyan (snow22314@outlook.com)
- * @version v1.0.0
- */
-public class FileConstants {
+public interface FileConstants {
 
-    public static final String FILE_ID_PARAM = "fileId";
-    public static final String FILE_NAME_PARAM = "name";
-    public static final String USER_ID_PARAM = "userId";
-    public static final String ACCOUNT_ID_PARAM = "accountId";
-    public static final String FILE_PARAM = "file";
-    public static final String FILES_PARAM = "files";
+    String FILE_ROOT_PREFIX = "nichetoolkit.file";
+    String DATA_PREFIX = "data";
+    String TEMP_PREFIX = "temp";
 
-    public static final String CONTENT_RANGE_HEADER = "Content-Range";
-    public static final String CONTENT_RANGE_BYTES_HEADER = "bytes ";
-    public static final String CONTENT_RANGE_RANGE_REGEX = "-";
-    public static final String CONTENT_RANGE_SIZE_REGEX = "/";
+    String DEFAULT_IMAGE_SUFFIX = "png";
 
-    public static final String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
-    public static final String ATTACHMENT_FILENAME_VALUE = "attachment; filename=";
+    String[] IMAGE_SUFFIX = new String[]
+            {"jpg", "jpeg", "png", "bpm", "gif", "svg", "icon", "tfw", "psd", "tif", "tiff", "raw", "tag"};
+    String[] DOCUMENT_SUFFIX = new String[]
+            {"txt", "doc", "docx", "ppt", "pptx", "xls", "xlsx", "pdf", "vsdx", "eapx"};
+    String[] VIDEO_SUFFIX = new String[]
+            {"mp3", "mp4", "avi", "mkv", "rmvb", "rm", "asf", "wmv", "mov", "raw", "tag"};
+    String[] EXECUTABLE_SUFFIX = new String[]{"sh", "bat", "exe", "py"};
 
-    public static final String SUFFIX_REGEX = ".";
-    public static final String IMAGE_JPG_SUFFIX = "jpg";
-    public static final String IMAGE_PNG_SUFFIX = "png";
+    String[] COMPRESSED_SUFFIX = new String[]{"rar", "tar", "zip", "jar", "war"};
 
-    public static final String FILE_ZIP_SUFFIX = "zip";
 
-    public static final String IMAGE_CONDENSE_WIDTH_PROPERTY = "condenseWidth";
-    public static final String IMAGE_CONDENSE_HEIGHT_PROPERTY = "condenseHeight";
-    public static final String IMAGE_CONDENSE_QUALITY_PROPERTY = "condenseQuality";
-    public static final String IMAGE_CONDENSE_SCALE_PROPERTY = "condenseScale";
-    public static final String ORIGINAL_SUFFIX_PROPERTY = "originalSuffix";
-    public static final String ORIGINAL_SIZE_PROPERTY = "originalSize";
-    public static final String ORIGINAL_MD5_PROPERTY = "originalMd5";
-    public static final String ORIGINAL_NAME_PROPERTY = "originalName";
+    String CONTENT_RANGE_HEADER = "Content-Range";
+    String CONTENT_RANGE_BYTES_HEADER = "bytes ";
+    String CONTENT_RANGE_RANGE_REGEX = "-";
+    String CONTENT_RANGE_SIZE_REGEX = "/";
+
+    String CONTENT_DISPOSITION_HEADER = "Content-Disposition";
+    String ATTACHMENT_FILENAME_VALUE = "attachment; filename=";
+
+    String SUFFIX_REGEX = ".";
+    String IMAGE_JPG_SUFFIX = "jpg";
+    String IMAGE_PNG_SUFFIX = "png";
+
+    String FILE_ZIP_SUFFIX = "zip";
+
+    String IMAGE_CONDENSE_WIDTH_PROPERTY = "condenseWidth";
+    String IMAGE_CONDENSE_HEIGHT_PROPERTY = "condenseHeight";
+    String IMAGE_CONDENSE_QUALITY_PROPERTY = "condenseQuality";
+    String IMAGE_CONDENSE_SCALE_PROPERTY = "condenseScale";
+    String ORIGINAL_SUFFIX_PROPERTY = "originalSuffix";
+    String ORIGINAL_SIZE_PROPERTY = "originalSize";
+    String ORIGINAL_MD5_PROPERTY = "originalMd5";
+    String ORIGINAL_NAME_PROPERTY = "originalName";
 
 }

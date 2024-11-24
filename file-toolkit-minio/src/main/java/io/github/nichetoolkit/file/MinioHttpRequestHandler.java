@@ -1,7 +1,6 @@
 package io.github.nichetoolkit.file;
 
-import io.github.nichetoolkit.file.model.FileIndex;
-import io.github.nichetoolkit.file.video.VideoHttpRequestHandler;
+import io.github.nichetoolkit.file.video.VideoRequestHandler;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
 import io.minio.GetObjectResponse;
 import org.springframework.stereotype.Component;
@@ -14,7 +13,7 @@ import java.io.IOException;
  * @version v1.0.0
  */
 @Component
-public class MinioHttpRequestHandler extends VideoHttpRequestHandler {
+public class MinioHttpRequestHandler extends VideoRequestHandler {
 
     @Override
     public MinioInputStreamResource videoInputStreamResource(FileIndex fileIndex) throws IOException {

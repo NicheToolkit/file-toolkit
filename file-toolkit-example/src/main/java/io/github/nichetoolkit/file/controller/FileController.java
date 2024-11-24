@@ -1,13 +1,12 @@
 package io.github.nichetoolkit.file.controller;
 
 
-import io.github.nichetoolkit.file.configure.FileCommonProperties;
+import io.github.nichetoolkit.file.configure.FileProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
-import io.github.nichetoolkit.file.error.FileErrorStatus;
-import io.github.nichetoolkit.file.filter.FileFilter;
+import io.github.nichetoolkit.file.FileFilter;
 import io.github.nichetoolkit.file.helper.FileServiceHelper;
-import io.github.nichetoolkit.file.model.FileIndex;
-import io.github.nichetoolkit.file.model.FileRequest;
+import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.FileRequest;
 import io.github.nichetoolkit.file.service.FileService;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.RestResult;
@@ -29,8 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 @Slf4j
 @RestSkip
@@ -40,7 +37,7 @@ import java.util.concurrent.Future;
 public class FileController {
 
     @Autowired
-    private FileCommonProperties commonProperties;
+    private FileProperties commonProperties;
 
     @Autowired
     private FileService fileService;

@@ -1,0 +1,25 @@
+package io.github.nichetoolkit.file.configure;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
+import tk.mybatis.spring.annotation.MapperScan;
+
+/**
+ * <p>RiceMybatisStarterAutoConfigure</p>
+ * @author Cyan (snow22314@outlook.com)
+ * @version v1.0.0
+ */
+@Slf4j
+@EnableAsync
+@Configuration
+@MapperScan(basePackages = {"io.github.nichetoolkit.rice.mapper"})
+@ComponentScan(basePackages = {"io.github.nichetoolkit.rice"})
+@ImportAutoConfiguration(value = {DatasourceAutoConfigure.class})
+public class FileExampleAutoConfigure {
+    public FileExampleAutoConfigure() {
+        log.debug("================= rice-toolkit-test-web initiated ！ ===================");
+    }
+}

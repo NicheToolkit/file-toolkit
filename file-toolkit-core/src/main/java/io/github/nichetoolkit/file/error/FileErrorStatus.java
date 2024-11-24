@@ -11,12 +11,12 @@ import lombok.Getter;
 @Getter
 public enum FileErrorStatus implements RestStatus {
 
+    // TODO usages recode
     /** file error */
-    SERVICE_DOWNLOAD_ERROR(11000, "下载服务发生错误"),
-    FILE_NO_FOUND_ERROR(11001, "文件未找到"),
-    FILE_NO_FINISH_ERROR(11002, "文件未上传完成或为合并，无法下载"),
-    CONTENT_RANGE_IS_NULL(11003, "分片上传请求头Content-Range解析为空"),
-    FILE_ID_IS_NULL(11004, "文件编号不能为空"),
+    FILE_DOWNLOAD_ERROR(11000, "下载服务发生错误"),
+    FILE_FINISHED_ERROR(11002, "文件未上传完成或为合并，无法下载"),
+    CONTENT_RANGE_ERROR(11003, "分片上传请求头Content-Range解析为空"),
+
     FILE_TOO_LARGE_ERROR(11005, "文件过大"),
     FILE_READ_STREAM_ERROR(11006, "文件数据流读取错误"),
     FILE_READ_BYTE_NULL(11007, "文件数据读取为空"),

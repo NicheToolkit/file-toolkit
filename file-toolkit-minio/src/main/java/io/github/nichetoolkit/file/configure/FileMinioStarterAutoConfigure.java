@@ -1,7 +1,7 @@
 package io.github.nichetoolkit.file.configure;
 
 import io.github.nichetoolkit.file.MinioHttpRequestHandler;
-import io.github.nichetoolkit.file.video.VideoHttpRequestHandler;
+import io.github.nichetoolkit.file.video.VideoRequestHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +22,8 @@ public class FileMinioStarterAutoConfigure {
     }
 
     @Bean
-    @ConditionalOnMissingBean(value = VideoHttpRequestHandler.class)
-    public VideoHttpRequestHandler minioHttpRequestHandler() {
+    @ConditionalOnMissingBean(value = VideoRequestHandler.class)
+    public VideoRequestHandler minioHttpRequestHandler() {
         return new MinioHttpRequestHandler();
     }
 }

@@ -11,7 +11,7 @@
         <module>file-toolkit-example</module>
         <module>file-toolkit-bom</module>
         <module>file-toolkit-core</module>
-        <module>file-toolkit-service</module>
+        <module>file-toolkit-starter</module>
         <module>file-toolkit-minio</module>
     </modules>
 
@@ -165,7 +165,7 @@
             </dependency>
             <dependency>
                 <groupId>io.github.nichetoolkit</groupId>
-                <artifactId>file-toolkit-service</artifactId>
+                <artifactId>file-toolkit-starter</artifactId>
                 <version>${file-toolkit.version}</version>
             </dependency>
             <dependency>

@@ -1,79 +1,109 @@
-## [file-Toolkit](https://github.com/NicheToolkit/file-toolkit) file开发工具组
+## [File-Toolkit](https://github.com/NicheToolkit/file-toolkit)
 
 [![GitHub License](https://img.shields.io/badge/license-Apache-blue.svg)](https://github.com/NicheToolkit/file-toolkit/blob/master/LICENSE)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.nichetoolkit/file-toolkit-service-starter)](https://central.sonatype.com/search?smo=true&q=file-toolkit-service-starter&namespace=io.github.nichetoolkit)
-[![Nexus Release](https://img.shields.io/nexus/r/io.github.nichetoolkit/file-toolkit-service-starter?server=https%3A%2F%2Fs01.oss.sonatype.org)](https://s01.oss.sonatype.org/content/repositories/releases/io/github/nichetoolkit/file-toolkit-service-starter/)
-[![Nexus Snapshot](https://img.shields.io/nexus/s/io.github.nichetoolkit/file-toolkit-service-starter?server=https%3A%2F%2Fs01.oss.sonatype.org)](https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/nichetoolkit/file-toolkit-service-starter/)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.nichetoolkit/mybatis-toolkit-starter)](https://central.sonatype.com/search?smo=true&q=file-toolkit-starter&namespace=io.github.nichetoolkit)
+[![Nexus Release](https://img.shields.io/nexus/r/io.github.nichetoolkit/file-toolkit-starter?server=https%3A%2F%2Fs01.oss.sonatype.org)](https://s01.oss.sonatype.org/content/repositories/releases/io/github/nichetoolkit/file-toolkit-starter/)
+[![Nexus Snapshot](https://img.shields.io/nexus/s/io.github.nichetoolkit/file-toolkit-starter?server=https%3A%2F%2Fs01.oss.sonatype.org)](https://s01.oss.sonatype.org/content/repositories/snapshots/io/github/nichetoolkit/file-toolkit-starter/)
 ![Tests](https://github.com/NicheToolkit/file-toolkit/workflows/Tests/badge.svg)
 
-&emsp;&emsp; 依赖[rice-toolkit](https://github.com/NicheToolkit/rice-toolkit/rice-toolkit-starter)组件下的基于[postgresql](https://www.postgresql.org/)数据库环境下的简单业务通用服务开发组件.
+## Maven Central Repository
 
-## Maven Central
+- [Maven Central Repository](https://search.maven.org/search?q=io.github.nichetoolkit)
 
--  [Maven Central Repository](https://search.maven.org/search?q=io.github.nichetoolkit)
+- [Sonatype Central Repository](https://central.sonatype.dev/search?q=io.github.nichetoolkit)
 
--  [Sonatype Central Repository](https://central.sonatype.dev/search?q=io.github.nichetoolkit)
+## Dependent & Environment
 
-## 依赖环境
- > [Spring Boot](https://spring.io/projects/spring-boot) 2.7.7.RELEASE\
- > [Maven](https://maven.apache.org/) 3.6.0+\
- > [JDK](https://www.oracle.com/java/technologies/downloads/#java8) 1.8\
- > [PostgreSQL](https://www.postgresql.org/) 10.0+
- 
-## file-toolkit-common-starter
- * Maven (`pom.xml`)
+> [Spring Boot](https://spring.io/projects/spring-boot) 2.7.18.RELEASE\
+> [Maven](https://maven.apache.org/) 3.6.3+\
+> [JDK](https://www.oracle.com/java/technologies/downloads/#java8) 1.8\
+> [PostgreSQL](https://www.postgresql.org/) 10.0+
+
+## Wiki Reference
+
+[Wiki Reference](https://github.com/NicheToolkit/file-toolkit/wiki): https://github.com/NicheToolkit/file-toolkit/wiki
+
+## Instructions
+
+### Maven Usages
+
+#### mybatis-toolkit-core
+
+* Maven (`pom.xml`)
+
 ```xml
-  <dependency>
-    <groupId>io.github.nichetoolkit</groupId>
-    <artifactId>file-toolkit-common-starter</artifactId>
-    <version>1.0.4</version>
-  </dependency>
-``` 
 
-## file-toolkit-service-starter
- * Maven (`pom.xml`)
-```xml
-  <dependency>
+<dependency>
     <groupId>io.github.nichetoolkit</groupId>
-    <artifactId>file-toolkit-service-starter</artifactId>
-    <version>1.0.4</version>
-  </dependency>
+    <artifactId>mybatis-toolkit-core</artifactId>
+    <version>1.1.1</version>
+</dependency>
 ```
 
-## file-toolkit-minio-starter
- * Maven (`pom.xml`)
+#### mybatis-toolkit-context
+
+* Maven (`pom.xml`)
+
 ```xml
-  <dependency>
+
+<dependency>
     <groupId>io.github.nichetoolkit</groupId>
-    <artifactId>file-toolkit-minio-starter</artifactId>
-    <version>1.0.4</version>
-  </dependency>
+    <artifactId>mybatis-toolkit-context</artifactId>
+    <version>1.1.1</version>
+</dependency>
 ```
 
-## file-toolkit-minio-utils
- * Maven (`pom.xml`)
+#### mybatis-toolkit-starter
+
+* Maven (`pom.xml`)
+
 ```xml
-  <dependency>
+
+<dependency>
     <groupId>io.github.nichetoolkit</groupId>
-    <artifactId>file-toolkit-minio-utils</artifactId>
-    <version>1.0.4</version>
-  </dependency>
-``` 
+    <artifactId>mybatis-toolkit-starter</artifactId>
+    <version>1.1.1</version>
+</dependency>
+```
 
-## 使用方式
+### Configure Properties
 
-参考[file-toolkit-test-web](https://github.com/NicheToolkit/file-toolkit/tree/master/file-toolkit-test-web)模块.
+#### cache configuration
 
- ## 依赖参考
+* prefix
 
- [rice-toolkit](https://github.com/NicheToolkit/rice-toolkit)
- 
- ## License 
+>
+> nichetoolkit.mybatis.cache
+>
 
- [Apache License](https://www.apache.org/licenses/LICENSE-2.0)
- 
- ## Dependencies
- 
- [rest-toolkit](https://github.com/NicheToolkit/rest-toolkit)
-  
- [Spring Boot](https://github.com/spring-projects/spring-boot)
+* values
+
+|    value    |   type    | defaultValue |                          description                          |
+|:-----------:|:---------:|:------------:|:-------------------------------------------------------------:|
+| `init-size` | `Integer` |    `1024`    |   the initiate size of table cache on mybatis `sql` handle.   |
+| `use-once`  | `Boolean` |   `false`    | the switch of table cache used once on mybatis `sql ` handle. |
+
+* properties
+
+```properties
+nichetoolkit.mybatis.cache.init-size=1024
+nichetoolkit.mybatis.cache.use-once=false
+```
+
+## Test Example
+
+[file-toolkit-example](https://github.com/NicheToolkit/file-toolkit/tree/master/file-toolkit-example)
+
+## License
+
+[Apache License](https://www.apache.org/licenses/LICENSE-2.0)
+
+## Dependencies
+
+[Rest-toolkit](https://github.com/NicheToolkit/rest-toolkit)
+
+[Rice-toolkit](https://github.com/NicheToolkit/rice-toolkit)
+
+[Mybatis-toolkit](https://github.com/NicheToolkit/mybatis-toolkit)
+
+[Spring Boot](https://github.com/spring-projects/spring-boot)
