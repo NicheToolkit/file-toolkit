@@ -42,7 +42,7 @@ public class ImageUtils {
         try {
             ImageHelper.write(bufferedImage, outputStream);
         } catch (ImageWriteException exception) {
-            log.error("It is has an error during bufferedImage to write as outputStream.", exception);
+            log.error("It has encountered an error during bufferedImage to write as outputStream.", exception);
             GeneralUtils.printStackTrace(exception);
         }
     }
@@ -59,7 +59,7 @@ public class ImageUtils {
         try {
             ImageHelper.write(bufferedImage, imagePath);
         } catch (ImageWriteException exception) {
-            log.error("It is has an error during bufferedImage to write as file!", exception);
+            log.error("It has encountered an error during bufferedImage to write as file!", exception);
             GeneralUtils.printStackTrace(exception);
         }
     }
@@ -76,7 +76,7 @@ public class ImageUtils {
         try {
             ImageHelper.write(bufferedImage,  FileConstants.DEFAULT_IMAGE_SUFFIX, file);
         } catch (ImageWriteException exception) {
-            log.error("It is has an error during bufferedImage to write as file!", exception);
+            log.error("It has encountered an error during bufferedImage to write as file!", exception);
             GeneralUtils.printStackTrace(exception);
         }
     }
@@ -96,7 +96,7 @@ public class ImageUtils {
         try {
             ImageHelper.write(bufferedImage, formatName, outputStream);
         } catch (ImageWriteException exception) {
-            log.error("It is has an error during bufferedImage to write as outputStream!", exception);
+            log.error("It has encountered an error during bufferedImage to write as outputStream!", exception);
             GeneralUtils.printStackTrace(exception);
         }
     }
@@ -114,7 +114,7 @@ public class ImageUtils {
         try {
             ImageHelper.write(bufferedImage, formatName, new File(imagePath));
         } catch (ImageWriteException exception) {
-            log.error("It is has an error during bufferedImage to write as file!", exception);
+            log.error("It has encountered an error during bufferedImage to write as file!", exception);
             GeneralUtils.printStackTrace(exception);
         }
     }
@@ -133,7 +133,7 @@ public class ImageUtils {
         try {
             ImageHelper.write(bufferedImage, formatName, file);
         } catch (ImageWriteException exception) {
-            log.error("It is has an error during bufferedImage to read as file!", exception);
+            log.error("It has encountered an error during bufferedImage to read as file!", exception);
             GeneralUtils.printStackTrace(exception);
         }
     }
@@ -150,7 +150,7 @@ public class ImageUtils {
         try {
             return ImageHelper.read(inputStream);
         } catch (ImageReadException exception) {
-            log.error("It is has an error during inputStream to read as BufferedImage!", exception);
+            log.error("It has encountered an error during inputStream to read as BufferedImage!", exception);
             GeneralUtils.printStackTrace(exception);
             return null;
         }
@@ -168,7 +168,7 @@ public class ImageUtils {
         try {
             return ImageHelper.read(imagePath);
         } catch (ImageReadException exception) {
-            log.error("It is has an error during file to read as BufferedImage!", exception);
+            log.error("It has encountered an error during file to read as BufferedImage!", exception);
             GeneralUtils.printStackTrace(exception);
             return null;
         }
@@ -187,7 +187,7 @@ public class ImageUtils {
         try {
             return ImageHelper.read(file);
         } catch (ImageReadException exception) {
-            log.error("It is has an error during file to write as BufferedImage!", exception);
+            log.error("It has encountered an error during file to write as BufferedImage!", exception);
             GeneralUtils.printStackTrace(exception);
             return null;
         }
@@ -205,7 +205,7 @@ public class ImageUtils {
         try {
             return ImageHelper.read(bufferedImage);
         } catch (ImageTransferException exception) {
-            log.error("It is has an error during bufferedImage to transfer as inputStream!", exception);
+            log.error("It has encountered an error during bufferedImage to transfer as inputStream!", exception);
             GeneralUtils.printStackTrace(exception);
             return null;
         }
@@ -222,7 +222,7 @@ public class ImageUtils {
         try {
             return ImageHelper.bytes(bufferedImage);
         } catch (ImageTransferException exception) {
-            log.error("It is has an error during bufferedImage to transfer as inputStream!", exception);
+            log.error("It has encountered an error during bufferedImage to transfer as inputStream!", exception);
             GeneralUtils.printStackTrace(exception);
             return null;
         }
@@ -239,7 +239,7 @@ public class ImageUtils {
         try {
             return IoStreamUtils.bytes(Files.newInputStream(file.toPath()));
         } catch (IOException exception) {
-            log.error("It is has an error during file to transfer as byte!", exception);
+            log.error("It has encountered an error during file to transfer as byte!", exception);
             GeneralUtils.printStackTrace(exception);
             return null;
         }
@@ -260,7 +260,7 @@ public class ImageUtils {
                     .outputFormat(FileConstants.IMAGE_PNG_SUFFIX)
                     .outputQuality(1d).asBufferedImage();
         } catch (IOException exception) {
-            log.error("It is has an error during bufferedImage to scale as bufferedImage!", exception);
+            log.error("It has encountered an error during bufferedImage to scale as bufferedImage!", exception);
             GeneralUtils.printStackTrace(exception);
             return null;
         }
@@ -282,7 +282,7 @@ public class ImageUtils {
                     .outputFormat(FileConstants.IMAGE_PNG_SUFFIX)
                     .outputQuality(1d).asBufferedImage();
         } catch (IOException exception) {
-            log.error("It is has an error during inputStream to scale as bufferedImage!", exception);
+            log.error("It has encountered an error during inputStream to scale as bufferedImage!", exception);
             GeneralUtils.printStackTrace(exception);
             return null;
         }

@@ -1,6 +1,6 @@
 package io.github.nichetoolkit.file.mapper;
 
-import io.github.nichetoolkit.file.FileChunkEntity;
+import io.github.nichetoolkit.file.PartEntity;
 import io.github.nichetoolkit.rice.RiceIdMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Component
-public interface FileChunkMapper extends RiceIdMapper<FileChunkEntity>, Mapper<FileChunkEntity> {
+public interface FileChunkMapper extends RiceIdMapper<PartEntity>, Mapper<PartEntity> {
 
     /**
      * 通过id查询实体
@@ -18,7 +18,7 @@ public interface FileChunkMapper extends RiceIdMapper<FileChunkEntity>, Mapper<F
      * @param chunkIndex 分片序号
      * @return T 查询的数据
      */
-    FileChunkEntity findByFileIdAndChunkIndex(@Param("fileId") String fileId, @Param("chunkIndex") Integer chunkIndex);
+    PartEntity findByFileIdAndChunkIndex(@Param("fileId") String fileId, @Param("chunkIndex") Integer chunkIndex);
 
 
     /**
@@ -26,28 +26,28 @@ public interface FileChunkMapper extends RiceIdMapper<FileChunkEntity>, Mapper<F
      * @param fileId 文件id
      * @return T 查询的数据
      */
-    FileChunkEntity findByFileIdFirstChunk(@Param("fileId") String fileId);
+    PartEntity findByFileIdFirstChunk(@Param("fileId") String fileId);
 
     /**
      * 通过id查询实体
      * @param fileId 文件id
      * @return T 查询的数据
      */
-    FileChunkEntity findByFileIdLastChunk(@Param("fileId") String fileId);
+    PartEntity findByFileIdLastChunk(@Param("fileId") String fileId);
 
     /**
      * 通过id查询实体
      * @param fileId 文件id
      * @return T 查询的数据
      */
-    List<FileChunkEntity> findAllByFileId(@Param("fileId") String fileId);
+    List<PartEntity> findAllByFileId(@Param("fileId") String fileId);
 
     /**
      * 通过id查询实体
      * @param fileIds 文件id集合
      * @return T 查询的数据
      */
-    List<FileChunkEntity> findAllByFileIds(@Param("fileIds") Collection<String> fileIds);
+    List<PartEntity> findAllByFileIds(@Param("fileIds") Collection<String> fileIds);
 
 
 }

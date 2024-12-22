@@ -5,7 +5,7 @@ import io.github.nichetoolkit.file.configure.FileProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.FileFilter;
 import io.github.nichetoolkit.file.helper.FileServiceHelper;
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.BulkModel;
 import io.github.nichetoolkit.file.FileRequest;
 import io.github.nichetoolkit.file.service.FileService;
 import io.github.nichetoolkit.rest.RestException;
@@ -86,36 +86,36 @@ public class FileController {
     }
 
     @PostMapping("/file/upload")
-    public ResponseEntity<FileIndex> fileUpload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
+    public ResponseEntity<BulkModel> fileUpload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         log.info("the file will be started uploading at 'fileUpload', filename: {}", originalFilename);
-        FileIndex fileUpload = fileService.upload(file, fileRequest);
+        BulkModel fileUpload = fileService.upload(file, fileRequest);
         return ResponseEntity.ok(fileUpload);
     }
 
     @PostMapping("/image/upload")
-    public ResponseEntity<FileIndex> imageUpload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
+    public ResponseEntity<BulkModel> imageUpload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         log.info("the image file will be started uploading at 'imageUpload', filename: {}", originalFilename);
-        FileIndex fileUpload = fileService.upload(file, fileRequest);
+        BulkModel fileUpload = fileService.upload(file, fileRequest);
         return ResponseEntity.ok(fileUpload);
     }
 
     @PostMapping("/image/autograph")
-    public ResponseEntity<FileIndex> imageAutograph(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
+    public ResponseEntity<BulkModel> imageAutograph(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         fileRequest.setIsAutograph(true);
         log.info("the image file will be started uploading at 'imageAutograph', filename: {}", originalFilename);
-        FileIndex fileUpload = fileService.upload(file, fileRequest);
+        BulkModel fileUpload = fileService.upload(file, fileRequest);
         return ResponseEntity.ok(fileUpload);
     }
 
     @PostMapping("/index/upload")
-    public ResponseEntity<FileIndex> indexUpload(@NonNull @RequestBody FileIndex fileIndex) throws RestException {
+    public ResponseEntity<BulkModel> indexUpload(@NonNull @RequestBody BulkModel fileIndex) throws RestException {
         String originalFilename = fileIndex.getName();
         log.info("the index file will be started uploading at 'indexUpload', filename: {}", originalFilename);
-        FileIndex createIndex = FileServiceHelper.createFileIndex(fileIndex);
-        FileIndex fileUpload = fileService.indexUpload(createIndex);
+        BulkModel createIndex = FileServiceHelper.createFileIndex(fileIndex);
+        BulkModel fileUpload = fileService.indexUpload(createIndex);
         return ResponseEntity.ok(fileUpload);
     }
 
@@ -125,7 +125,7 @@ public class FileController {
                                       FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         log.info("the chunk file will be started uploading at 'chunkUpload', filename: {}", originalFilename);
-        FileIndex fileIndex = fileService.chunkUpload(file, contentRange, fileRequest);
+        BulkModel fileIndex = fileService.chunkUpload(file, contentRange, fileRequest);
         return ResponseEntity.ok(fileIndex);
     }
 
@@ -134,7 +134,7 @@ public class FileController {
     public ResponseEntity upload(@NonNull @RequestPart("file") MultipartFile file, FileRequest fileRequest) throws RestException {
         String originalFilename = file.getOriginalFilename();
         log.info("the file will be started uploading at 'upload', filename: {}", originalFilename);
-        FileIndex fileUpload = fileService.upload(file, fileRequest);
+        BulkModel fileUpload = fileService.upload(file, fileRequest);
         return RestResult.ok(fileUpload);
     }
 

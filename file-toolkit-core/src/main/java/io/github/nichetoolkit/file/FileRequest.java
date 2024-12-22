@@ -59,8 +59,8 @@ public class FileRequest implements Serializable {
     /** 是否压缩 */
     protected Boolean isCondense;
 
-    public FileIndex toIndex() {
-        FileIndex fileIndex = new FileIndex(fileId);
+    public BulkModel toIndex() {
+        BulkModel fileIndex = new BulkModel(fileId);
         BeanUtils.copyNonullProperties(this, fileIndex);
         fileIndex.setFileType(FileType.parseKey(this.fileType));
         if (GeneralUtils.isNotEmpty(this.properties)) {

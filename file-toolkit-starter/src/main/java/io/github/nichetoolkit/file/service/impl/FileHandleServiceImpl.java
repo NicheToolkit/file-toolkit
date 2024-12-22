@@ -5,7 +5,7 @@ import io.github.nichetoolkit.file.constant.FileConstants;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
 import io.github.nichetoolkit.file.helper.FileServiceHelper;
 import io.github.nichetoolkit.file.image.ImageHelper;
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.BulkModel;
 import io.github.nichetoolkit.file.image.ImageUtils;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.error.natives.FileErrorException;
@@ -40,7 +40,7 @@ public class FileHandleServiceImpl implements FileHandleService {
 
     @Async
     @Override
-    public void autographImage(FileIndex fileIndex) throws RestException {
+    public void autographImage(BulkModel fileIndex) throws RestException {
         String tempPath = FileUtils.createPath(commonProperties.getTempPath());
         String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
         String randomPath = FileUtils.createPath(cachePath, GeneralUtils.uuid());
@@ -64,7 +64,7 @@ public class FileHandleServiceImpl implements FileHandleService {
 
     @Async
     @Override
-    public void condenseImage(FileIndex fileIndex) throws RestException {
+    public void condenseImage(BulkModel fileIndex) throws RestException {
         String tempPath = FileUtils.createPath(commonProperties.getTempPath());
         String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
         String randomPath = FileUtils.createPath(cachePath, GeneralUtils.uuid());
@@ -128,7 +128,7 @@ public class FileHandleServiceImpl implements FileHandleService {
 
     @Async
     @Override
-    public void condenseFile(FileIndex fileIndex) throws RestException {
+    public void condenseFile(BulkModel fileIndex) throws RestException {
         String tempPath = FileUtils.createPath(commonProperties.getTempPath());
         String cachePath = FileUtils.createPath(tempPath, fileIndex.getId());
         String randomPath = FileUtils.createPath(cachePath, GeneralUtils.uuid());

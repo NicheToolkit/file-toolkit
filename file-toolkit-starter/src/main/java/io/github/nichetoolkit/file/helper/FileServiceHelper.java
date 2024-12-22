@@ -2,12 +2,12 @@ package io.github.nichetoolkit.file.helper;
 
 import io.github.nichetoolkit.file.configure.FileProperties;
 import io.github.nichetoolkit.file.constant.FileConstants;
-import io.github.nichetoolkit.file.FileIndexEntity;
+import io.github.nichetoolkit.file.BulkEntity;
 import io.github.nichetoolkit.file.FileType;
 import io.github.nichetoolkit.file.error.FileErrorStatus;
 import io.github.nichetoolkit.file.FileFilter;
-import io.github.nichetoolkit.file.FileChunk;
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.PartModel;
+import io.github.nichetoolkit.file.BulkModel;
 import io.github.nichetoolkit.file.FileRequest;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileIndexService;
@@ -66,7 +66,7 @@ public class FileServiceHelper implements InitializingBean {
         }
     }
 
-    public static void buildProperties(String filename, long size, String suffix, FileIndex fileIndex) {
+    public static void buildProperties(String filename, long size, String suffix, BulkModel fileIndex) {
         fileIndex.addProperty(FileConstants.ORIGINAL_SUFFIX_PROPERTY, fileIndex.getSuffix());
         fileIndex.setSuffix(suffix);
         fileIndex.addProperty(FileConstants.ORIGINAL_NAME_PROPERTY, fileIndex.getName());
@@ -77,10 +77,10 @@ public class FileServiceHelper implements InitializingBean {
     }
 
 
-    public static void buildChunkFiles(List<FileIndex> fileIndices, FileFilter fileFilter, String randomPath, List<File> fileList) throws RestException {
-        for (FileIndex fileIndex : fileIndices) {
-            List<FileChunk> fileChunks = fileIndex.getFileChunks();
-            for (FileChunk fileChunk : fileChunks) {
+    public static void buildChunkFiles(List<BulkModel> fileIndices, FileFilter fileFilter, String randomPath, List<File> fileList) throws RestException {
+        for (BulkModel fileIndex : fileIndices) {
+            List<PartModel> fileChunks = fileIndex.getFileChunks();
+            for (PartModel fileChunk : fileChunks) {
                 String itemFilename = fileIndex.getAlias().concat("_").concat(String.valueOf(fileChunk.getChunkIndex())).concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
                 if (fileFilter.isOriginal()) {
                     itemFilename = fileIndex.getFilename().concat("_").concat(String.valueOf(fileChunk.getChunkIndex())).concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
@@ -93,8 +93,8 @@ public class FileServiceHelper implements InitializingBean {
     }
 
 
-    public static void buildIndexFiles(List<FileIndex> fileIndices, FileFilter fileFilter, String randomPath, List<File> fileList) throws RestException {
-        for (FileIndex fileIndex : fileIndices) {
+    public static void buildIndexFiles(List<BulkModel> fileIndices, FileFilter fileFilter, String randomPath, List<File> fileList) throws RestException {
+        for (BulkModel fileIndex : fileIndices) {
             if (fileIndex.getFileSize() > INSTANCE.commonProperties.getMaxFileSize()) {
                 log.warn("the file size is too large, id: {}, size: {}", fileIndex.getId(), fileIndex.getFileSize());
                 throw new FileErrorException(FileErrorStatus.FILE_TOO_LARGE_ERROR);
@@ -109,7 +109,7 @@ public class FileServiceHelper implements InitializingBean {
         }
     }
 
-    public static FileIndex createFileIndex(FileIndex fileIndex) throws RestException {
+    public static BulkModel createFileIndex(BulkModel fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileIndex)) {
             log.warn("the file index is null!");
             throw new FileErrorException(FileErrorStatus.FILE_INDEX_IS_NULL);
@@ -150,7 +150,7 @@ public class FileServiceHelper implements InitializingBean {
         return fileIndex;
     }
 
-    public static void buildMd5(MultipartFile file, FileIndex fileIndex) throws RestException {
+    public static void buildMd5(MultipartFile file, BulkModel fileIndex) throws RestException {
         try {
             buildMd5(file.getInputStream(), fileIndex);
         } catch (IOException exception) {
@@ -159,7 +159,7 @@ public class FileServiceHelper implements InitializingBean {
         }
     }
 
-    public static void buildMd5(File file, FileIndex fileIndex) throws RestException {
+    public static void buildMd5(File file, BulkModel fileIndex) throws RestException {
         try(FileInputStream fileInputStream = new FileInputStream(file)) {
             buildMd5(fileInputStream, fileIndex);
         } catch (IOException exception) {
@@ -168,12 +168,12 @@ public class FileServiceHelper implements InitializingBean {
         }
     }
 
-    public static void buildMd5(InputStream inputStream, FileIndex fileIndex) throws RestException {
+    public static void buildMd5(InputStream inputStream, BulkModel fileIndex) throws RestException {
         byte[] bytes = StreamUtils.bytes(inputStream);
         buildMd5(bytes, fileIndex);
     }
 
-    public static void buildMd5(byte[] bytes, FileIndex fileIndex) throws RestException {
+    public static void buildMd5(byte[] bytes, BulkModel fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(bytes)) {
             log.error("the file read with bytes is null, filename: {}", fileIndex.getName());
             throw new FileErrorException(FileErrorStatus.FILE_READ_BYTE_NULL);
@@ -183,7 +183,7 @@ public class FileServiceHelper implements InitializingBean {
         fileIndex.setFileMd5(md5);
     }
 
-    public static void buildMd5(MultipartFile file, FileChunk fileChunk) throws RestException {
+    public static void buildMd5(MultipartFile file, PartModel fileChunk) throws RestException {
         try {
             buildMd5(file.getInputStream(), fileChunk);
         } catch (IOException exception) {
@@ -192,7 +192,7 @@ public class FileServiceHelper implements InitializingBean {
         }
     }
 
-    public static void buildMd5(File file, FileChunk fileChunk) throws RestException {
+    public static void buildMd5(File file, PartModel fileChunk) throws RestException {
         try {
             buildMd5(new FileInputStream(file), fileChunk);
         } catch (IOException exception) {
@@ -201,12 +201,12 @@ public class FileServiceHelper implements InitializingBean {
         }
     }
 
-    public static void buildMd5(InputStream inputStream, FileChunk fileChunk) throws RestException {
+    public static void buildMd5(InputStream inputStream, PartModel fileChunk) throws RestException {
         byte[] bytes = StreamUtils.bytes(inputStream);
         buildMd5(bytes, fileChunk);
     }
 
-    public static void buildMd5(byte[] bytes, FileChunk fileChunk) throws RestException {
+    public static void buildMd5(byte[] bytes, PartModel fileChunk) throws RestException {
         if (GeneralUtils.isEmpty(bytes)) {
             log.error("the chunk read with bytes is null, chunk index: {}", fileChunk.getChunkIndex());
             throw new FileErrorException(FileErrorStatus.FILE_READ_BYTE_NULL);
@@ -216,12 +216,12 @@ public class FileServiceHelper implements InitializingBean {
         fileChunk.setChunkMd5(md5);
     }
 
-    public static FileIndex createFileChunk(MultipartFile multipartFile, FileIndex fileIndex) throws RestException {
+    public static BulkModel createFileChunk(MultipartFile multipartFile, BulkModel fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileIndex)) {
             log.warn("the file index is null!");
             throw new FileErrorException(FileErrorStatus.FILE_INDEX_IS_NULL);
         }
-        FileChunk fileChunk = fileIndex.getFileChunk();
+        PartModel fileChunk = fileIndex.getFileChunk();
         if (GeneralUtils.isEmpty(fileIndex)) {
             log.warn("the file chunk is null!");
             throw new FileErrorException(FileErrorStatus.FILE_CHUNK_IS_NULL);
@@ -234,7 +234,7 @@ public class FileServiceHelper implements InitializingBean {
             }
             fileChunk.setFileId(fileIndexId);
         }
-        FileIndex queryFileIndex = INSTANCE.fileIndexService.queryById(fileIndex.getId());
+        BulkModel queryFileIndex = INSTANCE.fileIndexService.queryById(fileIndex.getId());
         if (GeneralUtils.isEmpty(queryFileIndex)) {
             log.warn("the file service query result is empty!");
             throw new FileErrorException(FileErrorStatus.FILE_INDEX_IS_NULL);
@@ -278,8 +278,8 @@ public class FileServiceHelper implements InitializingBean {
 
     }
 
-    public static FileIndex createFileChunk(FileRequest fileRequest, String contentRange) throws RestException {
-        FileIndex fileIndex = fileRequest.toIndex();
+    public static BulkModel createFileChunk(FileRequest fileRequest, String contentRange) throws RestException {
+        BulkModel fileIndex = fileRequest.toIndex();
         if (GeneralUtils.isEmpty(contentRange)) {
             log.error("the header of 'Content-Range' for request is null! ");
             throw new RestException(FileErrorStatus.CONTENT_RANGE_IS_NULL);
@@ -306,7 +306,7 @@ public class FileServiceHelper implements InitializingBean {
             log.error("the header of 'Content-Range' size value for request is null! ");
             throw new FileErrorException(FileErrorStatus.FILE_CHUNK_PARAM_ERROR);
         }
-        FileChunk fileChunk = new FileChunk();
+        PartModel fileChunk = new PartModel();
         fileChunk.setFileId(fileIndex.getId());
         Long chunkSize = chunkEnd - chunkStart;
         Long sliceSize = fileSize / chunkSize;
@@ -326,9 +326,9 @@ public class FileServiceHelper implements InitializingBean {
         return fileIndex;
     }
 
-    public static FileIndex createFileIndex(MultipartFile multipartFile, FileIndex fileIndex) throws RestException {
+    public static BulkModel createFileIndex(MultipartFile multipartFile, BulkModel fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileIndex)) {
-            fileIndex = new FileIndex();
+            fileIndex = new BulkModel();
         }
         if (GeneralUtils.isEmpty(fileIndex.getId())) {
             String fileId = IdentityUtils.generateString();
@@ -424,23 +424,23 @@ public class FileServiceHelper implements InitializingBean {
         return FileType.OTHER;
     }
 
-    public static void buildChunks(List<FileIndexEntity> entityList, Collection<FileIndex> modelList) throws RestException {
+    public static void buildChunks(List<BulkEntity> entityList, Collection<BulkModel> modelList) throws RestException {
         if (GeneralUtils.isEmpty(modelList)) {
             return;
         }
-        List<String> fileIds = entityList.stream().filter(FileIndexEntity::getIsSlice).map(FileIndexEntity::getId).distinct().collect(Collectors.toList());
+        List<String> fileIds = entityList.stream().filter(BulkEntity::getIsSlice).map(BulkEntity::getId).distinct().collect(Collectors.toList());
         if (GeneralUtils.isNotEmpty(fileIds)) {
-            List<FileChunk> fileChunks = INSTANCE.fileChunkService.queryAllByFileIds(fileIds);
+            List<PartModel> fileChunks = INSTANCE.fileChunkService.queryAllByFileIds(fileIds);
             if (GeneralUtils.isNotEmpty(fileChunks)) {
-                Map<String, List<FileChunk>> fileChunkMap = fileChunks.stream().collect(Collectors.groupingBy(FileChunk::getFileId));
-                for (FileIndex fileIndex : modelList) {
+                Map<String, List<PartModel>> fileChunkMap = fileChunks.stream().collect(Collectors.groupingBy(PartModel::getFileId));
+                for (BulkModel fileIndex : modelList) {
                     if (fileIndex.getIsSlice()) {
                         String fileIndexId = fileIndex.getId();
-                        List<FileChunk> fileChunkList = fileChunkMap.get(fileIndexId);
+                        List<PartModel> fileChunkList = fileChunkMap.get(fileIndexId);
                         if (GeneralUtils.isNotEmpty(fileChunkList)) {
                             Collections.sort(fileChunkList);
                             fileIndex.setFileChunks(fileChunkList);
-                            FileChunk fileChunk = fileChunkList.get(fileChunkList.size() - 1);
+                            PartModel fileChunk = fileChunkList.get(fileChunkList.size() - 1);
                             fileIndex.setFileChunk(fileChunk);
                             fileIndex.setCurrentIndex(fileChunk.getChunkIndex());
                         }

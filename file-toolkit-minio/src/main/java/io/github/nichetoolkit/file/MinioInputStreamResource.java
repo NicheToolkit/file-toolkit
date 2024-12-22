@@ -15,7 +15,7 @@ import java.io.InputStream;
 public class MinioInputStreamResource extends VideoResource {
     private StatObjectResponse statObject;
 
-    public MinioInputStreamResource(InputStream inputStream, FileIndex fileIndex) throws IOException {
+    public MinioInputStreamResource(InputStream inputStream, BulkModel fileIndex) throws IOException {
         super(inputStream, fileIndex);
         try {
             this.statObject = MinioUtils.statObject(fileIndex.getId());

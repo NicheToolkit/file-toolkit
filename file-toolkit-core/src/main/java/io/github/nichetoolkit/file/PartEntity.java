@@ -18,7 +18,7 @@ import java.util.Date;
 @Data
 @TableName("file_chunk")
 @EqualsAndHashCode(callSuper = false)
-public class FileChunkEntity extends RiceIdEntity<FileChunkEntity, FileChunk> {
+public class PartEntity extends RiceIdEntity<PartEntity, PartModel> {
     /** 文件id */
     private String fileId;
     /** 分片序列 */
@@ -42,15 +42,15 @@ public class FileChunkEntity extends RiceIdEntity<FileChunkEntity, FileChunk> {
     /** 分片结束时间 */
     private Date endTime;
 
-    public FileChunkEntity() {
+    public PartEntity() {
     }
 
-    public FileChunkEntity(String id) {
+    public PartEntity(String id) {
         super(id);
     }
 
-    public FileChunk toModel() {
-        FileChunk model = new FileChunk();
+    public PartModel toModel() {
+        PartModel model = new PartModel();
         BeanUtils.copyNonullProperties(this, model);
         model.setOperateType(OperateType.parseKey(this.operate));
         return model;

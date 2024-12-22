@@ -1,6 +1,6 @@
 package io.github.nichetoolkit.file.service;
 
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.BulkModel;
 import io.github.nichetoolkit.rest.RestException;
 
 /**
@@ -10,9 +10,9 @@ import io.github.nichetoolkit.rest.RestException;
  */
 public interface FileHandleService {
 
-    void autographImage(FileIndex fileIndex) throws RestException;
+    void autographImage(BulkModel fileIndex) throws RestException;
 
-    void condenseImage(FileIndex fileIndex) throws RestException;
+    void condenseImage(BulkModel fileIndex) throws RestException;
 
-    void condenseFile(FileIndex fileIndex) throws RestException;
+    void condenseFile(BulkModel fileIndex) throws RestException;
 }

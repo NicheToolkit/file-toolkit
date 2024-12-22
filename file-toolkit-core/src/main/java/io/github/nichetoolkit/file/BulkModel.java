@@ -31,7 +31,7 @@ import java.util.Optional;
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
+public class BulkModel extends RiceInfoModel<BulkModel, BulkEntity> {
 
     /** 上传用户 */
     protected RestId<String> user;
@@ -88,13 +88,13 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     private Boolean isMerge;
 
     /** 文件分块对象 */
-    private List<FileChunk> fileChunks;
+    private List<PartModel> fileChunks;
 
     /** 当前分片上传 */
     private Integer currentIndex;
 
     /** 文件分块对象 */
-    private FileChunk fileChunk;
+    private PartModel fileChunk;
 
     /** 图片宽度 */
     private Integer width;
@@ -108,10 +108,10 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     @JsonIgnore
     protected File file;
 
-    public FileIndex() {
+    public BulkModel() {
     }
 
-    public FileIndex(String id) {
+    public BulkModel(String id) {
         super(id);
     }
 
@@ -171,8 +171,8 @@ public class FileIndex extends RiceInfoModel<FileIndex, FileIndexEntity> {
     }
 
     @Override
-    public FileIndexEntity toEntity() {
-        FileIndexEntity entity = new FileIndexEntity();
+    public BulkEntity toEntity() {
+        BulkEntity entity = new BulkEntity();
         BeanUtils.copyNonullProperties(this, entity);
         entity.setUserId(Optional.ofNullable(this.user).map(RestId::getId).orElse(null));
         entity.setOriginalFilename(this.name);

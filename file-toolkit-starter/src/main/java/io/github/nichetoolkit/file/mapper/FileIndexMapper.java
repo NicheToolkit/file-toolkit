@@ -1,19 +1,19 @@
 package io.github.nichetoolkit.file.mapper;
 
-import io.github.nichetoolkit.file.FileIndexEntity;
+import io.github.nichetoolkit.file.BulkEntity;
 import io.github.nichetoolkit.rice.RiceInfoMapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.common.Mapper;
 
 @Component
-public interface FileIndexMapper extends RiceInfoMapper<FileIndexEntity>, Mapper<FileIndexEntity> {
+public interface FileIndexMapper extends RiceInfoMapper<BulkEntity>, Mapper<BulkEntity> {
     /**
      * 查询上传中断文件
      * @param name 文件源名称
      * @return T 查询的数据
      */
-    FileIndexEntity findByNameWithUploadInterrupt(@Param("name") String name);
+    BulkEntity findByNameWithUploadInterrupt(@Param("name") String name);
 
     /**
      * 实体更新

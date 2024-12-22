@@ -16,7 +16,7 @@ import java.io.IOException;
 public class MinioHttpRequestHandler extends VideoRequestHandler {
 
     @Override
-    public MinioInputStreamResource videoInputStreamResource(FileIndex fileIndex) throws IOException {
+    public MinioInputStreamResource videoInputStreamResource(BulkModel fileIndex) throws IOException {
         try {
             GetObjectResponse getObjectResponse = MinioUtils.getObject(fileIndex.getId());
             return new MinioInputStreamResource(getObjectResponse, fileIndex);

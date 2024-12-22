@@ -2,6 +2,8 @@ package io.github.nichetoolkit.file.constant;
 
 public interface FileConstants {
 
+    String VIDEO_FILE_HEADER = "Video-File";
+
     String FILE_ROOT_PREFIX = "nichetoolkit.file";
     String DATA_PREFIX = "data";
     String TEMP_PREFIX = "temp";

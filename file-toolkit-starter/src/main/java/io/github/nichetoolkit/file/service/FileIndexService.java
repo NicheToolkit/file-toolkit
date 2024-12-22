@@ -2,7 +2,7 @@ package io.github.nichetoolkit.file.service;
 
 
 import io.github.nichetoolkit.file.FileFilter;
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.BulkModel;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rice.service.FilterService;
 import io.github.nichetoolkit.rice.service.extend.RemoveService;
@@ -12,7 +12,7 @@ import io.github.nichetoolkit.rice.service.extend.RemoveService;
  * @author Cyan (snow22314@outlook.com)
  * @version v1.0.0
  */
-public interface FileIndexService extends FilterService<String,String, FileIndex, FileFilter>, RemoveService<String,String> {
+public interface FileIndexService extends FilterService<String,String, BulkModel, FileFilter>, RemoveService<String,String> {
 
     /**
      * 通过id集合查询单个
@@ -20,7 +20,7 @@ public interface FileIndexService extends FilterService<String,String, FileIndex
      * @return M 查询的对象
      * @throws RestException 模块异常
      */
-    FileIndex queryByNameWithUploadInterrupt(String name) throws RestException;
+    BulkModel queryByNameWithUploadInterrupt(String name) throws RestException;
 
     /**
      * 文件分片上传结束

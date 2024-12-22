@@ -1,6 +1,6 @@
 package io.github.nichetoolkit.file.video;
 
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.BulkModel;
 import org.springframework.core.io.InputStreamResource;
 
 import java.io.IOException;
@@ -12,14 +12,14 @@ import java.io.InputStream;
  * @version v1.0.0
  */
 public abstract class VideoResource extends InputStreamResource {
-    private FileIndex fileIndex;
+    private BulkModel fileIndex;
 
-    public VideoResource(FileIndex fileIndex) {
+    public VideoResource(BulkModel fileIndex) {
         super(fileIndex.inputStream());
         this.fileIndex = fileIndex;
     }
 
-    public VideoResource(InputStream inputStream, FileIndex fileIndex) {
+    public VideoResource(InputStream inputStream, BulkModel fileIndex) {
         super(inputStream);
         this.fileIndex = fileIndex;
     }

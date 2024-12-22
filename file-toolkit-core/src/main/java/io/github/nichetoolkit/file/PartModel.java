@@ -26,7 +26,7 @@ import java.util.Optional;
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(value = JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FileChunk extends RiceIdModel<FileChunk, FileChunkEntity> implements Comparator<FileChunk>, Comparable<FileChunk> {
+public class PartModel extends RiceIdModel<PartModel, PartEntity> implements Comparator<PartModel>, Comparable<PartModel> {
     /** 文件id */
     private String fileId;
     /** 分片序列 */
@@ -64,27 +64,27 @@ public class FileChunk extends RiceIdModel<FileChunk, FileChunkEntity> implement
         return new ByteArrayInputStream(this.bytes);
     }
 
-    public FileChunk() {
+    public PartModel() {
     }
 
-    public FileChunk(String id) {
+    public PartModel(String id) {
         super(id);
     }
 
-    public FileChunkEntity toEntity() {
-        FileChunkEntity entity = new FileChunkEntity();
+    public PartEntity toEntity() {
+        PartEntity entity = new PartEntity();
         BeanUtils.copyNonullProperties(this, entity);
         entity.setOperate(Optional.ofNullable(this.operateType).map(OperateType::getKey).orElse(OperateType.NONE.getKey()));
         return entity;
     }
 
     @Override
-    public int compare(FileChunk source, FileChunk target) {
+    public int compare(PartModel source, PartModel target) {
         return Integer.compare(source.getChunkIndex(), target.getChunkIndex());
     }
 
     @Override
-    public int compareTo(@NonNull FileChunk target) {
+    public int compareTo(@NonNull PartModel target) {
         return Integer.compare(this.getChunkIndex(), target.getChunkIndex());
     }
 }

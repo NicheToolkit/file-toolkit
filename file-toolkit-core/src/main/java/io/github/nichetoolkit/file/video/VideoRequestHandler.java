@@ -1,6 +1,7 @@
 package io.github.nichetoolkit.file.video;
 
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.BulkModel;
+import io.github.nichetoolkit.file.constant.FileConstants;
 import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
@@ -14,13 +15,11 @@ import java.io.IOException;
  */
 public abstract class VideoRequestHandler extends ResourceHttpRequestHandler {
 
-    public final static String VIDEO_FILE = "VIDEO-FILE";
-
     @Override
     protected Resource getResource(HttpServletRequest request) throws IOException {
-        final FileIndex fileIndex = (FileIndex) request.getAttribute(VIDEO_FILE);
+        final BulkModel fileIndex = (BulkModel) request.getAttribute(FileConstants.VIDEO_FILE_HEADER);
         return videoInputStreamResource(fileIndex);
     }
 
-    abstract public VideoResource videoInputStreamResource(FileIndex fileIndex) throws IOException;
+    abstract public VideoResource videoInputStreamResource(BulkModel fileIndex) throws IOException;
 }

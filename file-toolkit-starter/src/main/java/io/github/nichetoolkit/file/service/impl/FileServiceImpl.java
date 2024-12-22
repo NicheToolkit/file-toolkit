@@ -7,8 +7,8 @@ import io.github.nichetoolkit.file.error.FileErrorStatus;
 import io.github.nichetoolkit.file.FileFilter;
 import io.github.nichetoolkit.file.StoreService;
 import io.github.nichetoolkit.file.helper.FileServiceHelper;
-import io.github.nichetoolkit.file.FileChunk;
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.PartModel;
+import io.github.nichetoolkit.file.BulkModel;
 import io.github.nichetoolkit.file.FileRequest;
 import io.github.nichetoolkit.file.service.FileChunkService;
 import io.github.nichetoolkit.file.service.FileHandleService;
@@ -108,7 +108,7 @@ public class FileServiceImpl implements FileService {
         }
         boolean isExist = false;
         if (chunk) {
-            FileChunk fileChunk = fileChunkService.queryById(fileId);
+            PartModel fileChunk = fileChunkService.queryById(fileId);
             isExist = GeneralUtils.isNotEmpty(fileChunk);
             if (delete) {
                 fileChunkService.deleteById(fileId);
@@ -116,7 +116,7 @@ public class FileServiceImpl implements FileService {
                 fileChunkService.removeById(fileId);
             }
         } else {
-            FileIndex fileIndex = fileIndexService.queryById(fileId);
+            BulkModel fileIndex = fileIndexService.queryById(fileId);
             isExist = GeneralUtils.isNotEmpty(fileIndex);
             if (delete) {
                 fileIndexService.deleteById(fileId);
@@ -149,7 +149,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void download(FileIndex fileIndex, String filename, String contentType, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException {
+    public void download(BulkModel fileIndex, String filename, String contentType, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException {
         response.setContentType(contentType);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         if (fileType == FileType.VIDEO && preview) {
@@ -174,7 +174,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public void download(FileIndex fileIndex, String filename, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException {
+    public void download(BulkModel fileIndex, String filename, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException {
         MediaType mediaType = FileServiceHelper.parseContentType(filename);
         if (!preview) {
             mediaType = MediaType.APPLICATION_OCTET_STREAM;
@@ -184,17 +184,17 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void download(FileFilter fileFilter, HttpServletRequest request, HttpServletResponse response) throws RestException {
-        List<FileIndex> fileIndices;
+        List<BulkModel> fileIndices;
         if (fileFilter.isChunk()) {
-            RestPage<FileChunk> fileChunkRestPage = fileChunkService.queryAllWithFilter(fileFilter);
+            RestPage<PartModel> fileChunkRestPage = fileChunkService.queryAllWithFilter(fileFilter);
             FileServiceHelper.checkRestPage(fileChunkRestPage);
-            List<FileChunk> fileChunks = fileChunkRestPage.getItems();
-            List<String> fileIndexIds = fileChunks.stream().map(FileChunk::getFileId).distinct().collect(Collectors.toList());
-            List<FileIndex> fileIndexList = fileIndexService.queryAll(fileIndexIds);
+            List<PartModel> fileChunks = fileChunkRestPage.getItems();
+            List<String> fileIndexIds = fileChunks.stream().map(PartModel::getFileId).distinct().collect(Collectors.toList());
+            List<BulkModel> fileIndexList = fileIndexService.queryAll(fileIndexIds);
             if (GeneralUtils.isNotEmpty(fileIndexList)) {
-                Map<String, List<FileChunk>> fileChunkMap = fileChunks.stream().collect(Collectors.groupingBy(FileChunk::getFileId));
-                for (FileIndex fileIndex : fileIndexList) {
-                    List<FileChunk> chunkList = fileChunkMap.get(fileIndex.getId());
+                Map<String, List<PartModel>> fileChunkMap = fileChunks.stream().collect(Collectors.groupingBy(PartModel::getFileId));
+                for (BulkModel fileIndex : fileIndexList) {
+                    List<PartModel> chunkList = fileChunkMap.get(fileIndex.getId());
                     if (GeneralUtils.isNotEmpty(chunkList)) {
                         fileIndex.setFileChunks(chunkList);
                     }
@@ -202,10 +202,10 @@ public class FileServiceImpl implements FileService {
             }
             fileIndices = fileIndexList;
         } else {
-            RestPage<FileIndex> fileIndexRestPage = fileIndexService.queryAllWithFilter(fileFilter);
+            RestPage<BulkModel> fileIndexRestPage = fileIndexService.queryAllWithFilter(fileFilter);
             FileServiceHelper.checkRestPage(fileIndexRestPage);
             fileIndices = fileIndexRestPage.getItems()
-                    .stream().filter(FileIndex::getIsFinish).collect(Collectors.toList());
+                    .stream().filter(BulkModel::getIsFinish).collect(Collectors.toList());
         }
 
         if (GeneralUtils.isEmpty(fileIndices)) {
@@ -216,7 +216,7 @@ public class FileServiceImpl implements FileService {
         String randomPath = FileUtils.createPath(tempPath, GeneralUtils.uuid());
 
         if (fileIndices.size() == 1) {
-            FileIndex fileIndex = fileIndices.get(0);
+            BulkModel fileIndex = fileIndices.get(0);
             if (!fileFilter.isChunk()) {
                 String filename = fileIndex.getAlias().concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
                 if (fileFilter.isOriginal()) {
@@ -241,9 +241,9 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public void fileDownload(String fileId, Boolean chunk, Boolean preview, Boolean original, HttpServletRequest request, HttpServletResponse response) throws RestException {
-        FileIndex fileIndex;
+        BulkModel fileIndex;
         if (chunk) {
-            FileChunk fileChunk = fileChunkService.queryById(fileId);
+            PartModel fileChunk = fileChunkService.queryById(fileId);
             if (GeneralUtils.isEmpty(fileChunk)) {
                 log.warn("the file service query result is empty!");
                 throw new FileErrorException(FileErrorStatus.FILE_NO_FOUND_ERROR);
@@ -264,7 +264,7 @@ public class FileServiceImpl implements FileService {
         }
         String filename = fileIndex.getAlias().concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
         if (chunk) {
-            FileChunk fileChunk = fileIndex.getFileChunk();
+            PartModel fileChunk = fileIndex.getFileChunk();
             if (original) {
                 filename = fileIndex.getFilename().concat("_").concat(String.valueOf(fileChunk.getChunkIndex())).concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
             } else {
@@ -279,7 +279,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public void imageDownload(String fileId, Boolean preview, Boolean original, HttpServletRequest request, HttpServletResponse response) throws RestException {
         String filename = fileId.concat(FileConstants.SUFFIX_REGEX).concat(FileConstants.IMAGE_JPG_SUFFIX);
-        FileIndex fileIndex = null;
+        BulkModel fileIndex = null;
         if (original) {
             fileIndex = fileIndexService.queryById(fileId);
             if (GeneralUtils.isEmpty(fileIndex)) {
@@ -289,19 +289,19 @@ public class FileServiceImpl implements FileService {
             filename = fileIndex.getFilename().concat(FileConstants.SUFFIX_REGEX).concat(fileIndex.getSuffix());
         }
         if (GeneralUtils.isEmpty(fileIndex)) {
-            fileIndex = new FileIndex(fileId);
+            fileIndex = new BulkModel(fileId);
         }
         download(fileIndex, filename, preview, FileType.IMAGE, request, response);
     }
 
     @Override
-    public FileIndex upload(MultipartFile file, FileRequest fileRequest) throws RestException {
-        FileIndex createIndex = FileServiceHelper.createFileIndex(file, fileRequest.toIndex());
+    public BulkModel upload(MultipartFile file, FileRequest fileRequest) throws RestException {
+        BulkModel createIndex = FileServiceHelper.createFileIndex(file, fileRequest.toIndex());
         return upload(createIndex);
     }
 
     @Override
-    public FileIndex upload(FileIndex fileIndex) throws RestException {
+    public BulkModel upload(BulkModel fileIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileIndex)) {
             throw new RestException(FileErrorStatus.FILE_INDEX_IS_NULL);
         }
@@ -323,9 +323,9 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public FileIndex indexUpload(FileIndex fileIndex) throws RestException {
+    public BulkModel indexUpload(BulkModel fileIndex) throws RestException {
         String name = fileIndex.getName();
-        FileIndex uploadInterrupt = fileIndexService.queryByNameWithUploadInterrupt(name);
+        BulkModel uploadInterrupt = fileIndexService.queryByNameWithUploadInterrupt(name);
         if (GeneralUtils.isNotEmpty(uploadInterrupt)) {
             return uploadInterrupt;
         } else {
@@ -335,17 +335,17 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public FileIndex chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException {
-        FileIndex fileChunkIndex = FileServiceHelper.createFileChunk(fileRequest, contentRange);
-        FileIndex fileIndex = FileServiceHelper.createFileChunk(file, fileChunkIndex);
+    public BulkModel chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException {
+        BulkModel fileChunkIndex = FileServiceHelper.createFileChunk(fileRequest, contentRange);
+        BulkModel fileIndex = FileServiceHelper.createFileChunk(file, fileChunkIndex);
         checkFileIndex(fileIndex);
-        FileChunk uploadChunk = fileChunkService.save(fileIndex.getFileChunk());
+        PartModel uploadChunk = fileChunkService.save(fileIndex.getFileChunk());
         fileStoreService.putById(uploadChunk.getId(), uploadChunk.inputStream());
         fileIndex.setFileChunk(uploadChunk);
         if (GeneralUtils.isEmpty(fileIndex.getFileChunks())) {
             fileIndex.setFileChunks(new ArrayList<>());
         }
-        List<FileChunk> fileChunks = fileIndex.getFileChunks();
+        List<PartModel> fileChunks = fileIndex.getFileChunks();
         fileChunks.add(uploadChunk);
         fileIndex.setCurrentIndex(uploadChunk.getChunkIndex());
         if ((uploadChunk.getIsLastChunk() || uploadChunk.getChunkIndex().equals(fileIndex.getSliceSize())) && fileIndex.getIsMerge()) {
@@ -358,7 +358,7 @@ public class FileServiceImpl implements FileService {
         return fileIndex;
     }
 
-    private void checkFileIndex(FileIndex fileIndex) {
+    private void checkFileIndex(BulkModel fileIndex) {
         if (GeneralUtils.isEmpty(fileIndex.getIsCondense())) {
             fileIndex.setIsCondense(false);
         }

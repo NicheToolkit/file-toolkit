@@ -2,7 +2,7 @@ package io.github.nichetoolkit.file.service;
 
 import io.github.nichetoolkit.file.FileType;
 import io.github.nichetoolkit.file.FileFilter;
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.BulkModel;
 import io.github.nichetoolkit.file.FileRequest;
 import io.github.nichetoolkit.rest.RestException;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,7 +53,7 @@ public interface FileService {
      * @param response    返回体
      * @throws RestException 服务异常
      */
-    void download(FileIndex fileIndex, String filename, String contentType, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException;
+    void download(BulkModel fileIndex, String filename, String contentType, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException;
 
     /**
      * @param fileIndex 文件id
@@ -62,7 +62,7 @@ public interface FileService {
      * @param response  返回体
      * @throws RestException 服务异常
      */
-    void download(FileIndex fileIndex, String filename, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException;
+    void download(BulkModel fileIndex, String filename, Boolean preview, FileType fileType, HttpServletRequest request, HttpServletResponse response) throws RestException;
 
     /**
      * 下载多文件
@@ -100,7 +100,7 @@ public interface FileService {
      * @return FileIndex
      * @throws RestException 服务异常
      */
-    FileIndex upload(MultipartFile file, FileRequest fileRequest) throws RestException;
+    BulkModel upload(MultipartFile file, FileRequest fileRequest) throws RestException;
 
     /**
      * 上传文件
@@ -108,7 +108,7 @@ public interface FileService {
      * @return FileIndex
      * @throws RestException 服务异常
      */
-    FileIndex upload(FileIndex fileIndex) throws RestException;
+    BulkModel upload(BulkModel fileIndex) throws RestException;
 
     /**
      * 预分片上传文件
@@ -116,7 +116,7 @@ public interface FileService {
      * @return FileIndex
      * @throws RestException 服务异常
      */
-    FileIndex indexUpload(FileIndex fileIndex) throws RestException;
+    BulkModel indexUpload(BulkModel fileIndex) throws RestException;
 
     /**
      * 分片上传
@@ -126,6 +126,6 @@ public interface FileService {
      * @return FileIndex
      * @throws RestException 服务异常
      */
-    FileIndex chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException;
+    BulkModel chunkUpload(MultipartFile file, String contentRange, FileRequest fileRequest) throws RestException;
 
 }

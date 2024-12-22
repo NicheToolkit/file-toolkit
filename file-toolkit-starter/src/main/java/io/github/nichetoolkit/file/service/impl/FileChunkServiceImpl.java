@@ -1,9 +1,9 @@
 package io.github.nichetoolkit.file.service;
 
-import io.github.nichetoolkit.file.FileChunkEntity;
+import io.github.nichetoolkit.file.PartEntity;
 import io.github.nichetoolkit.file.FileFilter;
 import io.github.nichetoolkit.file.mapper.FileChunkMapper;
-import io.github.nichetoolkit.file.FileChunk;
+import io.github.nichetoolkit.file.PartModel;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.util.GeneralUtils;
 import io.github.nichetoolkit.rice.RiceIdService;
@@ -21,14 +21,14 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEntity, FileFilter> implements FileChunkService {
+public class FileChunkServiceImpl extends RiceIdService<PartModel, PartEntity, FileFilter> implements FileChunkService {
 
     @Override
-    public FileChunk queryByFileIdAndChunkIndex(String fileId, Integer chunkIndex) throws RestException {
+    public PartModel queryByFileIdAndChunkIndex(String fileId, Integer chunkIndex) throws RestException {
         if (GeneralUtils.isEmpty(fileId) || GeneralUtils.isEmpty(chunkIndex)) {
             return null;
         }
-        FileChunkEntity entity = ((FileChunkMapper) superMapper).findByFileIdAndChunkIndex(fileId, chunkIndex);
+        PartEntity entity = ((FileChunkMapper) superMapper).findByFileIdAndChunkIndex(fileId, chunkIndex);
         if (GeneralUtils.isNotEmpty(entity)) {
             return modelActuator(entity);
         }
@@ -36,11 +36,11 @@ public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEnti
     }
 
     @Override
-    public FileChunk queryByFileIdFirstChunk(String fileId) throws RestException {
+    public PartModel queryByFileIdFirstChunk(String fileId) throws RestException {
         if (GeneralUtils.isEmpty(fileId)) {
             return null;
         }
-        FileChunkEntity entity = ((FileChunkMapper) superMapper).findByFileIdFirstChunk(fileId);
+        PartEntity entity = ((FileChunkMapper) superMapper).findByFileIdFirstChunk(fileId);
         if (GeneralUtils.isNotEmpty(entity)) {
             return modelActuator(entity);
         }
@@ -48,11 +48,11 @@ public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEnti
     }
 
     @Override
-    public FileChunk queryByFileIdLastChunk(String fileId) throws RestException {
+    public PartModel queryByFileIdLastChunk(String fileId) throws RestException {
         if (GeneralUtils.isEmpty(fileId)) {
             return null;
         }
-        FileChunkEntity entity = ((FileChunkMapper) superMapper).findByFileIdLastChunk(fileId);
+        PartEntity entity = ((FileChunkMapper) superMapper).findByFileIdLastChunk(fileId);
         if (GeneralUtils.isNotEmpty(entity)) {
             return modelActuator(entity);
         }
@@ -60,21 +60,21 @@ public class FileChunkServiceImpl extends RiceIdService<FileChunk, FileChunkEnti
     }
 
     @Override
-    public List<FileChunk> queryAllByFileId(String fileId) throws RestException {
+    public List<PartModel> queryAllByFileId(String fileId) throws RestException {
         if (GeneralUtils.isEmpty(fileId)) {
             return Collections.emptyList();
         }
-        List<FileChunkEntity> entityList = ((FileChunkMapper) superMapper).findAllByFileId(fileId);
+        List<PartEntity> entityList = ((FileChunkMapper) superMapper).findAllByFileId(fileId);
         log.debug("file chunk list has querying successful! size: {}", entityList.size());
         return modelActuator(entityList);
     }
 
     @Override
-    public List<FileChunk> queryAllByFileIds(Collection<String> fileIds) throws RestException {
+    public List<PartModel> queryAllByFileIds(Collection<String> fileIds) throws RestException {
         if (GeneralUtils.isEmpty(fileIds)) {
             return Collections.emptyList();
         }
-        List<FileChunkEntity> entityList = ((FileChunkMapper) superMapper).findAllByFileIds(fileIds);
+        List<PartEntity> entityList = ((FileChunkMapper) superMapper).findAllByFileIds(fileIds);
         log.debug("file chunk list has querying successful! size: {}", entityList.size());
         return modelActuator(entityList);
     }

@@ -1,10 +1,10 @@
 package io.github.nichetoolkit.file.service;
 
-import io.github.nichetoolkit.file.FileIndexEntity;
+import io.github.nichetoolkit.file.BulkEntity;
 import io.github.nichetoolkit.file.FileFilter;
 import io.github.nichetoolkit.file.mapper.FileIndexMapper;
-import io.github.nichetoolkit.file.FileChunk;
-import io.github.nichetoolkit.file.FileIndex;
+import io.github.nichetoolkit.file.PartModel;
+import io.github.nichetoolkit.file.BulkModel;
 import io.github.nichetoolkit.rest.RestException;
 import io.github.nichetoolkit.rest.actuator.BiConsumerActuator;
 import io.github.nichetoolkit.rest.util.GeneralUtils;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEntity, FileFilter> implements FileIndexService {
+public class FileIndexServiceImpl extends RiceInfoService<BulkModel, BulkEntity, FileFilter> implements FileIndexService {
 
     @Autowired
     private FileChunkService fileChunkService;
@@ -43,11 +43,11 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
     }
 
     @Override
-    public FileIndex queryByNameWithUploadInterrupt(String name) throws RestException {
+    public BulkModel queryByNameWithUploadInterrupt(String name) throws RestException {
         if (GeneralUtils.isEmpty(name)) {
             return null;
         }
-        FileIndexEntity entity = ((FileIndexMapper) superMapper).findByNameWithUploadInterrupt(name);
+        BulkEntity entity = ((FileIndexMapper) superMapper).findByNameWithUploadInterrupt(name);
         if (GeneralUtils.isNotEmpty(entity)) {
             return modelActuator(entity);
         }
@@ -68,34 +68,34 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
     }
 
     @Override
-    protected BiConsumerActuator<String,FileIndex> updateActuator() {
+    protected BiConsumerActuator<String, BulkModel> updateActuator() {
         return (tableKey,fileIndex) -> this.optional(fileIndex);
     }
 
     @Override
-    public void buildModel(FileIndexEntity entity, FileIndex model, Boolean... isLoadArray) throws RestException {
+    public void buildModel(BulkEntity entity, BulkModel model, Boolean... isLoadArray) throws RestException {
         if (GeneralUtils.isEmpty(model)) {
             return;
         }
         String fileId = entity.getId();
-        List<FileChunk> fileChunks = fileChunkService.queryAllByFileId(fileId);
+        List<PartModel> fileChunks = fileChunkService.queryAllByFileId(fileId);
         buildLastChunk(model, fileChunks);
     }
 
     @Override
-    public void buildModelList(Collection<FileIndexEntity> entityList, List<FileIndex> modelList, Boolean... isLoadArray) throws RestException {
+    public void buildModelList(Collection<BulkEntity> entityList, List<BulkModel> modelList, Boolean... isLoadArray) throws RestException {
         if (GeneralUtils.isEmpty(modelList)) {
             return;
         }
-        List<String> fileIds = entityList.stream().filter(FileIndexEntity::getIsSlice).map(FileIndexEntity::getId).distinct().collect(Collectors.toList());
+        List<String> fileIds = entityList.stream().filter(BulkEntity::getIsSlice).map(BulkEntity::getId).distinct().collect(Collectors.toList());
         if (GeneralUtils.isNotEmpty(fileIds)) {
-            List<FileChunk> fileChunks = fileChunkService.queryAllByFileIds(fileIds);
+            List<PartModel> fileChunks = fileChunkService.queryAllByFileIds(fileIds);
             if (GeneralUtils.isNotEmpty(fileChunks)) {
-                Map<String, List<FileChunk>> fileChunkMap = fileChunks.stream().collect(Collectors.groupingBy(FileChunk::getFileId));
-                for (FileIndex fileIndex : modelList) {
+                Map<String, List<PartModel>> fileChunkMap = fileChunks.stream().collect(Collectors.groupingBy(PartModel::getFileId));
+                for (BulkModel fileIndex : modelList) {
                     if (fileIndex.getIsSlice()) {
                         String fileIndexId = fileIndex.getId();
-                        List<FileChunk> fileChunkList = fileChunkMap.get(fileIndexId);
+                        List<PartModel> fileChunkList = fileChunkMap.get(fileIndexId);
                         buildLastChunk(fileIndex, fileChunkList);
                     }
                 }
@@ -103,11 +103,11 @@ public class FileIndexServiceImpl extends RiceInfoService<FileIndex, FileIndexEn
         }
     }
 
-    private void buildLastChunk(FileIndex fileIndex, List<FileChunk> fileChunkList) {
+    private void buildLastChunk(BulkModel fileIndex, List<PartModel> fileChunkList) {
         if (GeneralUtils.isNotEmpty(fileChunkList)) {
             Collections.sort(fileChunkList);
             fileIndex.setFileChunks(fileChunkList);
-            FileChunk fileChunk = fileChunkList.get(fileChunkList.size() - 1);
+            PartModel fileChunk = fileChunkList.get(fileChunkList.size() - 1);
             fileIndex.setFileChunk(fileChunk);
             fileIndex.setCurrentIndex(fileChunk.getChunkIndex());
         }

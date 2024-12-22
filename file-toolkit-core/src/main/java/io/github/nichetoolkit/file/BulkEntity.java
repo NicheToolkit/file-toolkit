@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @TableName("file_index")
 @EqualsAndHashCode(callSuper = false)
-public class FileIndexEntity extends RiceInfoEntity<FileIndexEntity, FileIndex> {
+public class BulkEntity extends RiceInfoEntity<BulkEntity, BulkModel> {
     /** 用户id */
     private String userId;
     /** 文件源名称 */
@@ -58,15 +58,15 @@ public class FileIndexEntity extends RiceInfoEntity<FileIndexEntity, FileIndex> 
     /** 文件存储属性 */
     private String properties;
 
-    public FileIndexEntity() {
+    public BulkEntity() {
     }
 
-    public FileIndexEntity(String id) {
+    public BulkEntity(String id) {
         super(id);
     }
 
-    public FileIndex toModel() {
-        FileIndex model = new FileIndex();
+    public BulkModel toModel() {
+        BulkModel model = new BulkModel();
         BeanUtils.copyNonullProperties(this, model);
         if (GeneralUtils.isNotEmpty(this.userId)) {
             IdModel<String> user = new IdModel<>(this.userId);
